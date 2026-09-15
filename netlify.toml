@@ -1,0 +1,7 @@
+# Netlify: Next.js 런타임 사용 (SSR 라우트 /recommend, /deck/[id] 때문에 정적 export 불가)
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
