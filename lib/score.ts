@@ -31,6 +31,7 @@ const countBy = <T extends string>(xs: T[]): Record<T, number> => {
 
 /** 덱의 캐리 유닛 = 아이템을 가장 많이 걸치는 유닛 (동률이면 고코스트) */
 export function getCarry(deck: Deck): UnitId {
+  if (deck.carryId) return deck.carryId;
   const itemsPerUnit = deck.coreItems.reduce((acc, ci) => {
     acc[ci.unitId] = (acc[ci.unitId] ?? 0) + 1;
     return acc;
@@ -202,3 +203,17 @@ export const transitionLabel = (score: ScoreBreakdown) => {
   if (reachability >= 20) return { emoji: "🟡", text: "전환 보통" };
   return { emoji: "🔴", text: "전환 어려움" };
 };
+
+/** 보유 유닛과 가장 겹치는 레벨을 현재로 보고, 그 다음 레벨에서 사야 할 유닛 */
+export function nextStep(deck: Deck, ownedIds: Set<UnitId>): { level: string; buy: UnitId[] } | null {
+  if (!deck.levels) return null;
+  const lvs = Object.keys(deck.levels).sort((a, b) => Number(a) - Number(b));
+  let cur = -1, best = -1;
+  lvs.forEach((lv, i) => {
+    const hit = deck.levels![lv].units.filter((u) => ownedIds.has(u)).length;
+    if (hit > best) { best = hit; cur = i; }
+  });
+  const next = lvs[Math.min(cur + 1, lvs.length - 1)];
+  const buy = deck.levels[next].units.filter((u) => !ownedIds.has(u));
+  return buy.length ? { level: next, buy } : null;
+}

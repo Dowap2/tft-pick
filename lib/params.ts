@@ -1,8 +1,11 @@
 import type { ComponentId, UnitId } from "./data";
 import type { UserInput, UserUnit } from "./score";
 
+// 재료 상한: 완성템 3개 + 여분 2개
+export const MAX_COMPONENTS = 8;
+
 const VALID_COMPONENTS = new Set<ComponentId>([
-  "bf", "bow", "rod", "tear", "vest", "cloak", "belt", "gloves", "spatula",
+  "bf", "bow", "rod", "tear", "vest", "cloak", "belt", "gloves", "spatula", "pan",
 ]);
 
 export function parseUserInput(sp: Record<string, string | string[] | undefined>): UserInput {
@@ -13,7 +16,7 @@ export function parseUserInput(sp: Record<string, string | string[] | undefined>
     .split(",")
     .map((s) => s.trim())
     .filter((s): s is ComponentId => VALID_COMPONENTS.has(s as ComponentId))
-    .slice(0, 3);
+    .slice(0, MAX_COMPONENTS);
 
   const units: UserUnit[] = unitsRaw
     .split(",")

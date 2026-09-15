@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { componentById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
-import { recommend, toStars, transitionLabel } from "@/lib/score";
-import { COST_TEXT, ItemIcon, UnitIcon } from "@/app/icons";
+import { nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
+import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -13,41 +13,42 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
   const input = parseUserInput(sp);
   const results = recommend(input).slice(0, 3);
   const q = buildQuery(input);
+  const owned = new Set(input.units.map((u) => u.unitId));
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8 flex items-center justify-between">
         <div>
-          <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-200">
+          <Link href="/" className="text-sm text-muted hover:text-gold-light">
             ← 다시 입력
           </Link>
-          <h1 className="mt-2 text-2xl font-bold">추천 결과</h1>
+          <h1 className="mt-2 text-2xl font-bold text-gold-light">추천 결과</h1>
         </div>
       </header>
 
       {/* 현재 상황 요약 */}
-      <section className="mb-8 rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
-        <h2 className="mb-3 text-sm font-semibold text-zinc-400">현재 상황</h2>
+      <section className="mb-8 panel rounded-lg bg-panel/70 p-4">
+        <h2 className="mb-3 text-sm font-semibold text-muted">현재 상황</h2>
         <div className="space-y-2 text-sm">
           <div>
-            <span className="text-zinc-500">아이템: </span>
+            <span className="text-muted/80">아이템: </span>
             {input.components.length === 0 ? (
-              <span className="text-zinc-600">없음</span>
+              <span className="text-muted/50">없음</span>
             ) : (
               input.components.map((c, i) => (
-                <span key={i} className="mr-2 inline-flex items-center gap-1 rounded bg-emerald-600/30 py-0.5 pl-0.5 pr-2 align-middle">
+                <span key={i} className="mr-2 inline-flex items-center gap-1 rounded bg-teal/20 py-0.5 pl-0.5 pr-2 align-middle">
                   <ItemIcon id={c} className="size-5" /> {componentById(c)?.name}
                 </span>
               ))
             )}
           </div>
           <div>
-            <span className="text-zinc-500">유닛: </span>
+            <span className="text-muted/80">유닛: </span>
             {input.units.length === 0 ? (
-              <span className="text-zinc-600">없음</span>
+              <span className="text-muted/50">없음</span>
             ) : (
               input.units.map((u) => (
-                <span key={u.unitId} className="mr-2 inline-flex items-center gap-1 rounded bg-indigo-600/30 py-0.5 pl-0.5 pr-2 align-middle">
+                <span key={u.unitId} className="mr-2 inline-flex items-center gap-1 rounded bg-gold-dark/60 py-0.5 pl-0.5 pr-2 align-middle">
                   <UnitIcon id={u.unitId} className="size-5" /> {unitById(u.unitId)?.name} {"★".repeat(u.star)}
                 </span>
               ))
@@ -62,54 +63,67 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
           const trans = transitionLabel(score);
           const carryName = unitById(score.carryId)?.name ?? score.carryId;
           const carryCost = unitById(score.carryId)?.cost ?? 0;
+          const next = nextStep(deck, owned);
           return (
             <Link
               key={deck.id}
               href={`/deck/${deck.id}?${q}`}
-              className="block rounded-xl border border-zinc-800 bg-zinc-900 p-5 transition hover:border-zinc-600 hover:bg-zinc-800/70"
+              className="block panel rounded-xl bg-panel p-5 transition hover:border-gold/70 hover:bg-panel-2"
             >
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
-                  <div className="text-xs text-zinc-500">{MEDALS[idx]} 추천 {idx + 1}</div>
+                  <div className="text-xs text-muted/80">{MEDALS[idx]} 추천 {idx + 1}</div>
                   <h3 className="mt-1 text-xl font-bold">{deck.name}</h3>
-                  <div className="mt-1 text-xs text-zinc-500">
-                    {trans.emoji} {trans.text} · {deck.tierLabel}티어 · 평균순위 {deck.avgPlacement.toFixed(2)}
+                  <div className="mt-1 text-xs text-muted/80">
+                    {trans.emoji} {trans.text} · <TierBadge tier={deck.tierLabel} /> 평균순위 {deck.avgPlacement.toFixed(2)}
                   </div>
-                  <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-zinc-800 py-0.5 pl-0.5 pr-2 text-xs">
+                  <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-panel-2 py-0.5 pl-0.5 pr-2 text-xs">
                     <UnitIcon id={score.carryId} className="size-6" />
-                    <span className="text-zinc-500">메인 캐리</span>
-                    <span className={score.hasCarry ? "font-semibold text-emerald-300" : "font-semibold text-zinc-200"}>
+                    <span className="text-muted/80">메인 캐리</span>
+                    <span className={score.hasCarry ? "font-semibold text-teal" : "font-semibold text-parchment"}>
                       {carryName}
                     </span>
                     <span className={COST_TEXT[carryCost]}>{carryCost}코</span>
-                    {score.hasCarry && <span className="text-emerald-400">✓ 보유</span>}
+                    {score.hasCarry && <span className="text-teal">✓ 보유</span>}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-emerald-400">
+                  <div className="text-3xl font-bold gold-text">
                     {Math.round(score.total)}%
                   </div>
-                  <div className="text-xs text-zinc-500">적합도</div>
+                  <div className="text-xs text-muted/80">적합도</div>
                 </div>
               </div>
 
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {deck.coreUnits.map((cu) => (
                   <div key={cu.unitId} className="flex flex-col items-center">
-                    <UnitIcon id={cu.unitId} size="md" className={cu.unitId === score.carryId ? "ring-2 ring-emerald-400" : ""} />
-                    <span className="text-[10px] leading-3 text-yellow-400">{"★".repeat(cu.star)}</span>
+                    <UnitIcon id={cu.unitId} size="md" className={`${cu.unitId === score.carryId ? "bg-teal!" : ""} ${owned.has(cu.unitId) ? "" : "opacity-45"}`} />
+                    <span className="text-[10px] leading-3 text-gold">{"★".repeat(cu.star)}</span>
                   </div>
                 ))}
                 {score.carryItems.length > 0 && (
                   <div className="ml-2 flex items-center gap-1 self-start">
                     {score.carryItems.map((iid, i) => (
-                      <ItemIcon key={i} id={iid} size="md" className={score.buildableCarryItems.includes(iid) ? "ring-2 ring-emerald-400" : "opacity-60"} />
+                      <ItemIcon key={i} id={iid} size="md" className={score.buildableCarryItems.includes(iid) ? "ring-2 ring-teal" : "opacity-60"} />
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-zinc-400 sm:grid-cols-4">
+              {next && (
+                <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded bg-panel-2/60 px-2 py-1.5 text-xs">
+                  <span className="mr-1 text-gold-light">다음 목표 {next.level}렙 →</span>
+                  {next.buy.map((uid) => (
+                    <span key={uid} className="inline-flex items-center gap-1">
+                      <UnitIcon id={uid} className="size-6" />
+                      <span className={COST_TEXT[unitById(uid)?.cost ?? 1]}>{unitById(uid)?.name}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted sm:grid-cols-4">
                 <MetricRow label="캐리" score={score.carryScore} max={35} />
                 <MetricRow label="캐리템" score={score.carryItemScore} max={30} />
                 <MetricRow label="서포트" score={score.supportScore} max={15} />
@@ -121,9 +135,9 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                   <li
                     key={i}
                     className={
-                      r.kind === "good" ? "text-emerald-300"
+                      r.kind === "good" ? "text-teal"
                       : r.kind === "warn" ? "text-amber-300/80"
-                      : "text-zinc-400"
+                      : "text-muted"
                     }
                   >
                     {r.kind === "good" ? "✓" : r.kind === "warn" ? "△" : "·"} {r.text}
@@ -142,7 +156,7 @@ function MetricRow({ label, score, max }: { label: string; score: number; max: n
   return (
     <div className="flex items-center justify-between">
       <span>{label}</span>
-      <span className="font-mono text-yellow-400">{toStars(score, max)}</span>
+      <span className="font-mono text-gold">{toStars(score, max)}</span>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 // CommunityDragon → lib/gen/{units,items}.json
-// 사용: node scripts/sync.mjs [패치=pbe] [세트번호=18]
+// 사용: node scripts/sync.mjs [패치=latest] [세트번호=18]
 //   패치: pbe | latest | 16.18 같은 버전
 import { writeFileSync, readFileSync } from "node:fs";
 
-const [patch = "pbe", setArg = "18"] = process.argv.slice(2);
+const [patch = "latest", setArg = "18"] = process.argv.slice(2);
 const SET = Number(setArg);
 const CDN = `https://raw.communitydragon.org/${patch}/game/`;
 const asset = (tex) => CDN + tex.toLowerCase().replace(/\.tex$/, ".png");
@@ -11,7 +11,7 @@ const asset = (tex) => CDN + tex.toLowerCase().replace(/\.tex$/, ".png");
 const COMPONENT = {
   TFT_Item_BFSword: "bf", TFT_Item_RecurveBow: "bow", TFT_Item_NeedlesslyLargeRod: "rod",
   TFT_Item_TearOfTheGoddess: "tear", TFT_Item_ChainVest: "vest", TFT_Item_NegatronCloak: "cloak",
-  TFT_Item_GiantsBelt: "belt", TFT_Item_SparringGloves: "gloves", TFT_Item_Spatula: "spatula",
+  TFT_Item_GiantsBelt: "belt", TFT_Item_SparringGloves: "gloves", TFT_Item_Spatula: "spatula", TFT_Item_FryingPan: "pan",
 };
 
 const res = await fetch(`https://raw.communitydragon.org/${patch}/cdragon/tft/ko_kr.json`);
@@ -29,7 +29,7 @@ for (const c of set.champions) {
   const id = m[1].toLowerCase();
   if (seenUnit.has(id)) continue;
   seenUnit.add(id);
-  units.push({ id, name: c.name, cost: c.cost, traits: c.traits, img: asset(c.squareIcon) });
+  units.push({ id, apiName: c.apiName, name: c.name, cost: c.cost, traits: c.traits, img: asset(c.squareIcon) });
 }
 units.sort((a, b) => a.cost - b.cost || a.id.localeCompare(b.id));
 
@@ -37,27 +37,25 @@ units.sort((a, b) => a.cost - b.cost || a.id.localeCompare(b.id));
 const items = [];
 const seenRecipe = new Set();
 for (const it of data.items) {
-  if (!/^TFT_Item_[A-Za-z]+$/.test(it.apiName) || /Corrupted/.test(it.apiName)) continue;
+  const isCore = /^TFT_Item_[A-Za-z]+$/.test(it.apiName) && !/Corrupted/.test(it.apiName);
+  const isEmblem = new RegExp(`^TFT${SET}_Item_[A-Za-z]+EmblemItem$`).test(it.apiName); // 세트 상징 (뒤집개/후라이팬 조합)
+  if (!isCore && !isEmblem) continue;
   if (it.composition?.length !== 2 || !it.composition.every((c) => COMPONENT[c])) continue;
   const recipe = it.composition.map((c) => COMPONENT[c]).sort();
   const key = recipe.join("+");
   if (seenRecipe.has(key)) continue;
   seenRecipe.add(key);
-  items.push({ id: it.apiName.slice("TFT_Item_".length).toLowerCase(), name: it.name, recipe, img: asset(it.icon) });
+  const id = it.apiName.replace(/^TFT\d*_Item_/, "").replace(/EmblemItem$/, "emblem").toLowerCase();
+  items.push({ id, name: it.name, recipe, img: asset(it.icon) });
 }
 items.sort((a, b) => a.recipe.join().localeCompare(b.recipe.join()));
 
+// ---- 특성: apiName → 한글명 (metatft 덱 이름 변환용)
+const traits = Object.fromEntries(set.traits.map((t) => [t.apiName, t.name]));
+
+writeFileSync("lib/gen/traits.json", JSON.stringify(traits, null, 2) + "\n");
 writeFileSync("lib/gen/units.json", JSON.stringify(units, null, 2) + "\n");
 writeFileSync("lib/gen/items.json", JSON.stringify(items, null, 2) + "\n");
 writeFileSync("lib/gen/meta.json", JSON.stringify({ patch, set: SET, syncedAt: new Date().toISOString().slice(0, 10) }, null, 2) + "\n");
 console.log(`patch=${patch} set=${SET}: ${units.length} units, ${items.length} items`);
 
-// ---- 덱 데이터 검증: data.ts 안의 unitId/itemId가 전부 존재하는지
-const src = readFileSync("lib/data.ts", "utf8");
-const bad = [];
-for (const m of src.matchAll(/unitId: "([a-z0-9_]+)"/g)) if (!seenUnit.has(m[1])) bad.push("unit:" + m[1]);
-for (const m of src.matchAll(/itemId: "([a-z0-9_]+)"/g)) if (!items.some((i) => i.id === m[1])) bad.push("item:" + m[1]);
-if (bad.length) {
-  console.error("덱 데이터에 없는 id:", [...new Set(bad)].join(", "));
-  process.exit(1);
-}
