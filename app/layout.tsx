@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   keywords: ["롤토체스", "TFT", "전략적 팀 전투", "덱 추천", "메타 덱", `시즌 ${meta.set}`, "배치", "조합"],
   openGraph: { type: "website", locale: "ko_KR", siteName: "TFT PICK" },
   robots: { index: true, follow: true },
-  verification: { google: "fMgfI6BmyXa_cuEitR_fYBlITKiivCZuBTeZXcSy4_M" },
+  verification: { google: "OvNLHJXOThBroS7JJu1uc0Cb9xILGz1-RHIDC6Enz3c" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
