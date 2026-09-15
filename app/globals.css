@@ -27,6 +27,7 @@ body {
 /* 유닛 초상화 육각형 */
 .hex {
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  aspect-ratio: 0.866; /* 정육각형: 폭 = 높이 × cos30° — 높이(h-*)만 지정 */
 }
 
 /* 제목용 금색 그라데이션 */
@@ -36,6 +37,10 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+/* 아이템 조합식 툴팁 (hover) */
+.tip { opacity: 0; transform: translate(-50%, 4px); transition: opacity .15s, transform .15s; pointer-events: none; }
+.group:hover > .tip { opacity: 1; transform: translate(-50%, 0); }
 
 /* 패널: 얇은 금색 테두리 + 안쪽 광택 */
 .panel {

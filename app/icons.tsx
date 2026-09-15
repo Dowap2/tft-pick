@@ -21,14 +21,15 @@ export const TIER_COLOR: Record<string, string> = {
 };
 
 const SIZE = { sm: "size-8", md: "size-12", lg: "size-16" };
+const HEX_H = { sm: "h-8", md: "h-12", lg: "h-16" };
 
-// 육각형 초상화. 테두리는 바깥 span 배경(코스트색)이 p-0.5 만큼 보이는 방식.
+// 육각형 초상화. 테두리는 바깥 span 배경(코스트색)이 p-0.5 만큼 보이는 방식. 크기는 높이(h-*)로만 지정.
 // 강조하려면 className에 "bg-teal!" 처럼 !로 덮어쓰기 (ring은 clip-path에 잘림).
 export function UnitIcon({ id, size = "md", className = "" }: { id: string; size?: keyof typeof SIZE; className?: string }) {
   const u = unitById(id);
   return (
-    <span className={`hex inline-block shrink-0 p-0.5 ${SIZE[size]} ${COST_BG[u?.cost ?? 1]} ${className}`}>
-      <img src={u?.img} alt={u?.name ?? id} title={u?.name} className="hex size-full object-cover" />
+    <span className={`hex inline-block shrink-0 p-0.5 ${HEX_H[size]} ${COST_BG[u?.cost ?? 1]} ${className}`}>
+      <img src={u?.img} alt={u?.name ?? id} title={u?.name} className="hex h-full w-full object-cover" />
     </span>
   );
 }
@@ -36,16 +37,30 @@ export function UnitIcon({ id, size = "md", className = "" }: { id: string; size
 export function ItemIcon({ id, size = "sm", className = "" }: { id: string; size?: keyof typeof SIZE; className?: string }) {
   const it = itemById(id);
   const name = it?.name ?? componentById(id as never)?.name ?? id;
-  return (
+  const img = (
     <img
       src={it?.img ?? componentImg(id)}
       alt={name}
-      title={name}
+      title={it ? undefined : name}
       className={`${SIZE[size]} shrink-0 rounded border border-gold/40 ${className}`}
     />
   );
+  if (!it) return img;
+  // 완성템: hover 시 조합식 툴팁
+  return (
+    <span className="group relative inline-block shrink-0">
+      {img}
+      <span className="tip panel absolute bottom-full left-1/2 z-10 mb-1.5 flex items-center gap-1 whitespace-nowrap rounded bg-navy px-1.5 py-1 text-[11px] text-parchment">
+        <img src={componentImg(it.recipe[0])} alt="" className="size-5 rounded-sm" />
+        <span className="text-muted">+</span>
+        <img src={componentImg(it.recipe[1])} alt="" className="size-5 rounded-sm" />
+        <span className="ml-1">{name}</span>
+      </span>
+    </span>
+  );
 }
 
-export function TierBadge({ tier }: { tier: string }) {
-  return <span className={`rounded px-1.5 py-px text-[10px] font-bold ${TIER_COLOR[tier] ?? ""}`}>{tier}</span>;
+export function TierBadge({ tier, size = "sm" }: { tier: string; size?: "sm" | "lg" }) {
+  const cls = size === "lg" ? "rounded-md px-2 py-0.5 text-sm" : "rounded px-1.5 py-px text-[10px]";
+  return <span className={`inline-block align-middle font-bold ${cls} ${TIER_COLOR[tier] ?? ""}`}>{tier}</span>;
 }

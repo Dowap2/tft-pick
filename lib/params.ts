@@ -38,3 +38,10 @@ export function buildQuery(input: UserInput): string {
     p.set("units", input.units.map((u) => `${u.unitId}:${u.star}`).join(","));
   return p.toString();
 }
+
+/** 유닛 보유 토글: 있으면 빼고, 없으면 star로 추가 (덱 페이지에서 "산 것처럼" 보기) */
+export function toggleUnitQuery(input: UserInput, unitId: UnitId, star: 1 | 2 | 3 = 1): string {
+  const has = input.units.some((u) => u.unitId === unitId);
+  const units = has ? input.units.filter((u) => u.unitId !== unitId) : [...input.units, { unitId, star }];
+  return buildQuery({ ...input, units });
+}

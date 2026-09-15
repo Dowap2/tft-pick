@@ -127,7 +127,20 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     const c = unitById(uu.unitId)?.cost ?? 1;
     matchedWeight += SUPPORT_COST_WEIGHT[c] ?? 1;
   }
-  const supportScore = totalSupportWeight === 0 ? 0 : (matchedWeight / totalSupportWeight) * 15;
+  let supportScore = totalSupportWeight === 0 ? 0 : (matchedWeight / totalSupportWeight) * 15;
+
+  // 초반(4~7렙) 조합과의 일치율. 최종 조합엔 없는 초반 유닛(오른/자야 등)을 들고 있어도 인정.
+  const ownedIds = new Set(input.units.map((u) => u.unitId));
+  let earlyBest: { level: string; hit: number; total: number } | null = null;
+  for (const [lv, comp] of Object.entries(deck.levels ?? {})) {
+    if (Number(lv) > 7 || comp.units.length === 0) continue;
+    const hit = comp.units.filter((u) => ownedIds.has(u)).length;
+    if (!earlyBest || hit / comp.units.length > earlyBest.hit / earlyBest.total) earlyBest = { level: lv, hit, total: comp.units.length };
+  }
+  if (earlyBest && earlyBest.hit > 0) {
+    supportScore = Math.max(supportScore, (earlyBest.hit / earlyBest.total) * 15);
+    reasons.push({ kind: "good", text: `${earlyBest.level}렙 조합 ${earlyBest.hit}/${earlyBest.total} 보유 (초반 진입 좋음)` });
+  }
 
   if (matchedSupports.length > 0) {
     const names = matchedSupports.map((id) => unitById(id)?.name).filter(Boolean).join(", ");
@@ -139,7 +152,7 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
 
   // ---- 4) 메타 tiebreak (0~20, 접점 없으면 대폭 감쇄) ----
   const metaBase = Math.max(0, Math.min(20, ((4.5 - deck.avgPlacement) / 2) * 20));
-  const hasConnection = hasCarry || buildable.length > 0 || matchedSupports.length > 0;
+  const hasConnection = hasCarry || buildable.length > 0 || matchedSupports.length > 0 || (earlyBest?.hit ?? 0) > 0;
   const metaScore = hasAnyInput && !hasConnection ? metaBase * 0.15 : metaBase;
 
   // 티어/평균순위는 항상 표시

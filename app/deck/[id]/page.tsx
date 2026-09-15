@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { deckById, itemById, unitById } from "@/lib/data";
-import { parseUserInput, buildQuery } from "@/lib/params";
+import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
 import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
@@ -29,6 +29,9 @@ export default async function DeckDetailPage({
   const carryName = unitById(score.carryId)?.name ?? score.carryId;
   const carryUnit = unitById(score.carryId);
   const userUnitIds = new Set(input.units.map((u) => u.unitId));
+  // 유닛 클릭 → 보유 토글 (덱 목표 성으로 추가). URL만 바뀌고 점수/배치/레벨이 전부 다시 계산됨.
+  const toggleHref = (uid: string) =>
+    `/deck/${deck.id}?${toggleUnitQuery(input, uid, deck.coreUnits.find((u) => u.unitId === uid)?.star ?? 1)}`;
 
   // 유닛별 그룹: {unitId: [itemIds]}
   const itemsByUnit = deck.coreItems.reduce<Record<string, string[]>>((acc, ci) => {
@@ -47,9 +50,9 @@ export default async function DeckDetailPage({
         </Link>
         <div className="mt-2 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gold-light">{deck.name}</h1>
+            <h1 className="flex items-center gap-2 text-3xl font-bold text-gold-light"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h1>
             <div className="mt-1 text-sm text-muted/80">
-              {trans.emoji} {trans.text} · <TierBadge tier={deck.tierLabel} /> 평균순위 {deck.avgPlacement.toFixed(2)}
+              {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
               {deck.games && <span> · {deck.games.toLocaleString()}판</span>}
             </div>
             {deck.playstyle && (
@@ -120,13 +123,15 @@ export default async function DeckDetailPage({
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {comp.units.map((uid) => (
-                    <UnitIcon key={uid} id={uid} size="sm" className={`size-9! ${userUnitIds.has(uid) ? "" : "opacity-45"}`} />
+                    <Link key={uid} href={toggleHref(uid)} replace scroll={false} title={unitById(uid)?.name}>
+                      <UnitIcon id={uid} size="sm" className={`h-9! ${userUnitIds.has(uid) ? "" : "opacity-45"}`} />
+                    </Link>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <p className="mt-1 text-[10px] text-muted/60">각 레벨에서 가장 많이 쓰인 조합 · 흐림 = 미보유</p>
+          <p className="mt-1 text-[10px] text-muted/60">각 레벨에서 가장 많이 쓰인 조합 · 흐림 = 미보유 · 클릭하면 보유 토글</p>
         </section>
       )}
 
@@ -134,22 +139,25 @@ export default async function DeckDetailPage({
       <section className="mb-6">
         <h2 className="mb-3 text-lg font-semibold">최종 배치</h2>
         <div className="panel overflow-x-auto rounded-lg bg-panel/70 p-4">
-          <Board deck={deck} carryId={score.carryId} ownedIds={userUnitIds} />
+          <Board deck={deck} carryId={score.carryId} ownedIds={userUnitIds} hrefFor={toggleHref} />
         </div>
       </section>
 
       {/* 필수 유닛 */}
       <section className="mb-6">
-        <h2 className="mb-3 text-lg font-semibold">필수 유닛</h2>
+        <h2 className="mb-3 text-lg font-semibold">필수 유닛 <span className="text-xs font-normal text-muted/70">클릭하면 보유 토글</span></h2>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {deck.coreUnits.map((cu) => {
             const meta = unitById(cu.unitId);
             const has = userUnitIds.has(cu.unitId);
             const isCarry = cu.unitId === score.carryId;
             return (
-              <div
+              <Link
                 key={cu.unitId}
-                className={`rounded-lg border p-3 ${
+                href={toggleHref(cu.unitId)}
+                replace
+                scroll={false}
+                className={`block rounded-lg border p-3 transition hover:border-gold/60 ${
                   has ? "border-teal/60 bg-teal/10" : "border-gold/25 bg-panel"
                 } ${isCarry ? "border-teal/60!" : ""}`}
               >
@@ -166,7 +174,7 @@ export default async function DeckDetailPage({
                   <span className={COST_TEXT[meta?.cost ?? 1]}>{meta?.cost}코</span> · {meta?.traits.join(" / ")}
                 </div>
                 {has && <div className="mt-1 text-xs text-teal">✓ 보유</div>}
-              </div>
+              </Link>
             );
           })}
         </div>

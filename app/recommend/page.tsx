@@ -49,7 +49,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
             ) : (
               input.units.map((u) => (
                 <span key={u.unitId} className="mr-2 inline-flex items-center gap-1 rounded bg-gold-dark/60 py-0.5 pl-0.5 pr-2 align-middle">
-                  <UnitIcon id={u.unitId} className="size-5" /> {unitById(u.unitId)?.name} {"★".repeat(u.star)}
+                  <UnitIcon id={u.unitId} className="h-5" /> {unitById(u.unitId)?.name} {"★".repeat(u.star)}
                 </span>
               ))
             )}
@@ -73,12 +73,12 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
                   <div className="text-xs text-muted/80">{MEDALS[idx]} 추천 {idx + 1}</div>
-                  <h3 className="mt-1 text-xl font-bold">{deck.name}</h3>
+                  <h3 className="mt-1 flex items-center gap-2 text-xl font-bold"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h3>
                   <div className="mt-1 text-xs text-muted/80">
-                    {trans.emoji} {trans.text} · <TierBadge tier={deck.tierLabel} /> 평균순위 {deck.avgPlacement.toFixed(2)}
+                    {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
                   </div>
                   <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-panel-2 py-0.5 pl-0.5 pr-2 text-xs">
-                    <UnitIcon id={score.carryId} className="size-6" />
+                    <UnitIcon id={score.carryId} className="h-6" />
                     <span className="text-muted/80">메인 캐리</span>
                     <span className={score.hasCarry ? "font-semibold text-teal" : "font-semibold text-parchment"}>
                       {carryName}
@@ -116,7 +116,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                   <span className="mr-1 text-gold-light">다음 목표 {next.level}렙 →</span>
                   {next.buy.map((uid) => (
                     <span key={uid} className="inline-flex items-center gap-1">
-                      <UnitIcon id={uid} className="size-6" />
+                      <UnitIcon id={uid} className="h-6" />
                       <span className={COST_TEXT[unitById(uid)?.cost ?? 1]}>{unitById(uid)?.name}</span>
                     </span>
                   ))}
@@ -126,7 +126,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted sm:grid-cols-4">
                 <MetricRow label="캐리" score={score.carryScore} max={35} />
                 <MetricRow label="캐리템" score={score.carryItemScore} max={30} />
-                <MetricRow label="서포트" score={score.supportScore} max={15} />
+                <MetricRow label="조합" score={score.supportScore} max={15} />
                 <MetricRow label="메타" score={score.metaScore} max={20} />
               </div>
 

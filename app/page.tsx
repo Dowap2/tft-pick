@@ -161,7 +161,7 @@ export default function Home() {
                   key={u.unitId}
                   className="flex items-center gap-2 rounded-full bg-gold-dark/90 py-1 pl-1 pr-3 text-sm"
                 >
-                  <UnitIcon id={u.unitId} className="size-7" />
+                  <UnitIcon id={u.unitId} className="h-7" />
                   <span>{meta?.name}</span>
                   <div className="flex gap-0.5">
                     {[1, 2, 3].map((s) => (
