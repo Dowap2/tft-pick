@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { deckById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
@@ -8,6 +9,20 @@ import { Board } from "@/app/board";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 type Params = Promise<{ id: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const deck = deckById((await params).id);
+  if (!deck) return { title: "덱을 찾을 수 없음" };
+  const units = deck.coreUnits.map((u) => unitById(u.unitId)?.name).filter(Boolean).join(", ");
+  const carry = unitById(deck.carryId ?? "")?.name;
+  const description = `${deck.tierLabel}티어 · 평균 ${deck.avgPlacement.toFixed(2)}등${carry ? ` · 메인 캐리 ${carry}` : ""}. 최종 조합: ${units}. 레벨별 조합과 아이템, 배치도까지.`;
+  return {
+    title: `${deck.name} 덱 조합·아이템·배치`,
+    description,
+    alternates: { canonical: `/deck/${deck.id}` }, // 보유 유닛 쿼리는 색인에서 하나로 합침
+    openGraph: { title: `${deck.name} 덱 | TFT PICK`, description },
+  };
+}
 
 export default async function DeckDetailPage({
   params,

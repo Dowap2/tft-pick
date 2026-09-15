@@ -6,6 +6,11 @@ import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
+export const metadata = {
+  title: "추천 결과",
+  robots: { index: false, follow: true }, // 입력마다 달라지는 페이지라 색인 제외
+};
+
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function RecommendPage({ searchParams }: { searchParams: SP }) {
