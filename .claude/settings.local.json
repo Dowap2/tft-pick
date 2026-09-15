@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm --version)",
+      "WebFetch(domain:tactics.tools)",
+      "WebFetch(domain:emblemcomp.gg)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --use-npm --yes --no-eslint --turbopack)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"http://localhost:3000/recommend?items=bf,bow,tear&units=ahri:2,morgana:1,pebbles:2\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"http://localhost:3000/deck/elderwood-ezreal?items=bf,bow,tear&units=ezreal:2,kennen:1\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=bf,bow,tear&units=ahri:2,morgana:2,pebbles:2\")",
+      "WebFetch(domain:lolchess.gg)",
+      "WebFetch(domain:op.gg)",
+      "WebFetch(domain:tftacademy.com)",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=bf,bf,bow&units=draven:2,maokai:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=rod,tear,gloves&units=pebbles:3,krug:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=rod,tear,gloves&units=pebbles:3,krug:2,mama_beak:2\")",
+      "Bash(grep -oE \"추천 [123].{0,60}\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=bf,bf,bow&units=draven:2,maokai:2,ezreal:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=rod,rod,gloves&units=cassiopeia:2,rammus:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=vest,vest,cloak&units=sett:2,ahri:2\")",
+      "Skill(update-config)",
+      "Bash(python3 *)",
+      "Bash(curl -s \"http://localhost:3000/recommend?units=ahri:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?units=sivir:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?items=bf,bf,bow\")",
+      "Bash(curl -s \"http://localhost:3000/recommend?units=pebbles:2\")",
+      "Bash(curl -s \"http://localhost:3000/recommend\")"
+    ]
+  }
+}
