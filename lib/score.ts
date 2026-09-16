@@ -70,6 +70,10 @@ const CARRY_COST_WEIGHT: Record<number, number> = { 1: 20, 2: 24, 3: 28, 4: 32, 
 /** 코스트별 서포트 가중치 */
 const SUPPORT_COST_WEIGHT: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7 };
 
+/** 성 가중치. 2성 = 1성 3개 값어치지만 점수는 1.5배, 3성 2배로 완만하게 */
+const STAR_MULT: Record<number, number> = { 1: 1, 2: 1.5, 3: 2 };
+const starName = (id: UnitId, star: number) => `${unitById(id)?.name ?? id}${star > 1 ? "★".repeat(star) : ""}`;
+
 export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
   const reasons: Reason[] = [];
   const hasAnyInput = input.components.length > 0 || input.units.length > 0;
@@ -86,9 +90,11 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
   if (userCarry && carry) {
     const base = CARRY_COST_WEIGHT[carry.cost] ?? 20;
     const targetStar = carryTarget?.star ?? 2;
-    const starRatio = Math.min(userCarry.star / targetStar, 1);
+    const starRatio = Math.min(STAR_MULT[userCarry.star] / STAR_MULT[targetStar], 1.5); // 목표 초과(3성 등)는 최대 1.5배
     carryScore = base * (0.5 + 0.5 * starRatio);
-    if (starRatio >= 1) {
+    if (userCarry.star > targetStar) {
+      reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} ${"★".repeat(userCarry.star)} 확보 (목표 ${"★".repeat(targetStar)} 초과!)` });
+    } else if (starRatio >= 1) {
       reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} ${"★".repeat(userCarry.star)} 확보 (목표 달성)` });
     } else {
       reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} 보유 (목표 ${"★".repeat(targetStar)}, 현재 ${"★".repeat(userCarry.star)})` });
@@ -117,33 +123,38 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     const c = unitById(u.unitId)?.cost ?? 1;
     return s + (SUPPORT_COST_WEIGHT[c] ?? 1);
   }, 0);
-  const matchedSupports: UnitId[] = [];
+  const matchedSupports: UserUnit[] = [];
   let matchedWeight = 0;
   for (const uu of input.units) {
     if (uu.unitId === carryId) continue;
     const isSupport = supportUnits.find((u) => u.unitId === uu.unitId);
     if (!isSupport) continue;
-    matchedSupports.push(uu.unitId);
+    matchedSupports.push(uu);
     const c = unitById(uu.unitId)?.cost ?? 1;
-    matchedWeight += SUPPORT_COST_WEIGHT[c] ?? 1;
+    // 덱 목표 성 대비 내 성. 목표 2성인데 3성이면 1.33배, 1성이면 0.67배
+    matchedWeight += (SUPPORT_COST_WEIGHT[c] ?? 1) * (STAR_MULT[uu.star] / STAR_MULT[isSupport.star]);
   }
-  let supportScore = totalSupportWeight === 0 ? 0 : (matchedWeight / totalSupportWeight) * 15;
+  let supportScore = totalSupportWeight === 0 ? 0 : Math.min(matchedWeight / totalSupportWeight, 1.25) * 15;
 
   // 초반(4~7렙) 조합과의 일치율. 최종 조합엔 없는 초반 유닛(오른/자야 등)을 들고 있어도 인정.
-  const ownedIds = new Set(input.units.map((u) => u.unitId));
-  let earlyBest: { level: string; hit: number; total: number } | null = null;
+  // 초반엔 2성 여부가 핵심이라 성 가중치(1/1.5/2)로 카운트. 1성 4개 = 4/4, 2성 4개 = 6/4 → 1.25 캡
+  const starOf = new Map(input.units.map((u) => [u.unitId, u.star]));
+  let earlyBest: { level: string; hit: number; weighted: number; total: number } | null = null;
   for (const [lv, comp] of Object.entries(deck.levels ?? {})) {
     if (Number(lv) > 7 || comp.units.length === 0) continue;
-    const hit = comp.units.filter((u) => ownedIds.has(u)).length;
-    if (!earlyBest || hit / comp.units.length > earlyBest.hit / earlyBest.total) earlyBest = { level: lv, hit, total: comp.units.length };
+    const owned = comp.units.filter((u) => starOf.has(u));
+    const weighted = owned.reduce((s, u) => s + STAR_MULT[starOf.get(u)!], 0);
+    if (!earlyBest || weighted / comp.units.length > earlyBest.weighted / earlyBest.total)
+      earlyBest = { level: lv, hit: owned.length, weighted, total: comp.units.length };
   }
   if (earlyBest && earlyBest.hit > 0) {
-    supportScore = Math.max(supportScore, (earlyBest.hit / earlyBest.total) * 15);
-    reasons.push({ kind: "good", text: `${earlyBest.level}렙 조합 ${earlyBest.hit}/${earlyBest.total} 보유 (초반 진입 좋음)` });
+    supportScore = Math.max(supportScore, Math.min(earlyBest.weighted / earlyBest.total, 1.25) * 15);
+    const upgraded = earlyBest.weighted > earlyBest.hit ? ", 업그레이드 반영" : "";
+    reasons.push({ kind: "good", text: `${earlyBest.level}렙 조합 ${earlyBest.hit}/${earlyBest.total} 보유 (초반 진입 좋음${upgraded})` });
   }
 
   if (matchedSupports.length > 0) {
-    const names = matchedSupports.map((id) => unitById(id)?.name).filter(Boolean).join(", ");
+    const names = matchedSupports.map((u) => starName(u.unitId, u.star)).join(", ");
     reasons.push({
       kind: "good",
       text: `핵심 서포트 유닛 ${matchedSupports.length}개 보유 (${names})`,
@@ -179,7 +190,7 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     total = ((4.5 - deck.avgPlacement) / 2) * 100;
     total = Math.max(0, Math.min(100, total));
   } else {
-    total = carryScore + carryItemScore + supportScore + metaScore;
+    total = Math.min(100, carryScore + carryItemScore + supportScore + metaScore);
   }
 
   return {
@@ -193,7 +204,7 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     carryItems,
     buildableCarryItems: buildable,
     hasCarry,
-    matchedSupports,
+    matchedSupports: matchedSupports.map((u) => u.unitId),
     missingUnits,
   };
 }
@@ -206,7 +217,7 @@ export function recommend(input: UserInput): Array<{ deck: Deck; score: ScoreBre
 
 /** 0~max → 별 5개 표시 */
 export const toStars = (score: number, max: number) => {
-  const r = Math.round((score / max) * 5);
+  const r = Math.min(5, Math.round((score / max) * 5));
   return "★".repeat(r) + "☆".repeat(5 - r);
 };
 
