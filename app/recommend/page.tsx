@@ -2,7 +2,7 @@ import Link from "next/link";
 import { componentById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
 import { nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
-import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
+import { COST_TEXT, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -84,9 +84,14 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                 <div>
                   <div className="text-xs text-muted/80">{MEDALS[idx]} 추천 {idx + 1}</div>
                   <h3 className="mt-1 flex items-center gap-2 text-xl font-bold"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h3>
-                  <div className="mt-1 text-xs text-muted/80">
-                    {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted/80">
+                    <span>{trans.emoji} {trans.text}</span>
+                    <DeckTags deck={deck} />
+                    <span>평균 <span className="num text-text">{deck.avgPlacement.toFixed(2)}</span></span>
+                    {deck.top4Rate != null && <span>Top4 <span className="num text-pos">{(deck.top4Rate * 100).toFixed(0)}%</span></span>}
+                    {deck.winRate != null && <span>1등 <span className="num text-text">{(deck.winRate * 100).toFixed(0)}%</span></span>}
                   </div>
+                  <TraitRow unitIds={deck.coreUnits.map((u) => u.unitId)} className="mt-1.5" />
                   <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-surface-2 py-0.5 pl-0.5 pr-2 text-xs">
                     <UnitIcon id={score.carryId} className="h-6" />
                     <span className="text-muted/80">메인 캐리</span>

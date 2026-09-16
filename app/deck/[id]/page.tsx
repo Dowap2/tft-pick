@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { deckById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
 import { scoreDeck, transitionLabel } from "@/lib/score";
-import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
+import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
 import { LevelComps } from "@/app/levels";
 
@@ -67,10 +67,12 @@ export default async function DeckDetailPage({
         <div className="mt-2 flex items-start justify-between gap-4">
           <div>
             <h1 className="flex items-center gap-2 text-3xl font-bold text-text"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h1>
-            <div className="mt-1 text-sm text-muted/80">
-              {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
-              {deck.games && <span> · {deck.games.toLocaleString()}판</span>}
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted/80">
+              <span>{trans.emoji} {trans.text}</span>
+              <DeckTags deck={deck} />
+              {deck.games && <span className="text-xs">{deck.games.toLocaleString()}판</span>}
             </div>
+            <TraitRow unitIds={deck.coreUnits.map((u) => u.unitId)} className="mt-2" />
             {deck.playstyle && (
               <p className="mt-2 text-sm text-muted">{deck.playstyle}</p>
             )}
@@ -83,6 +85,10 @@ export default async function DeckDetailPage({
           </div>
         </div>
       </header>
+
+      <section className="panel mb-6 rounded-lg bg-surface px-4 py-3">
+        <DeckStats deck={deck} />
+      </section>
 
       {/* 메인 캐리 */}
       <section className="mb-6 panel rounded-lg border-line! bg-accent/5 p-4">
@@ -198,6 +204,11 @@ export default async function DeckDetailPage({
                   {unitById(uid)?.name}
                   {isCarry && <span className="text-[10px] text-accent">★캐리</span>}
                 </div>
+                {deck.altItems?.[uid]?.length ? (
+                  <div className="mb-2 flex items-center gap-1 text-[10px] text-muted/70">
+                    대체 {deck.altItems[uid].map((iid, i) => <ItemIcon key={i} id={iid} className="size-5! opacity-70" />)}
+                  </div>
+                ) : null}
                 <div className="flex flex-wrap gap-2">
                   {itemIds.map((iid, i) => {
                     const it = itemById(iid);

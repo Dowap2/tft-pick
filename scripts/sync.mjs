@@ -50,12 +50,17 @@ for (const it of data.items) {
 }
 items.sort((a, b) => a.recipe.join().localeCompare(b.recipe.join()));
 
-// ---- 특성: apiName → 한글명 (metatft 덱 이름 변환용)
-const traits = Object.fromEntries(set.traits.map((t) => [t.apiName, t.name]));
+// ---- 특성: apiName → { name, img, breakpoints(활성 인원), styles } — 덱 이름 변환 + 시너지 아이콘/단계 표시용
+const traits = Object.fromEntries(set.traits.map((t) => [t.apiName, {
+  name: t.name,
+  img: asset(t.icon),
+  breakpoints: t.effects.map((e) => e.minUnits).filter((n) => n != null).sort((a, b) => a - b),
+}]));
 
 writeFileSync("lib/gen/traits.json", JSON.stringify(traits, null, 2) + "\n");
 writeFileSync("lib/gen/units.json", JSON.stringify(units, null, 2) + "\n");
 writeFileSync("lib/gen/items.json", JSON.stringify(items, null, 2) + "\n");
-writeFileSync("lib/gen/meta.json", JSON.stringify({ patch, set: SET, syncedAt: new Date().toISOString().slice(0, 10) }, null, 2) + "\n");
+const prevMeta = (() => { try { return JSON.parse(readFileSync("lib/gen/meta.json", "utf8")); } catch { return {}; } })();
+writeFileSync("lib/gen/meta.json", JSON.stringify({ ...prevMeta, patch, set: SET, syncedAt: new Date().toISOString().slice(0, 10) }, null, 2) + "\n");
 console.log(`patch=${patch} set=${SET}: ${units.length} units, ${items.length} items`);
 

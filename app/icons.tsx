@@ -1,4 +1,4 @@
-import { itemById, unitById, componentById } from "@/lib/data";
+import { itemById, unitById, componentById, activeTraits, type Deck } from "@/lib/data";
 import meta from "@/lib/gen/meta.json";
 
 // 유닛/완성템 이미지는 lib/gen/*.json (scripts/sync.mjs). 재료 9종만 여기서 고정.
@@ -63,4 +63,59 @@ export function ItemIcon({ id, size = "sm", className = "" }: { id: string; size
 export function TierBadge({ tier, size = "sm" }: { tier: string; size?: "sm" | "lg" }) {
   const cls = size === "lg" ? "rounded-md px-2 py-0.5 text-sm" : "rounded px-1.5 py-px text-[10px]";
   return <span className={`num inline-block align-middle ${cls} ${TIER_COLOR[tier] ?? ""}`}>{tier}</span>;
+}
+
+// 시너지 아이콘 줄: 단계별 색(동/은/금/프리즘 느낌을 절제해서)
+const TRAIT_LEVEL = ["", "bg-[#7a5a3a]", "bg-[#6b7280]", "bg-[#b08a2e]", "bg-accent-2", "bg-accent"];
+export function TraitRow({ unitIds, className = "" }: { unitIds: string[]; className?: string }) {
+  const traits = activeTraits(unitIds);
+  if (traits.length === 0) return null;
+  return (
+    <div className={`flex flex-wrap gap-1 ${className}`}>
+      {traits.map((t) => (
+        <span key={t.name} title={`${t.name} ${t.count}`} className={`flex items-center gap-1 rounded px-1 py-px text-[10px] text-white ${TRAIT_LEVEL[Math.min(t.level, 5)]}`}>
+          {t.img && <img src={t.img} alt="" className="size-3.5 brightness-0 invert" />}
+          <span className="num">{t.count}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** Fast 8 / Fast 9 / 리롤(lvl N) / 난이도 태그 */
+export function DeckTags({ deck }: { deck: Deck }) {
+  const lev = deck.levelling ?? "";
+  const reroll = /^lvl/i.test(lev);
+  const DIFF: Record<string, string> = { 쉬움: "text-pos border-pos/40", 보통: "text-muted border-line", 어려움: "text-warn border-warn/40" };
+  return (
+    <span className="inline-flex gap-1 align-middle">
+      {lev && (
+        <span className={`num rounded border px-1.5 py-px text-[10px] uppercase ${reroll ? "border-accent-2/50 text-accent-2" : "border-accent/50 text-accent"}`}>
+          {reroll ? `${lev.replace(/lvl\s*/i, "")}렙 리롤` : lev}
+        </span>
+      )}
+      {deck.difficulty && <span className={`rounded border px-1.5 py-px text-[10px] ${DIFF[deck.difficulty]}`}>{deck.difficulty}</span>}
+    </span>
+  );
+}
+
+/** 통계 4종 */
+export function DeckStats({ deck, compact = false }: { deck: Deck; compact?: boolean }) {
+  const pct = (v?: number) => (v == null ? "-" : `${(v * 100).toFixed(1)}%`);
+  const cells: [string, string, string][] = [
+    ["평균 등수", deck.avgPlacement.toFixed(2), "text-text"],
+    ["Top4", pct(deck.top4Rate), "text-pos"],
+    ["1등", pct(deck.winRate), "text-text"],
+    ["픽률", pct(deck.pickRate), "text-muted"],
+  ];
+  return (
+    <div className={`grid grid-cols-4 ${compact ? "gap-3" : "gap-4"}`}>
+      {cells.map(([label, v, color]) => (
+        <div key={label} className="text-right">
+          <div className="text-[10px] uppercase tracking-wide text-muted">{label}</div>
+          <div className={`num leading-none ${compact ? "text-base" : "text-xl"} ${color}`}>{v}</div>
+        </div>
+      ))}
+    </div>
+  );
 }

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { itemById, unitById, type Deck } from "@/lib/data";
-import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
+import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { LevelComps } from "@/app/levels";
 
 const TIERS = ["전체", "OP", "S", "A", "B", "C"] as const;
@@ -77,10 +77,11 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                     <TierBadge tier={deck.tierLabel} size="lg" />
                     <h2 className="truncate text-lg font-semibold">{deck.name}</h2>
                   </div>
-                  <div className="text-xs text-muted">
-                    {carry && <>캐리 <span className={`font-medium ${COST_TEXT[carry.cost]}`}>{carry.name}</span> · </>}
-                    {Object.keys(deck.levels ?? {}).includes("9") && (deck.levels?.["9"]?.count ?? 0) > (deck.levels?.["8"]?.count ?? 0) ? "Fast 9" : "8렙 완성"}
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+                    <DeckTags deck={deck} />
+                    {carry && <>캐리 <span className={`font-medium ${COST_TEXT[carry.cost]}`}>{carry.name}</span></>}
                   </div>
+                  <TraitRow unitIds={deck.coreUnits.map((u) => u.unitId)} className="mt-1" />
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {deck.coreUnits.map((cu) => {
                       const u = unitById(cu.unitId);
@@ -88,21 +89,15 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                         <div key={cu.unitId} className="flex w-11 flex-col items-center">
                           <UnitIcon id={cu.unitId} size="md" className={`h-11! ${cu.unitId === deck.carryId ? "bg-accent!" : ""}`} />
                           <span className="mt-0.5 w-12 truncate text-center text-[10px] leading-3 text-muted">{u?.name}</span>
-                          <span className="text-[9px] leading-3 text-warn">{"★".repeat(cu.star)}</span>
+                          <span className={`text-[9px] leading-3 ${cu.star === 3 ? "num text-[11px] text-warn" : "text-warn/80"}`}>{"★".repeat(cu.star)}</span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
-                <div className="order-last flex basis-full items-end justify-between border-t border-line pt-3 sm:order-none sm:basis-auto sm:flex-col sm:items-end sm:gap-2 sm:border-0 sm:pt-0 sm:text-right">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wide text-muted">평균 등수</div>
-                    <div className="num text-2xl leading-none text-text">{deck.avgPlacement.toFixed(2)}</div>
-                  </div>
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wide text-muted">게임</div>
-                    <div className="num text-lg leading-none text-muted">{fmt(deck.games)}</div>
-                  </div>
+                <div className="order-last basis-full border-t border-line pt-3 sm:order-none sm:basis-auto sm:border-0 sm:pt-0">
+                  <DeckStats deck={deck} />
+                  <div className="mt-1 text-right text-[10px] text-muted/70">게임 <span className="num">{fmt(deck.games)}</span></div>
                 </div>
                 <span className="hidden self-center text-muted transition-transform duration-150 group-open:rotate-180 sm:inline" aria-hidden>▾</span>
               </summary>
@@ -123,7 +118,15 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                             {unitById(uid)?.name}
                             {uid === deck.carryId && <span className="ml-1 text-[10px] text-accent">CARRY</span>}
                           </div>
-                          <div className="mt-1 flex gap-1">{itemIds.map((iid, i) => <ItemIcon key={i} id={iid} />)}</div>
+                          <div className="mt-1 flex items-center gap-1">
+                            {itemIds.map((iid, i) => <ItemIcon key={i} id={iid} />)}
+                            {deck.altItems?.[uid]?.length ? (
+                              <>
+                                <span className="mx-1 text-[10px] text-muted/60">대체</span>
+                                {deck.altItems[uid].map((iid, i) => <ItemIcon key={`a${i}`} id={iid} className="size-6! opacity-70" />)}
+                              </>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
                     ))}

@@ -1,38 +1,307 @@
 {
-  "DA_18_Elderwood": "나무정령",
-  "DA_18_LuxUniqueTrait": "화신",
-  "DA_18_Slayer": "약탈자",
-  "DA_DravenUniqueTrait18": "현상금 추적자",
-  "DA_18_Solar": "햇빛",
-  "DA_18_Sprykin": "날렵이",
-  "DA_18_Adaptor": "적응가",
-  "DA_18_Coven": "악의 여단",
-  "DA_18_Eclipse": "일월식",
-  "DA_18_Hunter": "사냥꾼",
-  "DA_18_Maokai_UniqueTrait": "고목",
-  "DA_18_Battlemage": "거석",
-  "DA_Primal18": "원시",
-  "DA_18_Greenfather": "자연의 아버지",
-  "DA_18_Invoker": "기원자",
-  "DA_18_Rapidfire": "속사포",
-  "DA_Juggernaut18": "전쟁기계",
-  "DA_18_Inferno": "지옥불",
-  "DA_AluneUniqueTrait18": "조율",
-  "DA_18_Rival": "경쟁자",
-  "DA_18_Vanguard": "선봉대",
-  "DA_18_Brawler": "싸움꾼",
-  "DA_18_Blackthorn": "검은 가시",
-  "DA_18_Executioner": "처형자",
-  "DA_18_ApexPredator": "최상위 포식자",
-  "DA_Riftbeast18": "협곡야수",
-  "DA_18_Caustic": "부식",
-  "DA_18_Fae": "요정",
-  "DA_18_Lunar": "달빛",
-  "DA_18_Defender": "엄호대",
-  "DA_18_Spellweaver": "주문술사",
-  "DA_18_ZyraUniqueTrait": "가시의 여인",
-  "DA_FloraFatalis18": "치명적인 꽃",
-  "DA_18_Summoner": "소환사",
-  "DA_18_Blossom": "개화",
-  "DA_Emerald18": "에메랄드 성위"
+  "DA_18_Elderwood": {
+    "name": "나무정령",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_elderwood.png",
+    "breakpoints": [
+      3,
+      5,
+      7,
+      9,
+      11
+    ]
+  },
+  "DA_18_LuxUniqueTrait": {
+    "name": "화신",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_avatar.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Slayer": {
+    "name": "약탈자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_ravager.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_DravenUniqueTrait18": {
+    "name": "현상금 추적자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_bountyseeker.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Solar": {
+    "name": "햇빛",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_solar.png",
+    "breakpoints": [
+      3
+    ]
+  },
+  "DA_18_Sprykin": {
+    "name": "날렵이",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_sprykin.png",
+    "breakpoints": [
+      3,
+      5,
+      7
+    ]
+  },
+  "DA_18_Adaptor": {
+    "name": "적응가",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_adaptor.png",
+    "breakpoints": [
+      2,
+      3,
+      4
+    ]
+  },
+  "DA_18_Coven": {
+    "name": "악의 여단",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_coven.png",
+    "breakpoints": [
+      3,
+      4,
+      5,
+      7
+    ]
+  },
+  "DA_18_Eclipse": {
+    "name": "일월식",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_eclipse.png",
+    "breakpoints": []
+  },
+  "DA_18_Hunter": {
+    "name": "사냥꾼",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_hunter.png",
+    "breakpoints": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "DA_18_Maokai_UniqueTrait": {
+    "name": "고목",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_oldgrowth.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Battlemage": {
+    "name": "거석",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_monolith.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_Primal18": {
+    "name": "원시",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_primal.png",
+    "breakpoints": [
+      2,
+      4
+    ]
+  },
+  "DA_18_Greenfather": {
+    "name": "자연의 아버지",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_greenfather.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Invoker": {
+    "name": "기원자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_invoker.png",
+    "breakpoints": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "DA_18_Rapidfire": {
+    "name": "속사포",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_rapidfire.png",
+    "breakpoints": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "DA_Juggernaut18": {
+    "name": "전쟁기계",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_juggernaut.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_Inferno": {
+    "name": "지옥불",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_inferno.png",
+    "breakpoints": [
+      2,
+      3,
+      5,
+      7
+    ]
+  },
+  "DA_AluneUniqueTrait18": {
+    "name": "조율",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_attuned.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Rival": {
+    "name": "경쟁자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_rival.png",
+    "breakpoints": [
+      1,
+      1,
+      2
+    ]
+  },
+  "DA_18_Vanguard": {
+    "name": "선봉대",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_vanguard.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_Brawler": {
+    "name": "싸움꾼",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_brawler.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_Blackthorn": {
+    "name": "검은 가시",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_oldgod.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_Executioner": {
+    "name": "처형자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_executioner.png",
+    "breakpoints": [
+      2,
+      3,
+      4
+    ]
+  },
+  "DA_18_ApexPredator": {
+    "name": "최상위 포식자",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_apexpredator.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_Riftbeast18": {
+    "name": "협곡야수",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_riftbeast.png",
+    "breakpoints": [
+      3,
+      5,
+      7,
+      10
+    ]
+  },
+  "DA_18_Caustic": {
+    "name": "부식",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_caustic.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_18_Fae": {
+    "name": "요정",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_fae.png",
+    "breakpoints": [
+      2,
+      4
+    ]
+  },
+  "DA_18_Lunar": {
+    "name": "달빛",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_lunar.png",
+    "breakpoints": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "DA_18_Defender": {
+    "name": "엄호대",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_defender.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_Spellweaver": {
+    "name": "주문술사",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_spellweaver.png",
+    "breakpoints": [
+      2,
+      4,
+      6
+    ]
+  },
+  "DA_18_ZyraUniqueTrait": {
+    "name": "가시의 여인",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_zyraorigin.png",
+    "breakpoints": [
+      1
+    ]
+  },
+  "DA_FloraFatalis18": {
+    "name": "치명적인 꽃",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_florafatalis.png",
+    "breakpoints": [
+      1,
+      2
+    ]
+  },
+  "DA_18_Summoner": {
+    "name": "소환사",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_summoner.png",
+    "breakpoints": [
+      2,
+      3
+    ]
+  },
+  "DA_18_Blossom": {
+    "name": "개화",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_blossom.png",
+    "breakpoints": [
+      3,
+      5,
+      7,
+      9,
+      11
+    ]
+  },
+  "DA_Emerald18": {
+    "name": "에메랄드 성위",
+    "img": "https://raw.communitydragon.org/latest/game/assets/ux/traiticons/trait_icon_18_emeraldaspect.png",
+    "breakpoints": [
+      1
+    ]
+  }
 }

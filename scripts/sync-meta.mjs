@@ -16,7 +16,7 @@ const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 
 const units = readJson("lib/gen/units.json");
 const items = readJson("lib/gen/items.json");
-const traits = readJson("lib/gen/traits.json");
+const traits = Object.fromEntries(Object.entries(readJson("lib/gen/traits.json")).map(([k, v]) => [k, v.name]));
 const unitByApi = Object.fromEntries(units.map((u) => [u.apiName, u]));
 const itemIds = new Set(items.map((i) => i.id));
 
@@ -43,6 +43,12 @@ const cellToPos = (cell) => { const n = Number(cell.slice(5)) - 1; return [3 - M
 
 const { cluster_info: ci } = await get("latest_cluster_info");
 const builds = (await get("comp_builds")).results;
+const compsData = (await get("comps_data")).results.data.cluster_details;   // levelling, difficulty, 3성 목표, 아이템 우선순위
+const compsStats = (await get("comps_stats")).results;                     // 등수 분포 → 1등률/Top4/픽률
+const totalBoards = compsStats.find((s) => s.cluster === "")?.places?.[0] ?? 0;
+const statsOf = Object.fromEntries(compsStats.filter((s) => s.cluster).map((s) => [s.cluster, s]));
+// metatft 기준: difficulty < -0.05 Easy, > 0.07 또는 Fast 9 Hard
+const difficultyOf = (diff, lev) => (diff < -0.05 ? "쉬움" : diff > 0.07 || lev === "Fast 9" ? "어려움" : "보통");
 const clusters = ci.cluster_details.clusters
   .map((c) => ({ ...c, avg: builds[c.Cluster]?.overall?.avg, games: builds[c.Cluster]?.overall?.count }))
   .filter((c) => c.avg && c.avg < MAX_AVG)
@@ -96,13 +102,44 @@ for (const c of clusters) {
   const named = new Set(c.name.filter((p) => p.type === "unit").map((p) => unitByApi[p.name]?.id));
   const carryId = [...seenUnit].find((id) => named.has(id)) ?? [...named].find((id) => id && coreUnits.some((u) => u.unitId === id)) ?? [...seenUnit][0] ?? coreUnits[0].unitId;
 
+  // 대체 아이템: 유닛별 2~3위 빌드에만 나오는 아이템
+  const altItems = {};
+  for (const b of [...d.builds].sort((a, b) => b.score - a.score)) {
+    const uid = unitByApi[b.unit]?.id;
+    if (!uid || !seenUnit.has(uid)) continue;
+    const main = coreItems.filter((ci) => ci.unitId === uid).map((ci) => ci.itemId);
+    for (const it of b.buildName.map(itemId).filter(Boolean)) {
+      if (main.includes(it) || (altItems[uid] ?? []).includes(it)) continue;
+      (altItems[uid] ??= []).push(it);
+    }
+    if ((altItems[uid]?.length ?? 0) >= 3) altItems[uid] = altItems[uid].slice(0, 3);
+  }
+
+  // 통계·태그
+  const cd = compsData[c.Cluster] ?? {};
+  const st = statsOf[c.Cluster];
+  const places = st?.places ?? [];
+  const games = st?.count ?? c.games;
+  const winRate = games ? places[0] / games : undefined;
+  const top4Rate = games ? (places[0] + places[1] + places[2] + places[3]) / games : undefined;
+  const pickRate = totalBoards ? games / totalBoards : undefined;
+  const levelling = cd.levelling ?? (Number(finalLv) >= 9 ? "Fast 9" : "Fast 8");
+  const threeStarTargets = (cd.stars ?? []).map((a) => unitByApi[a]?.id).filter(Boolean);
+  // 상대 덱 상성: 같이 만나면 내 등수가 얼마나 나빠지나 (+면 불리). 우리 덱 집합 안의 것만.
+  const counters = (d.counters ?? [])
+    .filter((x) => String(x.against) !== String(c.Cluster) && clusters.some((k) => String(k.Cluster) === String(x.against)))
+    .map((x) => ({ deckId: `mt-${x.against}`, placeChange: Number(x.place_change.toFixed(2)) }));
+
   const name = c.name.map((p) => (p.type === "trait" ? traits[p.name] : unitByApi[p.name]?.name) ?? p.name).join(" ");
   const tierLabel = tierOf(c.avg);
   decks.push({
     id: `mt-${c.Cluster}`, name, tierLabel, tier: TIER_NUM[tierLabel],
-    avgPlacement: Number(c.avg.toFixed(2)), games: c.games, carryId, coreUnits, coreItems, levels,
+    avgPlacement: Number(c.avg.toFixed(2)), games,
+    winRate: winRate && Number(winRate.toFixed(4)), top4Rate: top4Rate && Number(top4Rate.toFixed(4)), pickRate: pickRate && Number(pickRate.toFixed(4)),
+    levelling, difficulty: difficultyOf(cd.difficulty ?? 0, levelling), threeStarTargets,
+    carryId, coreUnits, coreItems, altItems, levels, counters,
   });
-  console.log(`  ${tierLabel.padEnd(2)} ${c.avg.toFixed(2)} ${name}  (${coreUnits.length}u ${coreItems.length}i lv${Object.keys(levels).join("/")})`);
+  console.log(`  ${tierLabel.padEnd(2)} ${c.avg.toFixed(2)} ${name}  [${levelling}/${difficultyOf(cd.difficulty ?? 0, levelling)}] win ${((winRate ?? 0) * 100).toFixed(1)}% top4 ${((top4Rate ?? 0) * 100).toFixed(1)}%`);
 }
 
 writeFileSync("lib/gen/decks.json", JSON.stringify(decks, null, 2) + "\n");
