@@ -21,7 +21,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
   const owned = new Set(input.units.map((u) => u.unitId));
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8 flex items-center justify-between">
         <div>
           <Link href="/" className="text-sm text-muted hover:text-gold-light">

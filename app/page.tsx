@@ -81,7 +81,7 @@ export default function Home() {
   const canSubmit = components.length > 0 || completed.length > 0 || units.length > 0;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8">
         <h1 className="text-2xl font-bold text-gold-light">덱 추천</h1>
         <p className="mt-2 text-muted">

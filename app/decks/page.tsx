@@ -12,7 +12,7 @@ export default function DecksPage() {
   const decks = [...DECKS].sort((a, b) => a.tier - b.tier || a.avgPlacement - b.avgPlacement);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-gold-light">덱 목록</h1>
         <p className="mt-1 text-sm text-muted">

@@ -56,7 +56,7 @@ export default async function DeckDetailPage({
   }, {});
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8">
         <Link
           href={q ? `/recommend?${q}` : "/recommend"}

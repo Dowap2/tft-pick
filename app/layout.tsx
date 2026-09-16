@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import meta from "@/lib/gen/meta.json";
+import Script from "next/script";
 import { Header } from "./header";
+import { ADSENSE_CLIENT, SideAd } from "./ads";
 
 export const SITE_URL = "https://tft-pick.netlify.app";
 
@@ -20,10 +22,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-navy text-parchment">
         <Header />
-        {children}
+        <div className="flex w-full justify-center gap-6">
+          <SideAd side="left" />
+          {children}
+          <SideAd side="right" />
+        </div>
         <footer className="mt-auto px-4 py-6 text-center text-[11px] text-muted/60">
           Set {meta.set} · 패치 {meta.patch} · 덱 통계 {meta.metaUpdated} (metatft) · 이미지 CommunityDragon
         </footer>
+        {ADSENSE_CLIENT && (
+          <Script
+            async
+            strategy="afterInteractive"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </body>
     </html>
   );
