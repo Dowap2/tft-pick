@@ -71,8 +71,11 @@ const CARRY_COST_WEIGHT: Record<number, number> = { 1: 20, 2: 24, 3: 28, 4: 32, 
 /** 코스트별 서포트 가중치 */
 const SUPPORT_COST_WEIGHT: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7 };
 
-/** 성 가중치. 2성 = 1성 3개 값어치지만 점수는 1.5배, 3성 2배로 완만하게 */
-const STAR_MULT: Record<number, number> = { 1: 1, 2: 1.5, 3: 2 };
+/** 성 가중치. 3성은 9장 투자라 그 기물 중심으로 덱을 맞춰야 함 → 크게 */
+const STAR_MULT: Record<number, number> = { 1: 1, 2: 1.5, 3: 3 };
+/** 3성 기물 규칙: 덱이 그 기물을 쓰면 보너스, 안 쓰면 총점 반감 */
+const THREE_STAR_BONUS = 12;
+const THREE_STAR_UNUSED_MULT = 0.5;
 const starName = (id: UnitId, star: number) => `${unitById(id)?.name ?? id}${star > 1 ? "★".repeat(star) : ""}`;
 
 export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
@@ -91,7 +94,7 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
   if (userCarry && carry) {
     const base = CARRY_COST_WEIGHT[carry.cost] ?? 20;
     const targetStar = carryTarget?.star ?? 2;
-    const starRatio = Math.min(STAR_MULT[userCarry.star] / STAR_MULT[targetStar], 1.5); // 목표 초과(3성 등)는 최대 1.5배
+    const starRatio = Math.min(STAR_MULT[userCarry.star] / STAR_MULT[targetStar], 2); // 목표 초과(3성 등)는 최대 2배
     carryScore = base * (0.5 + 0.5 * starRatio);
     if (userCarry.star > targetStar) {
       reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} ${"★".repeat(userCarry.star)} 확보 (목표 ${"★".repeat(targetStar)} 초과!)` });
@@ -180,6 +183,24 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     text: `${deck.tierLabel}티어 · 평균순위 ${deck.avgPlacement.toFixed(2)}`,
   });
 
+  // ---- 5) 3성 기물 규칙 ----
+  // 3성이 있으면 그 기물을 중심으로 덱을 맞춰야 한다. 캐리면 위 캐리 점수로 이미 크게 반영,
+  // 서포트로 쓰면 보너스, 아예 안 쓰는 덱이면 총점 반감.
+  let anchorBonus = 0;
+  let anchorMult = 1;
+  for (const t of input.units.filter((u) => u.star === 3)) {
+    const name = unitById(t.unitId)?.name ?? t.unitId;
+    const inDeck = deck.coreUnits.some((u) => u.unitId === t.unitId);
+    if (t.unitId === carryId) continue;
+    if (inDeck) {
+      anchorBonus += THREE_STAR_BONUS;
+      reasons.push({ kind: "good", text: `3성 ${name} 활용하는 덱` });
+    } else {
+      anchorMult *= THREE_STAR_UNUSED_MULT;
+      reasons.push({ kind: "warn", text: `3성 ${name}을(를) 쓰지 않는 덱 (총점 반감)` });
+    }
+  }
+
   // 부족한 핵심 유닛 안내
   const missingUnits = deck.coreUnits
     .map((u) => u.unitId)
@@ -198,7 +219,7 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     total = ((4.5 - deck.avgPlacement) / 2) * 100;
     total = Math.max(0, Math.min(100, total));
   } else {
-    total = Math.min(100, carryScore + carryItemScore + supportScore + metaScore);
+    total = Math.min(100, (carryScore + carryItemScore + supportScore + metaScore + anchorBonus) * anchorMult);
   }
 
   return {
