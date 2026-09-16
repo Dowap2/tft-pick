@@ -1,0 +1,28 @@
+# 매일 새벽(KST 06:00) 유닛/아이템/덱 데이터 갱신 → 변경 있으면 커밋 → Netlify가 자동 배포
+name: sync-data
+on:
+  schedule:
+    - cron: "0 21 * * *"   # UTC 21:00 = KST 06:00
+  workflow_dispatch: {}     # 수동 실행
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run sync
+      - run: npm run sync:meta
+      - name: Commit if changed
+        run: |
+          git config user.name "tft-pick-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add lib/gen
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "data: $(date -u +%Y-%m-%d) 자동 갱신 (patch $(node -p "require('./lib/gen/meta.json').patch"), cluster $(node -p "require('./lib/gen/meta.json').metaCluster"))"
+          git push
