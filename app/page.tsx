@@ -82,11 +82,14 @@ export default function Home() {
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-gold-light">덱 추천</h1>
-        <p className="mt-2 text-muted">
-          지금 가진 아이템과 유닛을 입력하면 갈 수 있는 덱 3개를 추천해줍니다. 입력은 자동 저장됩니다.
-        </p>
+      <header className="mb-8 flex items-center gap-5">
+        <img src="/logo.png" alt="TFT PICK" className="size-24 shrink-0 drop-shadow-[0_0_18px_rgba(200,170,110,0.35)] sm:size-32" />
+        <div>
+          <h1 className="gold-text font-serif text-3xl font-bold uppercase tracking-[0.15em] sm:text-4xl">TFT Pick</h1>
+          <p className="mt-2 text-muted">
+            지금 가진 아이템과 유닛을 입력하면 갈 수 있는 덱 3개를 추천해줍니다. 입력은 자동 저장됩니다.
+          </p>
+        </div>
       </header>
 
       {/* 아이템 선택 */}

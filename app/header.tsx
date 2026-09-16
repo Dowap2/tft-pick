@@ -13,8 +13,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-gold/20 bg-navy/85 backdrop-blur">
       <nav className="mx-auto flex w-full max-w-3xl items-center gap-1 px-4">
-        <Link href="/" className="gold-text mr-4 font-serif text-lg font-bold uppercase tracking-[0.2em]">
-          TFT Pick
+        <Link href="/" className="mr-4 flex items-center gap-2">
+          <img src="/logo-128.png" alt="" className="size-9" />
+          <span className="gold-text font-serif text-lg font-bold uppercase tracking-[0.2em]">TFT Pick</span>
         </Link>
         {MENU.map((m) => {
           const active = m.match(path);
