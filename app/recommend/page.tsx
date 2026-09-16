@@ -3,6 +3,7 @@ import { componentById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
 import { nextActions, nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
+import { PivotTree } from "@/app/pivot";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -66,6 +67,8 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
           </div>
         </div>
       </section>
+
+      <PivotTree decks={results.map((r) => r.deck)} ownedIds={owned} />
 
       {/* Top 3 */}
       <section className="space-y-4">
