@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { itemById, unitById, type Deck } from "@/lib/data";
+import { itemById, teamCode, unitById, type Deck } from "@/lib/data";
+import { CopyTeamCode } from "@/app/team-code";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { LevelComps } from "@/app/levels";
 
@@ -97,7 +98,10 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                 </div>
                 <div className="order-last basis-full border-t border-line pt-3 sm:order-none sm:basis-auto sm:border-0 sm:pt-0">
                   <DeckStats deck={deck} />
-                  <div className="mt-1 text-right text-[10px] text-muted/70">게임 <span className="num">{fmt(deck.games)}</span></div>
+                  <div className="mt-1 flex items-center justify-end gap-2 text-[10px] text-muted/70">
+                    <CopyTeamCode code={teamCode(deck.coreUnits.map((u) => u.unitId))} />
+                    <span>게임 <span className="num">{fmt(deck.games)}</span></span>
+                  </div>
                 </div>
                 <span className="hidden self-center text-muted transition-transform duration-150 group-open:rotate-180 sm:inline" aria-hidden>▾</span>
               </summary>

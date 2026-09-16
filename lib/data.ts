@@ -4,6 +4,7 @@ import unitsJson from "./gen/units.json";
 import itemsJson from "./gen/items.json";
 import decksJson from "./gen/decks.json";
 import traitsJson from "./gen/traits.json";
+import codesJson from "./gen/codes.json";
 
 export type ComponentId =
   | "bf" | "bow" | "rod" | "tear"
@@ -74,6 +75,7 @@ export type Trait = { name: string; img: string; breakpoints: number[] };
 // 덱은 `node scripts/sync-meta.mjs` 로 metatft 통계에서 생성 (lib/gen/decks.json)
 export const DECKS = decksJson as unknown as Deck[];
 export const TRAITS = traitsJson as Record<string, Trait>;
+const CODES = codesJson as { set: string; codes: Record<string, string> };
 const TRAIT_BY_NAME = new Map(Object.values(TRAITS).map((t) => [t.name, t]));
 
 /** 유닛 목록의 활성 시너지: 인원수와 도달 단계(0 = 미활성). 인원 많은 순. */
@@ -95,3 +97,11 @@ export const itemById = (id: string) => ITEMS.find((i) => i.id === id);
 export const deckById = (id: string) => DECKS.find((d) => d.id === id);
 export const componentById = (id: ComponentId) =>
   COMPONENTS.find((c) => c.id === id);
+
+// 인게임 팀 플래너 코드: "02" + 슬롯 10개 × 3자리 hex(빈칸 000) + 세트키
+export function teamCode(unitIds: UnitId[]): string | null {
+  const ids = unitIds.filter((id) => CODES.codes[id]).slice(0, 10);
+  if (ids.length === 0) return null;
+  const slots = Array.from({ length: 10 }, (_, i) => CODES.codes[ids[i]] ?? "000").join("");
+  return `02${slots}${CODES.set}`;
+}

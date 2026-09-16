@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { deckById, itemById, unitById } from "@/lib/data";
+import { deckById, itemById, teamCode, unitById } from "@/lib/data";
+import { CopyTeamCode } from "@/app/team-code";
 import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
 import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
@@ -82,6 +83,7 @@ export default async function DeckDetailPage({
               {Math.round(score.total)}<span className="text-xl">%</span>
             </div>
             <div className="text-xs text-muted/80">현재 적합도</div>
+            <CopyTeamCode code={teamCode(deck.coreUnits.map((u) => u.unitId))} className="mt-2" />
           </div>
         </div>
       </header>

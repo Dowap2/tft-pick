@@ -143,6 +143,20 @@ for (const c of clusters) {
 }
 
 writeFileSync("lib/gen/decks.json", JSON.stringify(decks, null, 2) + "\n");
+
+// ---- 팀 플래너 코드용 유닛 코드 (metatft 룩업). 코드 = "02" + 10슬롯×3hex + "TFTSet18"
+try {
+  const lookup = await (await fetch(`https://data.metatft.com/lookups/${ci.tft_set}_latest_en_us.json`, UA)).json();
+  const codes = {};
+  for (const u of units) {
+    const m = lookup.units.find((x) => x.assetNames?.includes(u.apiName) && x.code);
+    if (m) codes[u.id] = m.code;
+  }
+  writeFileSync("lib/gen/codes.json", JSON.stringify({ set: ci.tft_set, codes }, null, 2) + "\n");
+  console.log(`팀 코드: ${Object.keys(codes).length}/${units.length} 유닛`);
+} catch (e) {
+  console.warn("팀 코드 룩업 실패 (기존 codes.json 유지):", e.message);
+}
 writeFileSync("lib/gen/meta.json", JSON.stringify({ ...readJson("lib/gen/meta.json"), metaCluster: ci.cluster_id, metaUpdated: ci.updated_at.slice(0, 10) }, null, 2) + "\n");
 if (unmapped.size) console.warn("매핑 안 된 유닛(무시됨):", [...unmapped].join(", "));
 if (unmappedItems.size) console.warn("매핑 안 된 아이템(무시됨) — ITEM_ALIAS 확인:", [...unmappedItems].join(", "));
