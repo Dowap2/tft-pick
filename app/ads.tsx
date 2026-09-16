@@ -35,7 +35,7 @@ export function SideAd({ side }: { side: "left" | "right" }) {
             data-ad-format="vertical"
           />
         ) : (
-          <div className="flex h-[600px] w-40 items-center justify-center rounded border border-dashed border-gold/20 text-[10px] text-muted/40">
+          <div className="flex h-[600px] w-40 items-center justify-center rounded border border-dashed border-line text-[10px] text-muted/40">
             AD {side}
           </div>
         )}

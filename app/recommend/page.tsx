@@ -24,21 +24,21 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8 flex items-center justify-between">
         <div>
-          <Link href="/" className="text-sm text-muted hover:text-gold-light">
+          <Link href="/" className="text-sm text-muted hover:text-text">
             ← 다시 입력
           </Link>
-          <h1 className="mt-2 text-2xl font-bold text-gold-light">추천 결과</h1>
+          <h1 className="mt-2 text-2xl font-bold">추천 결과</h1>
         </div>
       </header>
 
       {/* 현재 상황 요약 */}
-      <section className="mb-8 panel rounded-lg bg-panel/70 p-4">
+      <section className="mb-8 panel rounded-lg bg-surface p-4">
         <h2 className="mb-3 text-sm font-semibold text-muted">현재 상황</h2>
         <div className="space-y-2 text-sm">
           <div>
             <span className="text-muted/80">아이템: </span>
             {input.completed.map((id, i) => (
-              <span key={`d${i}`} className="mr-2 inline-flex items-center gap-1 rounded bg-gold-dark/60 py-0.5 pl-0.5 pr-2 align-middle" title="완성 아이템">
+              <span key={`d${i}`} className="mr-2 inline-flex items-center gap-1 rounded bg-accent-2/40 py-0.5 pl-0.5 pr-2 align-middle" title="완성 아이템">
                 <ItemIcon id={id} className="size-5" /> {itemById(id)?.name}
               </span>
             ))}
@@ -46,7 +46,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               <span className="text-muted/50">없음</span>
             ) : (
               input.components.map((c, i) => (
-                <span key={i} className="mr-2 inline-flex items-center gap-1 rounded bg-teal/20 py-0.5 pl-0.5 pr-2 align-middle">
+                <span key={i} className="mr-2 inline-flex items-center gap-1 rounded bg-pos/15 py-0.5 pl-0.5 pr-2 align-middle">
                   <ItemIcon id={c} className="size-5" /> {componentById(c)?.name}
                 </span>
               ))
@@ -58,7 +58,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               <span className="text-muted/50">없음</span>
             ) : (
               input.units.map((u) => (
-                <span key={u.unitId} className="mr-2 inline-flex items-center gap-1 rounded bg-gold-dark/60 py-0.5 pl-0.5 pr-2 align-middle">
+                <span key={u.unitId} className="mr-2 inline-flex items-center gap-1 rounded bg-accent-2/40 py-0.5 pl-0.5 pr-2 align-middle">
                   <UnitIcon id={u.unitId} className="h-5" /> {unitById(u.unitId)?.name} {"★".repeat(u.star)}
                 </span>
               ))
@@ -78,7 +78,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
             <Link
               key={deck.id}
               href={`/deck/${deck.id}?${q}`}
-              className="block panel rounded-xl bg-panel p-5 transition hover:border-gold/70 hover:bg-panel-2"
+              className="block panel rounded-xl bg-surface p-5 transition hover:border-accent/60 hover:bg-surface-2"
             >
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
@@ -87,19 +87,19 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                   <div className="mt-1 text-xs text-muted/80">
                     {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
                   </div>
-                  <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-panel-2 py-0.5 pl-0.5 pr-2 text-xs">
+                  <div className="mt-2 inline-flex items-center gap-1.5 rounded bg-surface-2 py-0.5 pl-0.5 pr-2 text-xs">
                     <UnitIcon id={score.carryId} className="h-6" />
                     <span className="text-muted/80">메인 캐리</span>
-                    <span className={score.hasCarry ? "font-semibold text-teal" : "font-semibold text-parchment"}>
+                    <span className="font-semibold text-text">
                       {carryName}
                     </span>
                     <span className={COST_TEXT[carryCost]}>{carryCost}코</span>
-                    {score.hasCarry && <span className="text-teal">✓ 보유</span>}
+                    {score.hasCarry && <span className="text-pos">✓ 보유</span>}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold gold-text">
-                    {Math.round(score.total)}%
+                  <div className="num text-3xl text-accent">
+                    {Math.round(score.total)}<span className="text-lg">%</span>
                   </div>
                   <div className="text-xs text-muted/80">적합도</div>
                 </div>
@@ -108,22 +108,22 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {deck.coreUnits.map((cu) => (
                   <div key={cu.unitId} className="flex flex-col items-center">
-                    <UnitIcon id={cu.unitId} size="md" className={`${cu.unitId === score.carryId ? "bg-teal!" : ""} ${owned.has(cu.unitId) ? "" : "opacity-45"}`} />
-                    <span className="text-[10px] leading-3 text-gold">{"★".repeat(cu.star)}</span>
+                    <UnitIcon id={cu.unitId} size="md" className={`${cu.unitId === score.carryId ? "bg-accent!" : ""} ${owned.has(cu.unitId) ? "" : "opacity-45"}`} />
+                    <span className="text-[10px] leading-3 text-warn">{"★".repeat(cu.star)}</span>
                   </div>
                 ))}
                 {score.carryItems.length > 0 && (
                   <div className="ml-2 flex items-center gap-1 self-start">
                     {score.carryItems.map((iid, i) => (
-                      <ItemIcon key={i} id={iid} size="md" className={score.buildableCarryItems.includes(iid) ? "ring-2 ring-teal" : "opacity-60"} />
+                      <ItemIcon key={i} id={iid} size="md" className={score.buildableCarryItems.includes(iid) ? "ring-2 ring-pos" : "opacity-60"} />
                     ))}
                   </div>
                 )}
               </div>
 
               {next && (
-                <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded bg-panel-2/60 px-2 py-1.5 text-xs">
-                  <span className="mr-1 text-gold-light">다음 목표 {next.level}렙 →</span>
+                <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded bg-surface-2/60 px-2 py-1.5 text-xs">
+                  <span className="mr-1 text-text">다음 목표 {next.level}렙 →</span>
                   {next.buy.map((uid) => (
                     <span key={uid} className="inline-flex items-center gap-1">
                       <UnitIcon id={uid} className="h-6" />
@@ -145,8 +145,8 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                   <li
                     key={i}
                     className={
-                      r.kind === "good" ? "text-teal"
-                      : r.kind === "warn" ? "text-amber-300/80"
+                      r.kind === "good" ? "text-pos"
+                      : r.kind === "warn" ? "text-warn/80"
                       : "text-muted"
                     }
                   >
@@ -166,7 +166,7 @@ function MetricRow({ label, score, max }: { label: string; score: number; max: n
   return (
     <div className="flex items-center justify-between">
       <span>{label}</span>
-      <span className="font-mono text-gold">{toStars(score, max)}</span>
+      <span className="text-warn">{toStars(score, max)}</span>
     </div>
   );
 }

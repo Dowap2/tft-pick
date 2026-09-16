@@ -2,20 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import meta from "@/lib/gen/meta.json";
 
 const MENU = [
   { href: "/", label: "덱 추천", match: (p: string) => p === "/" || p.startsWith("/recommend") },
-  { href: "/decks", label: "덱 목록", match: (p: string) => p.startsWith("/deck") },
+  { href: "/decks", label: "덱 티어 리스트", match: (p: string) => p.startsWith("/deck") },
 ];
 
 export function Header() {
   const path = usePathname();
   return (
-    <header className="sticky top-0 z-20 border-b border-gold/20 bg-navy/85 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-line bg-bg/95">
       <nav className="mx-auto flex w-full max-w-3xl items-center gap-1 px-4">
         <Link href="/" className="mr-4 flex items-center gap-2">
-          <img src="/logo-128.png" alt="" className="size-9" />
-          <span className="gold-text font-serif text-lg font-bold uppercase tracking-[0.2em]">TFT Pick</span>
+          <img src="/logo-128.png" alt="" className="size-7" />
+          <span className="num text-base uppercase tracking-wider text-text">TFT Pick</span>
         </Link>
         {MENU.map((m) => {
           const active = m.match(path);
@@ -23,14 +24,17 @@ export function Header() {
             <Link
               key={m.href}
               href={m.href}
-              className={`border-b-2 px-3 py-3 text-sm transition ${
-                active ? "border-gold font-semibold text-gold-light" : "border-transparent text-muted hover:text-parchment"
+              className={`border-b-2 px-3 py-2.5 text-sm transition-colors duration-150 ${
+                active ? "border-accent font-semibold text-text" : "border-transparent text-muted hover:text-text"
               }`}
             >
               {m.label}
             </Link>
           );
         })}
+        <span className="num ml-auto hidden rounded-md border border-line px-2 py-0.5 text-xs uppercase text-muted sm:inline">
+          Set {meta.set} · {meta.patch}
+        </span>
       </nav>
     </header>
   );

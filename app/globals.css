@@ -1,49 +1,51 @@
 @import "tailwindcss";
 
-/* 롤토체스(헥스텍) 팔레트: 남색 바탕 + 금색 테두리 + 청록 강조 */
+/* 디자인.md: 다크 e스포츠 데이터 대시보드. 차콜 바탕, 옅은 회색 테두리, 인디고(주)/퍼플(보조) 강조, 절제된 시맨틱 색 */
 @theme {
-  --color-navy: #010a13;
-  --color-navy-2: #0a1428;
-  --color-panel: #0f1b2d;
-  --color-panel-2: #16263d;
-  --color-gold: #c8aa6e;
-  --color-gold-light: #f0e6d2;
-  --color-gold-dark: #785a28;
-  --color-teal: #0ac8b9;
-  --color-parchment: #f0e6d2;
-  --color-muted: #a09b8c;
+  --color-bg: #0b0d12;
+  --color-surface: #14171f;
+  --color-surface-2: #1b1f2a;
+  --color-line: #262b38;
+  --color-text: #e8eaf0;
+  --color-muted: #8b90a0;
+  --color-accent: #5b6cff;       /* 인디고: 활성 필터·탭·버튼·캐리 */
+  --color-accent-2: #8b5cf6;     /* 퍼플: 보조 강조·선택 유닛 */
+  --color-pos: #3dd68c;          /* 긍정: 보유·조합 가능 */
+  --color-neg: #f06a6a;
+  --color-warn: #e5b84b;
   --color-cost-1: #9aa4af;
-  --color-cost-2: #1f9e5a;
-  --color-cost-3: #2a7fd4;
-  --color-cost-4: #b13bd6;
+  --color-cost-2: #2fa66a;
+  --color-cost-3: #3b82f6;
+  --color-cost-4: #a855f7;
   --color-cost-5: #f2a93b;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-rajdhani), "Pretendard Variable", sans-serif;  /* 영문 제목·큰 숫자·패치 라벨 전용 */
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: radial-gradient(ellipse 80% 50% at 50% -10%, #123a52 0%, var(--color-navy-2) 45%, var(--color-navy) 100%) fixed;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-/* 유닛 초상화 육각형 */
+/* 키보드 포커스 */
+:where(a, button, input, summary):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* 유닛 초상화 육각형 (정육각: 폭 = 높이 × cos30°) */
 .hex {
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  aspect-ratio: 0.866; /* 정육각형: 폭 = 높이 × cos30° — 높이(h-*)만 지정 */
+  aspect-ratio: 0.866;
 }
 
-/* 제목용 금색 그라데이션 */
-.gold-text {
-  background: linear-gradient(180deg, #f0e6d2 0%, #c8aa6e 55%, #785a28 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* 아이템 조합식 툴팁 (hover) */
+/* 아이템 조합식 툴팁 (hover, 150ms) */
 .tip { opacity: 0; transform: translate(-50%, 4px); transition: opacity .15s, transform .15s; pointer-events: none; }
 .group:hover > .tip { opacity: 1; transform: translate(-50%, 0); }
 
-/* 패널: 얇은 금색 테두리 + 안쪽 광택 */
-.panel {
-  border: 1px solid color-mix(in srgb, var(--color-gold) 35%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-gold-light) 8%, transparent);
-}
+/* 패널: 옅은 테두리만. 그림자·광택 없음 */
+.panel { border: 1px solid var(--color-line); }
+
+/* 숫자·영문 라벨 */
+.num { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.01em; }

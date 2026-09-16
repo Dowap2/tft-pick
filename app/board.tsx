@@ -22,14 +22,14 @@ export function Board({ deck, carryId, ownedIds, hrefFor }: Props) {
         <div key={row} className={`flex gap-0.5 ${row % 2 ? "ml-[21px]" : ""}`}>
           {[0, 1, 2, 3, 4, 5, 6].map((col) => {
             const u = byPos.get(`${row},${col}`);
-            if (!u) return <span key={col} className="hex mb-3 h-12 shrink-0 bg-gold/20" />;
+            if (!u) return <span key={col} className="hex mb-3 h-12 shrink-0 bg-surface-2" />;
             const owned = ownedIds.has(u.unitId);
             const isCarry = u.unitId === carryId;
             const items = itemsByUnit.get(u.unitId) ?? [];
             const cell = (
               <div className={`relative flex w-[42px] flex-col items-center ${owned ? "" : "opacity-50"}`}>
-                <UnitIcon id={u.unitId} className={`h-12! ${isCarry ? "bg-teal!" : ""}`} />
-                <span className="absolute top-8 text-[10px] leading-none text-gold drop-shadow-[0_0_2px_#000]">
+                <UnitIcon id={u.unitId} className={`h-12! ${isCarry ? "bg-accent!" : ""}`} />
+                <span className="absolute top-8 text-[10px] leading-none text-warn drop-shadow-[0_0_2px_#000]">
                   {"★".repeat(u.star)}
                 </span>
                 {items.length > 0 && (
@@ -39,7 +39,7 @@ export function Board({ deck, carryId, ownedIds, hrefFor }: Props) {
                     ))}
                   </span>
                 )}
-                <span className="mt-px w-[46px] truncate text-center text-[9px] leading-3 text-parchment">
+                <span className="mt-px w-[46px] truncate text-center text-[9px] leading-3 text-text">
                   {unitById(u.unitId)?.name}
                 </span>
               </div>

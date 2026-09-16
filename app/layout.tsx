@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Rajdhani } from "next/font/google";
 import "./globals.css";
 import meta from "@/lib/gen/meta.json";
 import Script from "next/script";
 import { Header } from "./header";
 import { ADSENSE_CLIENT, SideAd } from "./ads";
+
+const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-rajdhani" });
 
 export const SITE_URL = "https://tft-pick.netlify.app";
 
@@ -19,16 +22,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-navy text-parchment">
+    <html lang="ko" className={`h-full antialiased ${rajdhani.variable}`}>
+      <head>
+        {/* Pretendard: Google Fonts에 없어 CDN 사용 (동적 서브셋) */}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+      </head>
+      <body className="min-h-full flex flex-col bg-bg font-sans text-text">
         <Header />
         <div className="flex w-full justify-center gap-6">
           <SideAd side="left" />
           {children}
           <SideAd side="right" />
         </div>
-        <footer className="mt-auto px-4 py-6 text-center text-[11px] text-muted/60">
-          Set {meta.set} · 패치 {meta.patch} · 덱 통계 {meta.metaUpdated} (metatft) · 이미지 CommunityDragon
+        <footer className="mt-auto border-t border-line px-4 py-5 text-center text-[11px] text-muted/70">
+          <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 덱 통계 {meta.metaUpdated} (metatft) · 이미지 CommunityDragon
         </footer>
         {ADSENSE_CLIENT && (
           <Script

@@ -13,11 +13,11 @@ type Props = {
 export function LevelComps({ deck, ownedIds, hrefFor }: Props) {
   if (!deck.levels) return null;
   return (
-    <div className="panel divide-y divide-gold/15 rounded-lg bg-panel/70">
+    <div className="panel divide-y divide-line rounded-lg bg-surface">
       {Object.entries(deck.levels).map(([lv, comp]) => (
         <div key={lv} className="flex items-center gap-3 px-3 py-2">
           <div className="w-10 shrink-0">
-            <div className="text-sm font-bold text-gold-light">{lv}렙</div>
+            <div className="text-sm font-bold text-text">{lv}렙</div>
             <div className="text-[10px] text-muted/70">{comp.avg.toFixed(2)}등</div>
           </div>
           <div className="flex flex-wrap gap-1">

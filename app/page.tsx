@@ -82,12 +82,12 @@ export default function Home() {
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
-      <header className="mb-8 flex items-center gap-5">
-        <img src="/logo.png" alt="TFT PICK" className="size-24 shrink-0 drop-shadow-[0_0_18px_rgba(200,170,110,0.35)] sm:size-32" />
+      <header className="mb-8 flex items-center gap-4">
+        <img src="/logo.png" alt="TFT PICK" className="size-16 shrink-0" />
         <div>
-          <h1 className="gold-text font-serif text-3xl font-bold uppercase tracking-[0.15em] sm:text-4xl">TFT Pick</h1>
-          <p className="mt-2 text-muted">
-            지금 가진 아이템과 유닛을 입력하면 갈 수 있는 덱 3개를 추천해줍니다. 입력은 자동 저장됩니다.
+          <h1 className="text-2xl font-bold sm:text-3xl">덱 추천</h1>
+          <p className="mt-1 text-sm text-muted">
+            지금 가진 아이템과 유닛을 입력하면 초반에 갈 수 있는 덱 3개를 추천합니다. 입력은 자동 저장됩니다.
           </p>
         </div>
       </header>
@@ -95,7 +95,7 @@ export default function Home() {
       {/* 아이템 선택 */}
       <section className="mb-8">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gold-light">아이템</h2>
+          <h2 className="text-base font-semibold">아이템</h2>
           <span className="text-sm text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
         </div>
 
@@ -105,7 +105,7 @@ export default function Home() {
               <button
                 key={`c${i}`}
                 onClick={() => setCompleted(completed.filter((_, j) => j !== i))}
-                className="flex items-center gap-1.5 rounded-full bg-gold-dark/90 py-1 pl-1 pr-3 text-sm hover:bg-gold-dark"
+                className="flex items-center gap-1.5 rounded-md bg-accent-2/70 py-1 pl-1 pr-3 text-sm hover:bg-accent-2/60"
                 title="완성 아이템 (분해 불가)"
               >
                 <ItemIcon id={id} className="size-6" /> {ITEMS.find((x) => x.id === id)?.name} ✕
@@ -117,7 +117,7 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => removeComponent(i)}
-                  className="flex items-center gap-1.5 rounded-full bg-teal/80 py-1 pl-1 pr-3 text-sm hover:bg-teal"
+                  className="flex items-center gap-1.5 rounded-md bg-pos/25 py-1 pl-1 pr-3 text-sm hover:bg-pos/35"
                 >
                   <ItemIcon id={id} className="size-6" /> {c?.name} ✕
                 </button>
@@ -132,7 +132,7 @@ export default function Home() {
               key={c.id}
               onClick={() => addComponent(c.id)}
               disabled={slotsUsed >= MAX_COMPONENTS}
-              className="flex flex-col items-center gap-1 rounded-lg border border-gold/25 bg-panel px-2 py-2 text-xs transition hover:border-gold/70 hover:bg-panel-2 disabled:opacity-40"
+              className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-2 py-2 text-xs transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40"
             >
               <ItemIcon id={c.id} size="md" />
               {c.name}
@@ -142,19 +142,19 @@ export default function Home() {
 
         <button
           onClick={() => setShowItems(!showItems)}
-          className="mt-3 text-sm text-muted hover:text-gold-light"
+          className="mt-3 text-sm text-muted hover:text-text"
         >
           {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
         </button>
         {showItems && (
-          <div className="mt-2 grid grid-cols-6 gap-1.5 rounded-lg border border-gold/15 p-2 sm:grid-cols-9">
+          <div className="mt-2 grid grid-cols-6 gap-1.5 rounded-lg border border-line p-2 sm:grid-cols-9">
             {ITEMS.map((it) => (
               <button
                 key={it.id}
                 onClick={() => addItem(it.id)}
                 disabled={slotsUsed + 2 > MAX_COMPONENTS}
                 title={it.name}
-                className="rounded transition hover:bg-panel-2 disabled:opacity-40"
+                className="rounded transition hover:bg-surface-2 disabled:opacity-40"
               >
                 <ItemIcon id={it.id} size="md" className="mx-auto" />
               </button>
@@ -166,7 +166,7 @@ export default function Home() {
       {/* 유닛 선택 */}
       <section className="mb-10">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gold-light">보유 유닛</h2>
+          <h2 className="text-base font-semibold">보유 유닛</h2>
           <span className="text-sm text-muted/80">{units.length}개 선택</span>
         </div>
 
@@ -177,7 +177,7 @@ export default function Home() {
               return (
                 <div
                   key={u.unitId}
-                  className="flex items-center gap-2 rounded-full bg-gold-dark/90 py-1 pl-1 pr-3 text-sm"
+                  className="flex items-center gap-2 rounded-md bg-accent-2/70 py-1 pl-1 pr-3 text-sm"
                 >
                   <UnitIcon id={u.unitId} className="h-7" />
                   <span>{meta?.name}</span>
@@ -187,7 +187,7 @@ export default function Home() {
                         key={s}
                         onClick={() => setStar(u.unitId, s as 1 | 2 | 3)}
                         className={
-                          s <= u.star ? "text-gold-light" : "text-parchment/30"
+                          s <= u.star ? "text-text" : "text-text/30"
                         }
                       >
                         ★
@@ -209,7 +209,7 @@ export default function Home() {
               key={c}
               onClick={() => setCostTab(c)}
               className={`rounded px-2.5 py-1 text-xs font-semibold transition ${
-                costTab === c ? "bg-gold text-navy" : `bg-panel ${c ? COST_TEXT[c] : "text-muted"} hover:bg-panel-2`
+                costTab === c ? "bg-accent text-white" : `bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:bg-surface-2`
               }`}
             >
               {c ? `${c}코` : "전체"}
@@ -220,9 +220,9 @@ export default function Home() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="유닛 검색 (예: 아리)"
-          className="mb-3 w-full rounded-lg border border-gold/25 bg-panel px-3 py-2 text-sm outline-none focus:border-gold/70"
+          className="mb-3 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
         />
-        <div className="grid max-h-72 grid-cols-2 gap-1.5 overflow-y-auto rounded-lg border border-gold/15 p-2 sm:grid-cols-3">
+        <div className="grid max-h-72 grid-cols-2 gap-1.5 overflow-y-auto rounded-lg border border-line p-2 sm:grid-cols-3">
           {filteredUnits.map((u) => {
             const picked = units.some((x) => x.unitId === u.id);
             return (
@@ -231,8 +231,8 @@ export default function Home() {
                 onClick={() => toggleUnit(u.id)}
                 className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-sm transition ${
                   picked
-                    ? "bg-gold-dark/70"
-                    : "bg-panel hover:bg-panel-2"
+                    ? "bg-accent-2/50"
+                    : "bg-surface hover:bg-surface-2"
                 }`}
               >
                 <UnitIcon id={u.id} size="sm" />
@@ -248,7 +248,7 @@ export default function Home() {
         <button
           onClick={submit}
           disabled={!canSubmit}
-          className="flex-1 rounded-lg bg-gold py-3 font-semibold text-navy transition hover:bg-gold-light disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex-1 rounded-lg bg-accent py-3 font-semibold text-white transition-colors duration-150 hover:bg-accent/85 disabled:cursor-not-allowed disabled:opacity-40"
         >
           덱 추천받기
         </button>
@@ -262,7 +262,7 @@ export default function Home() {
             setQuery("");
             try { localStorage.removeItem(STORAGE_KEY); } catch {}
           }}
-          className="rounded-lg border border-gold/25 px-4 py-3 text-sm hover:bg-panel-2"
+          className="rounded-lg border border-line px-4 py-3 text-sm hover:bg-surface-2"
         >
           초기화
         </Link>

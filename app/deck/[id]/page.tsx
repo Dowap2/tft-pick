@@ -60,13 +60,13 @@ export default async function DeckDetailPage({
       <header className="mb-8">
         <Link
           href={q ? `/recommend?${q}` : "/recommend"}
-          className="text-sm text-muted hover:text-gold-light"
+          className="text-sm text-muted hover:text-text"
         >
           ← 추천 결과로
         </Link>
         <div className="mt-2 flex items-start justify-between gap-4">
           <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold text-gold-light"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h1>
+            <h1 className="flex items-center gap-2 text-3xl font-bold text-text"><TierBadge tier={deck.tierLabel} size="lg" />{deck.name}</h1>
             <div className="mt-1 text-sm text-muted/80">
               {trans.emoji} {trans.text} · 평균순위 {deck.avgPlacement.toFixed(2)}
               {deck.games && <span> · {deck.games.toLocaleString()}판</span>}
@@ -76,8 +76,8 @@ export default async function DeckDetailPage({
             )}
           </div>
           <div className="text-right">
-            <div className="text-4xl font-bold gold-text">
-              {Math.round(score.total)}%
+            <div className="num text-4xl text-accent">
+              {Math.round(score.total)}<span className="text-xl">%</span>
             </div>
             <div className="text-xs text-muted/80">현재 적합도</div>
           </div>
@@ -85,22 +85,22 @@ export default async function DeckDetailPage({
       </header>
 
       {/* 메인 캐리 */}
-      <section className="mb-6 panel rounded-lg border-teal/40! bg-teal/5 p-4">
-        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-teal">
+      <section className="mb-6 panel rounded-lg border-line! bg-accent/5 p-4">
+        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-accent">
           메인 캐리
         </div>
         <div className="flex items-center gap-3">
           <UnitIcon id={score.carryId} size="lg" />
           <div>
-            <div className="text-xl font-bold text-teal">{carryName}</div>
+            <div className="text-xl font-bold text-text">{carryName}</div>
             <div className="text-xs text-muted/80">
               <span className={COST_TEXT[carryUnit?.cost ?? 1]}>{carryUnit?.cost}코</span> · {carryUnit?.traits.join(" / ")}
             </div>
           </div>
           {score.hasCarry ? (
-            <span className="ml-auto rounded bg-teal/80 px-2 py-0.5 text-xs font-medium">✓ 보유중</span>
+            <span className="ml-auto rounded bg-pos/20 px-2 py-0.5 text-xs font-medium text-pos">✓ 보유중</span>
           ) : (
-            <span className="ml-auto rounded bg-panel-2 px-2 py-0.5 text-xs text-muted">확보 필요</span>
+            <span className="ml-auto rounded bg-surface-2 px-2 py-0.5 text-xs text-muted">확보 필요</span>
           )}
         </div>
         {score.carryItems.length > 0 && (
@@ -112,8 +112,8 @@ export default async function DeckDetailPage({
                   key={i}
                   className={`flex items-center gap-1.5 rounded py-0.5 pl-0.5 pr-2 text-xs ${
                     buildable
-                      ? "bg-teal/20 text-teal"
-                      : "bg-panel-2 text-muted"
+                      ? "bg-pos/15 text-pos"
+                      : "bg-surface-2 text-muted"
                   }`}
                 >
                   <ItemIcon id={iid} />
@@ -138,7 +138,7 @@ export default async function DeckDetailPage({
       {/* 배치도 */}
       <section className="mb-6">
         <h2 className="mb-3 text-lg font-semibold">최종 배치</h2>
-        <div className="panel overflow-x-auto rounded-lg bg-panel/70 p-4">
+        <div className="panel overflow-x-auto rounded-lg bg-surface p-4">
           <Board deck={deck} carryId={score.carryId} ownedIds={userUnitIds} hrefFor={toggleHref} />
         </div>
       </section>
@@ -157,23 +157,23 @@ export default async function DeckDetailPage({
                 href={toggleHref(cu.unitId)}
                 replace
                 scroll={false}
-                className={`block rounded-lg border p-3 transition hover:border-gold/60 ${
-                  has ? "border-teal/60 bg-teal/10" : "border-gold/25 bg-panel"
-                } ${isCarry ? "border-teal/60!" : ""}`}
+                className={`block rounded-lg border p-3 transition hover:border-accent/60 ${
+                  has ? "border-accent/60 bg-accent/10" : "border-line bg-surface"
+                } ${isCarry ? "border-accent/60!" : ""}`}
               >
                 <UnitIcon id={cu.unitId} size="lg" className="mb-2" />
                 <div className="flex items-center gap-1 text-sm font-semibold">
                   {meta?.name ?? cu.unitId}
-                  {isCarry && <span className="text-[10px] text-teal">★캐리</span>}
+                  {isCarry && <span className="text-[10px] text-accent">★캐리</span>}
                 </div>
-                <div className="mt-1 text-xs text-gold">
+                <div className="mt-1 text-xs text-warn">
                   {"★".repeat(cu.star)}
                   <span className="text-muted/50">{"★".repeat(3 - cu.star)}</span>
                 </div>
                 <div className="mt-1 text-[10px] text-muted/80">
                   <span className={COST_TEXT[meta?.cost ?? 1]}>{meta?.cost}코</span> · {meta?.traits.join(" / ")}
                 </div>
-                {has && <div className="mt-1 text-xs text-teal">✓ 보유</div>}
+                {has && <div className="mt-1 text-xs text-pos">✓ 보유</div>}
               </Link>
             );
           })}
@@ -190,13 +190,13 @@ export default async function DeckDetailPage({
               <div
                 key={uid}
                 className={`rounded-lg border p-3 ${
-                  isCarry ? "border-teal/40 bg-teal/5" : "border-gold/25 bg-panel"
+                  isCarry ? "border-accent/40 bg-accent/5" : "border-line bg-surface"
                 }`}
               >
                 <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
                   <UnitIcon id={uid} size="sm" />
                   {unitById(uid)?.name}
-                  {isCarry && <span className="text-[10px] text-teal">★캐리</span>}
+                  {isCarry && <span className="text-[10px] text-accent">★캐리</span>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {itemIds.map((iid, i) => {
@@ -207,8 +207,8 @@ export default async function DeckDetailPage({
                         key={i}
                         className={`flex items-center gap-1.5 rounded py-1 pl-1 pr-2 text-xs ${
                           canMake
-                            ? "bg-teal/20 text-teal"
-                            : "bg-panel-2 text-muted"
+                            ? "bg-pos/15 text-pos"
+                            : "bg-surface-2 text-muted"
                         }`}
                       >
                         <ItemIcon id={iid} />
@@ -232,8 +232,8 @@ export default async function DeckDetailPage({
             <li
               key={i}
               className={
-                r.kind === "good" ? "text-teal"
-                : r.kind === "warn" ? "text-amber-300"
+                r.kind === "good" ? "text-pos"
+                : r.kind === "warn" ? "text-warn"
                 : "text-muted"
               }
             >
@@ -246,7 +246,7 @@ export default async function DeckDetailPage({
       <div className="mt-8">
         <Link
           href="/"
-          className="inline-block rounded-lg border border-gold/25 px-4 py-2 text-sm hover:bg-panel-2"
+          className="inline-block rounded-lg border border-line px-4 py-2 text-sm hover:bg-surface-2"
         >
           처음으로
         </Link>
