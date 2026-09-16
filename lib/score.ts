@@ -6,7 +6,8 @@ const componentName = (c: ComponentId) => componentById(c)?.name ?? c;
 
 export type UserUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 // completed = 이미 완성된 아이템(분해 불가) → 캐리템과 정확히 일치할 때만 인정
-export type UserInput = { components: ComponentId[]; completed: string[]; units: UserUnit[] };
+// rivals = 다른 플레이어 보드에서 본 유닛 (로비 스카우팅, 선택)
+export type UserInput = { components: ComponentId[]; completed: string[]; units: UserUnit[]; rivals?: UnitId[] };
 
 export type Reason = { kind: "good" | "warn" | "info"; text: string };
 export type ScoreBreakdown = {
@@ -167,12 +168,34 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
     }
   }
 
+  // ---- 6) 로비 스카우팅: 경합 + 상성 ----
+  // 상대 보드 유닛이 이 덱 핵심 유닛과 겹치면 기물 경쟁 → 감점. 상대가 가는 덱을 추정해 counters(상성)도 반영.
+  let contestMult = 1;
+  const rivals = new Set(input.rivals ?? []);
+  if (rivals.size > 0) {
+    const core = deck.coreUnits.map((u) => u.unitId);
+    const contested = core.filter((u) => rivals.has(u) && !starOf.has(u));
+    if (contested.length > 0) {
+      const ratio = contested.length / core.length;
+      contestMult *= 1 - Math.min(0.5, ratio * 1.2);
+      reasons.push({ kind: "warn", text: `경합: 상대가 ${names(contested)} 보유 (핵심 ${contested.length}/${core.length} 겹침)` });
+    }
+    const rivalDecks = inferDecks([...rivals]).filter((d) => d.id !== deck.id);
+    for (const rd of rivalDecks) {
+      const c = deck.counters?.find((x) => x.deckId === rd.id);
+      if (c && c.placeChange >= 0.1) {
+        contestMult *= 1 - Math.min(0.3, c.placeChange * 0.6);
+        reasons.push({ kind: "warn", text: `상성 불리: 상대 ${rd.name} 만나면 평균 +${c.placeChange.toFixed(2)}등` });
+      }
+    }
+  }
+
   const missingUnits = deck.coreUnits.map((u) => u.unitId).filter((id) => !starOf.has(id));
   if (!hasCarry && carry && carry.cost <= 3) reasons.push({ kind: "warn", text: `저코 캐리 ${carry.name} 확보 필요 (리롤 덱)` });
 
   const total = !hasAnyInput
     ? Math.max(0, Math.min(100, ((4.5 - deck.avgPlacement) / 2) * 100))
-    : Math.min(100, (earlyScore + itemScore + carryScore + metaScore + anchorBonus) * anchorMult);
+    : Math.min(100, (earlyScore + itemScore + carryScore + metaScore + anchorBonus) * anchorMult * contestMult);
 
   return { earlyScore, itemScore, carryScore, metaScore, total, reasons, carryId, carryItems, buildableCarryItems: buildable, hasCarry, matchedSupports, missingUnits };
 }
@@ -249,4 +272,15 @@ export function carouselPriority(): Array<{ component: ComponentId; score: numbe
   return [...acc]
     .map(([component, e]) => ({ component, score: e.score / max, decks: [...e.decks].sort((a, b) => a.avgPlacement - b.avgPlacement) }))
     .sort((a, b) => b.score - a.score);
+}
+
+/** 상대 보드 유닛으로 상대가 가는 덱 추정: 핵심 유닛 2개 이상 겹치는 덱, 겹침 많은 순 상위 2 */
+export function inferDecks(unitIds: UnitId[]): Deck[] {
+  const set = new Set(unitIds);
+  return DECKS
+    .map((d) => ({ d, hit: d.coreUnits.filter((u) => set.has(u.unitId)).length }))
+    .filter((x) => x.hit >= 2)
+    .sort((a, b) => b.hit - a.hit || a.d.avgPlacement - b.d.avgPlacement)
+    .slice(0, 2)
+    .map((x) => x.d);
 }

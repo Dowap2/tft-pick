@@ -1,4 +1,4 @@
-import { ITEMS, type ComponentId, type UnitId } from "./data";
+import { ITEMS, UNITS, type ComponentId, type UnitId } from "./data";
 import type { UserInput, UserUnit } from "./score";
 
 // 재료 상한: 완성템 3개 + 여분 2개
@@ -12,6 +12,7 @@ export function parseUserInput(sp: Record<string, string | string[] | undefined>
   const itemsRaw = typeof sp.items === "string" ? sp.items : "";
   const unitsRaw = typeof sp.units === "string" ? sp.units : "";
   const doneRaw = typeof sp.done === "string" ? sp.done : "";
+  const rivalsRaw = typeof sp.rivals === "string" ? sp.rivals : "";
 
   const components: ComponentId[] = itemsRaw
     .split(",")
@@ -35,13 +36,16 @@ export function parseUserInput(sp: Record<string, string | string[] | undefined>
       return { unitId: id as UnitId, star };
     });
 
-  return { components, completed, units };
+  const rivals = rivalsRaw.split(",").map((s) => s.trim()).filter((id) => UNITS.some((u) => u.id === id)).slice(0, 20);
+
+  return { components, completed, units, rivals };
 }
 
 export function buildQuery(input: UserInput): string {
   const p = new URLSearchParams();
   if (input.components.length) p.set("items", input.components.join(","));
   if (input.completed.length) p.set("done", input.completed.join(","));
+  if (input.rivals?.length) p.set("rivals", input.rivals.join(","));
   if (input.units.length)
     p.set("units", input.units.map((u) => `${u.unitId}:${u.star}`).join(","));
   return p.toString();

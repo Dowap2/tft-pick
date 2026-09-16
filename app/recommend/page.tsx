@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { componentById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
-import { nextActions, nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
+import { inferDecks, nextActions, nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { PivotTree } from "@/app/pivot";
 
@@ -20,6 +20,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
   const results = recommend(input).slice(0, 3);
   const q = buildQuery(input);
   const owned = new Set(input.units.map((u) => u.unitId));
+  const rivalDecks = inferDecks(input.rivals ?? []);
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
@@ -53,6 +54,19 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               ))
             )}
           </div>
+          {(input.rivals?.length ?? 0) > 0 && (
+            <div>
+              <span className="text-muted/80">로비: </span>
+              {input.rivals!.map((id) => (
+                <span key={id} className="mr-1.5 inline-flex items-center gap-1 rounded bg-warn/15 py-0.5 pl-0.5 pr-2 align-middle text-warn">
+                  <UnitIcon id={id} className="h-5" /> {unitById(id)?.name}
+                </span>
+              ))}
+              {rivalDecks.length > 0 && (
+                <span className="ml-1 text-xs text-muted">→ 상대 추정: {rivalDecks.map((d) => d.name).join(", ")}</span>
+              )}
+            </div>
+          )}
           <div>
             <span className="text-muted/80">유닛: </span>
             {input.units.length === 0 ? (

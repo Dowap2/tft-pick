@@ -22,6 +22,9 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [costTab, setCostTab] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
   const [showItems, setShowItems] = useState(false);
+  const [rivals, setRivals] = useState<UnitId[]>([]);      // 로비 스카우팅: 상대 보드에서 본 유닛
+  const [rivalQuery, setRivalQuery] = useState("");
+  const [showRivals, setShowRivals] = useState(false);
 
   // 마지막 입력 복원/저장 (라운드마다 다시 입력하지 않도록)
   const [restored, setRestored] = useState(false);
@@ -30,14 +33,15 @@ export default function Home() {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
       if (saved?.components) setComponents(saved.components);
       if (saved?.completed) setCompleted(saved.completed);
+      if (saved?.rivals) { setRivals(saved.rivals); if (saved.rivals.length) setShowRivals(true); }
       if (saved?.units) setUnits(saved.units);
     } catch {}
     setRestored(true);
   }, []);
   useEffect(() => {
     if (!restored) return; // 복원 전에 빈 값으로 덮어쓰지 않도록
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, completed, units })); } catch {}
-  }, [restored, components, completed, units]);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, completed, units, rivals })); } catch {}
+  }, [restored, components, completed, units, rivals]);
 
   // 재료 상한은 "재료 환산" 기준: 완성템 1개 = 재료 2개
   const slotsUsed = components.length + completed.length * 2;
@@ -76,6 +80,7 @@ export default function Home() {
     const params = new URLSearchParams();
     if (components.length) params.set("items", components.join(","));
     if (completed.length) params.set("done", completed.join(","));
+    if (rivals.length) params.set("rivals", rivals.join(","));
     if (units.length)
       params.set("units", units.map((u) => `${u.unitId}:${u.star}`).join(","));
     router.push(`/recommend?${params.toString()}`);
@@ -279,6 +284,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 로비 스카우팅 (선택) */}
+      <section className="mb-10">
+        <button onClick={() => setShowRivals(!showRivals)} className="text-sm text-muted hover:text-text">
+          {showRivals ? "▾" : "▸"} 로비 스카우팅 <span className="text-muted/60">(선택 · 상대 보드에서 본 유닛 → 경합·상성 반영)</span>
+          {rivals.length > 0 && <span className="num ml-2 text-accent">{rivals.length}</span>}
+        </button>
+        {showRivals && (
+          <div className="mt-2 rounded-lg border border-line p-3">
+            {rivals.length > 0 && (
+              <div className="mb-2 flex flex-wrap gap-1.5">
+                {rivals.map((id) => (
+                  <button key={id} onClick={() => setRivals(rivals.filter((r) => r !== id))} className="flex items-center gap-1 rounded-md bg-warn/15 py-0.5 pl-0.5 pr-2 text-xs text-warn hover:bg-warn/25">
+                    <UnitIcon id={id} className="h-5" /> {UNITS.find((u) => u.id === id)?.name} ✕
+                  </button>
+                ))}
+              </div>
+            )}
+            <input
+              value={rivalQuery}
+              onChange={(e) => setRivalQuery(e.target.value)}
+              placeholder="상대가 들고 있는 유닛 검색 (예: 아펠리오스)"
+              className="mb-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
+            />
+            {rivalQuery.trim() && (
+              <div className="flex flex-wrap gap-1">
+                {UNITS.filter((u) => u.name.includes(rivalQuery.trim()) && !rivals.includes(u.id)).slice(0, 12).map((u) => (
+                  <button key={u.id} onClick={() => { setRivals([...rivals, u.id]); setRivalQuery(""); }} className="flex items-center gap-1 rounded-md bg-surface px-2 py-1 text-xs hover:bg-surface-2">
+                    <UnitIcon id={u.id} className="h-5" /> {u.name} <span className={COST_TEXT[u.cost]}>{u.cost}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
       <div className="flex gap-3">
         <button
           onClick={submit}
@@ -293,6 +334,7 @@ export default function Home() {
             e.preventDefault();
             setComponents([]);
             setCompleted([]);
+            setRivals([]);
             setUnits([]);
             setQuery("");
             try { localStorage.removeItem(STORAGE_KEY); } catch {}
