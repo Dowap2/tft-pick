@@ -15,7 +15,7 @@ CommunityDragon ko_kr.json ──sync.mjs──▶ lib/gen/units.json, items.jso
 metatft comps API          ──sync-meta.mjs──▶ lib/gen/decks.json
                                                     │
 lib/data.ts (타입 + import) ◀───────────────────────┘
-lib/score.ts  추천 점수 (캐리 35 / 캐리템 30 / 서포트 15 / 메타 20)
+lib/score.ts  추천 점수 — 초반 진입 기준 (초반 조합 40 / 아이템 방향 25 / 캐리 보너스 15 / 메타 20, 3성 규칙)
 lib/board.ts  배치도 (실측 pos 없으면 특성 휴리스틱)
 app/          /  입력 → /recommend 상위 3 → /deck/[id] 상세 (레벨별 조합·배치도)
 ```

@@ -1,7 +1,8 @@
 import {
-  DECKS, itemById, unitById,
+  DECKS, itemById, unitById, componentById,
   type ComponentId, type Deck, type UnitId,
 } from "./data";
+const componentName = (c: ComponentId) => componentById(c)?.name ?? c;
 
 export type UserUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 // completed = 이미 완성된 아이템(분해 불가) → 캐리템과 정확히 일치할 때만 인정
@@ -9,17 +10,17 @@ export type UserInput = { components: ComponentId[]; completed: string[]; units:
 
 export type Reason = { kind: "good" | "warn" | "info"; text: string };
 export type ScoreBreakdown = {
-  carryScore: number;       // 0~35
-  carryItemScore: number;   // 0~30
-  supportScore: number;     // 0~15
-  metaScore: number;        // 0~20 (접점 없으면 크게 감쇄)
+  earlyScore: number;       // 0~40  초반(4~7렙) 조합 일치 — 핵심 축
+  itemScore: number;        // 0~25  아이템 방향 (재료 단위로 캐리템 레시피와 겹치는 정도)
+  carryScore: number;       // 0~15  캐리 보유 보너스 (없어도 감점 없음)
+  metaScore: number;        // 0~20  메타 (평균 순위)
   total: number;            // 0~100
   reasons: Reason[];
   carryId: UnitId;
   carryItems: string[];     // 캐리가 사용할 아이템 id
-  buildableCarryItems: string[];  // 유저 재료로 조합 가능한 캐리 아이템
+  buildableCarryItems: string[];  // 보유 재료/완성템으로 지금 갖출 수 있는 캐리 아이템
   hasCarry: boolean;
-  matchedSupports: UnitId[];
+  matchedSupports: UnitId[];      // 덱 조합(초반~최종)에 들어가는 보유 유닛
   missingUnits: UnitId[];
 };
 
@@ -65,177 +66,115 @@ function tryBuildItem(itemId: string, pool: Record<ComponentId, number>): boolea
   return false;
 }
 
-/** 코스트별 캐리 소유 기본 점수 (희귀할수록 높음) */
-const CARRY_COST_WEIGHT: Record<number, number> = { 1: 20, 2: 24, 3: 28, 4: 32, 5: 35 };
-
-/** 코스트별 서포트 가중치 */
-const SUPPORT_COST_WEIGHT: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7 };
-
 /** 성 가중치. 3성은 9장 투자라 그 기물 중심으로 덱을 맞춰야 함 → 크게 */
 const STAR_MULT: Record<number, number> = { 1: 1, 2: 1.5, 3: 3 };
 /** 3성 기물 규칙: 덱이 그 기물을 쓰면 보너스, 안 쓰면 총점 반감 */
 const THREE_STAR_BONUS = 12;
 const THREE_STAR_UNUSED_MULT = 0.5;
 const starName = (id: UnitId, star: number) => `${unitById(id)?.name ?? id}${star > 1 ? "★".repeat(star) : ""}`;
+const names = (ids: UnitId[]) => ids.map((id) => unitById(id)?.name ?? id).join(", ");
 
+// 이 서비스는 "초반에 어느 덱으로 갈지" 정하는 도구다. 2~3스테이지엔 1~2코 기물 몇 개와 재료 2~3개가 전부이므로
+// (1) 초반 조합 일치를 가장 크게, (2) 아이템은 완성 여부가 아니라 재료 단위 방향성으로, (3) 고코 캐리 미보유는 감점하지 않는다.
 export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
   const reasons: Reason[] = [];
-  const hasAnyInput = input.components.length > 0 || input.units.length > 0;
+  const hasAnyInput = input.components.length > 0 || input.completed.length > 0 || input.units.length > 0;
 
   const carryId = getCarry(deck);
   const carry = unitById(carryId);
   const carryTarget = deck.coreUnits.find((u) => u.unitId === carryId);
   const carryItems = deck.coreItems.filter((ci) => ci.unitId === carryId).map((ci) => ci.itemId);
+  const starOf = new Map(input.units.map((u) => [u.unitId, u.star]));
 
-  // ---- 1) 캐리 소유 점수 (0~35) ----
+  // ---- 1) 초반 조합 일치 (0~40) ----
+  // 4~7렙 각 레벨의 최빈 조합과 성 가중 일치율. 가장 잘 맞는 레벨 기준. 최종 조합도 후보에 포함(리롤 덱 등).
+  const comps: Array<{ label: string; units: UnitId[] }> = Object.entries(deck.levels ?? {})
+    .filter(([lv, c]) => Number(lv) <= 7 && c.units.length > 0)
+    .map(([lv, c]) => ({ label: `${lv}렙`, units: c.units }));
+  comps.push({ label: "최종", units: deck.coreUnits.map((u) => u.unitId) });
+  let best = { label: "", ratio: 0, hit: [] as UnitId[], total: 1 };
+  for (const c of comps) {
+    const hit = c.units.filter((u) => starOf.has(u));
+    const weighted = hit.reduce((s, u) => s + STAR_MULT[starOf.get(u)!], 0);
+    const ratio = Math.min(weighted / c.units.length, 1.25);
+    if (ratio > best.ratio) best = { label: c.label, ratio, hit, total: c.units.length };
+  }
+  const earlyScore = best.ratio * 40;
+  const matchedSupports = [...new Set(comps.flatMap((c) => c.units))].filter((u) => starOf.has(u));
+  if (best.hit.length > 0) {
+    const upgraded = best.hit.some((u) => starOf.get(u)! > 1) ? " · 업그레이드 반영" : "";
+    reasons.push({ kind: "good", text: `${best.label} 조합 ${best.hit.length}/${best.total} 보유 (${best.hit.map((u) => starName(u, starOf.get(u)!)).join(", ")})${upgraded}` });
+  }
+  const wasted = input.units.filter((u) => !matchedSupports.includes(u.unitId));
+  if (wasted.length > 0 && matchedSupports.length > 0) {
+    reasons.push({ kind: "info", text: `이 덱에 안 쓰이는 보유 유닛: ${names(wasted.map((u) => u.unitId))}` });
+  }
+
+  // ---- 2) 아이템 방향 (0~25) ----
+  // 캐리템 레시피의 재료 멀티셋 vs 내 재료. 완성템은 정확히 일치할 때만 재료 2개로 인정(분해 불가).
+  const need = countBy(carryItems.flatMap((iid) => itemById(iid)?.recipe ?? [])) as Record<string, number>;
+  const needTotal = Object.values(need).reduce((a, b) => a + b, 0);
+  const donePool = countBy(input.completed);
+  const buildable: string[] = [];
+  const ownedDone: string[] = [];
+  let matched = 0;
+  for (const iid of carryItems) {
+    if ((donePool[iid] ?? 0) > 0) {
+      donePool[iid] -= 1; buildable.push(iid); ownedDone.push(iid); matched += 2;
+      for (const c of itemById(iid)?.recipe ?? []) need[c] -= 1;
+    }
+  }
+  const pool = { ...countBy(input.components) } as Record<ComponentId, number>;
+  for (const c of input.components) if ((need[c] ?? 0) > 0) { need[c] -= 1; matched += 1; }
+  for (const iid of carryItems) if (!ownedDone.includes(iid) && tryBuildItem(iid, pool)) buildable.push(iid);
+  const itemScore = needTotal === 0 ? 0 : Math.min(matched / needTotal, 1) * 25;
+  if (ownedDone.length > 0 && carry) reasons.push({ kind: "good", text: `${carry.name} 핵심템 이미 완성 (${ownedDone.map((id) => itemById(id)?.name).join(", ")})` });
+  const craftable = buildable.filter((id) => !ownedDone.includes(id));
+  if (craftable.length > 0 && carry) reasons.push({ kind: "good", text: `보유 재료로 ${carry.name} 핵심템 조합 가능 (${craftable.map((id) => itemById(id)?.name).join(", ")})` });
+  else if (matched > 0 && carry) reasons.push({ kind: "good", text: `보유 재료 ${matched - ownedDone.length * 2}개가 ${carry.name} 핵심템 레시피에 쓰임` });
+  const uselessComps = input.components.filter((c) => !carryItems.some((iid) => itemById(iid)?.recipe.includes(c)));
+  if (uselessComps.length > 0 && matched > 0) reasons.push({ kind: "info", text: `캐리템에 안 쓰이는 재료: ${uselessComps.map((c) => componentName(c)).join(", ")}` });
+
+  // ---- 3) 캐리 보유 보너스 (0~15) ----
+  // 초반엔 4~5코 캐리가 없는 게 정상이라 없어도 감점 없음. 있으면(특히 저코 리롤 캐리) 보너스.
   const userCarry = input.units.find((u) => u.unitId === carryId);
   const hasCarry = !!userCarry;
   let carryScore = 0;
   if (userCarry && carry) {
-    const base = CARRY_COST_WEIGHT[carry.cost] ?? 20;
     const targetStar = carryTarget?.star ?? 2;
-    const starRatio = Math.min(STAR_MULT[userCarry.star] / STAR_MULT[targetStar], 2); // 목표 초과(3성 등)는 최대 2배
-    carryScore = base * (0.5 + 0.5 * starRatio);
-    if (userCarry.star > targetStar) {
-      reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} ${"★".repeat(userCarry.star)} 확보 (목표 ${"★".repeat(targetStar)} 초과!)` });
-    } else if (starRatio >= 1) {
-      reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} ${"★".repeat(userCarry.star)} 확보 (목표 달성)` });
-    } else {
-      reasons.push({ kind: "good", text: `메인 캐리 ${carry.name} 보유 (목표 ${"★".repeat(targetStar)}, 현재 ${"★".repeat(userCarry.star)})` });
-    }
+    const starRatio = Math.min(STAR_MULT[userCarry.star] / STAR_MULT[targetStar], 2);
+    carryScore = Math.min(15, 15 * (0.6 + 0.4 * starRatio));
+    reasons.push({ kind: "good", text: `메인 캐리 ${starName(carryId, userCarry.star)} 보유${userCarry.star >= targetStar ? " (목표 성 달성)" : ` (목표 ${"★".repeat(targetStar)})`}` });
   }
 
-  // ---- 2) 캐리 아이템 적합도 (0~30) ----
-  const pool = { ...countBy(input.components) } as Record<ComponentId, number>;
-  const donePool = countBy(input.completed);
-  const buildable: string[] = [];
-  const owned: string[] = [];
-  for (const iid of carryItems) {
-    if ((donePool[iid] ?? 0) > 0) { donePool[iid] -= 1; buildable.push(iid); owned.push(iid); }
-    else if (tryBuildItem(iid, pool)) buildable.push(iid);
-  }
-  if (owned.length > 0 && carry) {
-    reasons.push({ kind: "good", text: `${carry.name} 핵심 아이템 ${owned.length}개 이미 완성 (${owned.map((id) => itemById(id)?.name).join(", ")})` });
-  }
-  const carryItemScore = carryItems.length === 0 ? 0 : (buildable.length / carryItems.length) * 30;
-
-  const craftable = buildable.filter((id) => !owned.includes(id));
-  if (craftable.length > 0 && carry) {
-    const names = craftable.map((id) => itemById(id)?.name).filter(Boolean).join(", ");
-    reasons.push({
-      kind: "good",
-      text: `보유 재료로 ${carry.name}의 핵심 아이템 ${craftable.length}개 조합 가능 (${names}) → 총 ${buildable.length}/${carryItems.length}`,
-    });
-  }
-
-  // ---- 3) 서포트 유닛 적합도 (0~15) ----
-  const supportUnits = deck.coreUnits.filter((u) => u.unitId !== carryId);
-  const totalSupportWeight = supportUnits.reduce((s, u) => {
-    const c = unitById(u.unitId)?.cost ?? 1;
-    return s + (SUPPORT_COST_WEIGHT[c] ?? 1);
-  }, 0);
-  const matchedSupports: UserUnit[] = [];
-  let matchedWeight = 0;
-  for (const uu of input.units) {
-    if (uu.unitId === carryId) continue;
-    const isSupport = supportUnits.find((u) => u.unitId === uu.unitId);
-    if (!isSupport) continue;
-    matchedSupports.push(uu);
-    const c = unitById(uu.unitId)?.cost ?? 1;
-    // 덱 목표 성 대비 내 성. 목표 2성인데 3성이면 1.33배, 1성이면 0.67배
-    matchedWeight += (SUPPORT_COST_WEIGHT[c] ?? 1) * (STAR_MULT[uu.star] / STAR_MULT[isSupport.star]);
-  }
-  let supportScore = totalSupportWeight === 0 ? 0 : Math.min(matchedWeight / totalSupportWeight, 1.25) * 15;
-
-  // 초반(4~7렙) 조합과의 일치율. 최종 조합엔 없는 초반 유닛(오른/자야 등)을 들고 있어도 인정.
-  // 초반엔 2성 여부가 핵심이라 성 가중치(1/1.5/2)로 카운트. 1성 4개 = 4/4, 2성 4개 = 6/4 → 1.25 캡
-  const starOf = new Map(input.units.map((u) => [u.unitId, u.star]));
-  let earlyBest: { level: string; hit: number; weighted: number; total: number } | null = null;
-  for (const [lv, comp] of Object.entries(deck.levels ?? {})) {
-    if (Number(lv) > 7 || comp.units.length === 0) continue;
-    const owned = comp.units.filter((u) => starOf.has(u));
-    const weighted = owned.reduce((s, u) => s + STAR_MULT[starOf.get(u)!], 0);
-    if (!earlyBest || weighted / comp.units.length > earlyBest.weighted / earlyBest.total)
-      earlyBest = { level: lv, hit: owned.length, weighted, total: comp.units.length };
-  }
-  if (earlyBest && earlyBest.hit > 0) {
-    supportScore = Math.max(supportScore, Math.min(earlyBest.weighted / earlyBest.total, 1.25) * 15);
-    const upgraded = earlyBest.weighted > earlyBest.hit ? ", 업그레이드 반영" : "";
-    reasons.push({ kind: "good", text: `${earlyBest.level}렙 조합 ${earlyBest.hit}/${earlyBest.total} 보유 (초반 진입 좋음${upgraded})` });
-  }
-
-  if (matchedSupports.length > 0) {
-    const names = matchedSupports.map((u) => starName(u.unitId, u.star)).join(", ");
-    reasons.push({
-      kind: "good",
-      text: `핵심 서포트 유닛 ${matchedSupports.length}개 보유 (${names})`,
-    });
-  }
-
-  // ---- 4) 메타 tiebreak (0~20, 접점 없으면 대폭 감쇄) ----
+  // ---- 4) 메타 (0~20) ----
   const metaBase = Math.max(0, Math.min(20, ((4.5 - deck.avgPlacement) / 2) * 20));
-  const hasConnection = hasCarry || buildable.length > 0 || matchedSupports.length > 0 || (earlyBest?.hit ?? 0) > 0;
-  const metaScore = hasAnyInput && !hasConnection ? metaBase * 0.15 : metaBase;
-
-  // 티어/평균순위는 항상 표시
-  reasons.push({
-    kind: deck.tier <= 2 ? "good" : "info",
-    text: `${deck.tierLabel}티어 · 평균순위 ${deck.avgPlacement.toFixed(2)}`,
-  });
+  const hasConnection = matchedSupports.length > 0 || matched > 0;
+  const metaScore = hasAnyInput && !hasConnection ? metaBase * 0.3 : metaBase;
+  reasons.push({ kind: deck.tier <= 2 ? "good" : "info", text: `${deck.tierLabel}티어 · 평균순위 ${deck.avgPlacement.toFixed(2)}` });
 
   // ---- 5) 3성 기물 규칙 ----
-  // 3성이 있으면 그 기물을 중심으로 덱을 맞춰야 한다. 캐리면 위 캐리 점수로 이미 크게 반영,
-  // 서포트로 쓰면 보너스, 아예 안 쓰는 덱이면 총점 반감.
   let anchorBonus = 0;
   let anchorMult = 1;
   for (const t of input.units.filter((u) => u.star === 3)) {
-    const name = unitById(t.unitId)?.name ?? t.unitId;
-    const inDeck = deck.coreUnits.some((u) => u.unitId === t.unitId);
     if (t.unitId === carryId) continue;
-    if (inDeck) {
+    if (deck.coreUnits.some((u) => u.unitId === t.unitId)) {
       anchorBonus += THREE_STAR_BONUS;
-      reasons.push({ kind: "good", text: `3성 ${name} 활용하는 덱` });
+      reasons.push({ kind: "good", text: `3성 ${unitById(t.unitId)?.name} 활용하는 덱` });
     } else {
       anchorMult *= THREE_STAR_UNUSED_MULT;
-      reasons.push({ kind: "warn", text: `3성 ${name}을(를) 쓰지 않는 덱 (총점 반감)` });
+      reasons.push({ kind: "warn", text: `3성 ${unitById(t.unitId)?.name}을(를) 쓰지 않는 덱 (총점 반감)` });
     }
   }
 
-  // 부족한 핵심 유닛 안내
-  const missingUnits = deck.coreUnits
-    .map((u) => u.unitId)
-    .filter((id) => !input.units.some((uu) => uu.unitId === id));
-  const keyMissing = deck.coreUnits
-    .filter((u) => u.unitId === carryId && !hasCarry)
-    .map((u) => unitById(u.unitId)?.name)
-    .filter(Boolean);
-  if (keyMissing.length > 0) {
-    reasons.push({ kind: "warn", text: `메인 캐리 ${keyMissing.join(", ")} 확보 필요` });
-  }
+  const missingUnits = deck.coreUnits.map((u) => u.unitId).filter((id) => !starOf.has(id));
+  if (!hasCarry && carry && carry.cost <= 3) reasons.push({ kind: "warn", text: `저코 캐리 ${carry.name} 확보 필요 (리롤 덱)` });
 
-  // ---- 입력 없음 → 순수 메타 랭킹 ----
-  let total: number;
-  if (!hasAnyInput) {
-    total = ((4.5 - deck.avgPlacement) / 2) * 100;
-    total = Math.max(0, Math.min(100, total));
-  } else {
-    total = Math.min(100, (carryScore + carryItemScore + supportScore + metaScore + anchorBonus) * anchorMult);
-  }
+  const total = !hasAnyInput
+    ? Math.max(0, Math.min(100, ((4.5 - deck.avgPlacement) / 2) * 100))
+    : Math.min(100, (earlyScore + itemScore + carryScore + metaScore + anchorBonus) * anchorMult);
 
-  return {
-    carryScore,
-    carryItemScore,
-    supportScore,
-    metaScore,
-    total,
-    reasons,
-    carryId,
-    carryItems,
-    buildableCarryItems: buildable,
-    hasCarry,
-    matchedSupports: matchedSupports.map((u) => u.unitId),
-    missingUnits,
-  };
+  return { earlyScore, itemScore, carryScore, metaScore, total, reasons, carryId, carryItems, buildableCarryItems: buildable, hasCarry, matchedSupports, missingUnits };
 }
 
 export function recommend(input: UserInput): Array<{ deck: Deck; score: ScoreBreakdown }> {
@@ -251,10 +190,10 @@ export const toStars = (score: number, max: number) => {
 };
 
 export const transitionLabel = (score: ScoreBreakdown) => {
-  const reachability = score.carryScore + score.carryItemScore + score.supportScore;
-  if (reachability >= 45) return { emoji: "🟢", text: "전환 쉬움" };
-  if (reachability >= 20) return { emoji: "🟡", text: "전환 보통" };
-  return { emoji: "🔴", text: "전환 어려움" };
+  const reachability = score.earlyScore + score.itemScore + score.carryScore;
+  if (reachability >= 40) return { emoji: "🟢", text: "진입 쉬움" };
+  if (reachability >= 18) return { emoji: "🟡", text: "진입 보통" };
+  return { emoji: "🔴", text: "진입 어려움" };
 };
 
 /** 보유 유닛과 가장 겹치는 레벨을 현재로 보고, 그 다음 레벨에서 사야 할 유닛 */

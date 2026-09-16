@@ -134,9 +134,9 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
               )}
 
               <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted sm:grid-cols-4">
-                <MetricRow label="캐리" score={score.carryScore} max={35} />
-                <MetricRow label="캐리템" score={score.carryItemScore} max={30} />
-                <MetricRow label="조합" score={score.supportScore} max={15} />
+                <MetricRow label="초반 조합" score={score.earlyScore} max={40} />
+                <MetricRow label="아이템 방향" score={score.itemScore} max={25} />
+                <MetricRow label="캐리" score={score.carryScore} max={15} />
                 <MetricRow label="메타" score={score.metaScore} max={20} />
               </div>
 
