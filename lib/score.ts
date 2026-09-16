@@ -209,3 +209,44 @@ export function nextStep(deck: Deck, ownedIds: Set<UnitId>): { level: string; bu
   const buy = deck.levels[next].units.filter((u) => !ownedIds.has(u));
   return buy.length ? { level: next, buy } : null;
 }
+
+/** 다음 행동: 캐리템 완성에 더 필요한 재료, 이 덱 어디에도 안 쓰이는(팔아도 되는) 보유 유닛 */
+export function nextActions(deck: Deck, input: UserInput): { needComponents: ComponentId[]; sellUnits: UnitId[] } {
+  const carryId = getCarry(deck);
+  const need = countBy(
+    deck.coreItems.filter((ci) => ci.unitId === carryId).flatMap((ci) => itemById(ci.itemId)?.recipe ?? []),
+  ) as Record<string, number>;
+  const done = countBy(input.completed);
+  for (const ci of deck.coreItems) {
+    if (ci.unitId !== carryId || !(done[ci.itemId] > 0)) continue;
+    done[ci.itemId] -= 1;
+    for (const c of itemById(ci.itemId)?.recipe ?? []) need[c] = (need[c] ?? 0) - 1;
+  }
+  for (const c of input.components) if ((need[c] ?? 0) > 0) need[c] -= 1;
+  const needComponents = (Object.entries(need) as [ComponentId, number][])
+    .flatMap(([c, n]) => Array<ComponentId>(Math.max(0, n)).fill(c));
+
+  const used = new Set([...deck.coreUnits.map((u) => u.unitId), ...Object.values(deck.levels ?? {}).flatMap((l) => l.units)]);
+  const sellUnits = input.units.map((u) => u.unitId).filter((id) => !used.has(id));
+  return { needComponents, sellUnits };
+}
+
+/** 1-1 회전목마 재료 우선순위: 덱 픽률 × 캐리템 레시피 등장 횟수 (S/A 덱 기준) */
+export function carouselPriority(): Array<{ component: ComponentId; score: number; decks: Deck[] }> {
+  const acc = new Map<ComponentId, { score: number; decks: Set<Deck> }>();
+  for (const deck of DECKS) {
+    const carryId = getCarry(deck);
+    const w = (deck.pickRate ?? 0.01) * (deck.tier <= 2 ? 1.3 : 1);
+    for (const ci of deck.coreItems) {
+      if (ci.unitId !== carryId) continue;
+      for (const c of itemById(ci.itemId)?.recipe ?? []) {
+        const e = acc.get(c) ?? { score: 0, decks: new Set<Deck>() };
+        e.score += w; e.decks.add(deck); acc.set(c, e);
+      }
+    }
+  }
+  const max = Math.max(...[...acc.values()].map((e) => e.score), 1e-9);
+  return [...acc]
+    .map(([component, e]) => ({ component, score: e.score / max, decks: [...e.decks].sort((a, b) => a.avgPlacement - b.avgPlacement) }))
+    .sort((a, b) => b.score - a.score);
+}

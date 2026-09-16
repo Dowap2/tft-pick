@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { componentById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
-import { nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
+import { nextActions, nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
@@ -74,6 +74,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
           const carryName = unitById(score.carryId)?.name ?? score.carryId;
           const carryCost = unitById(score.carryId)?.cost ?? 0;
           const next = nextStep(deck, owned);
+          const act = nextActions(deck, input);
           return (
             <Link
               key={deck.id}
@@ -126,15 +127,36 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
                 )}
               </div>
 
-              {next && (
-                <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded bg-surface-2/60 px-2 py-1.5 text-xs">
-                  <span className="mr-1 text-text">다음 목표 {next.level}렙 →</span>
-                  {next.buy.map((uid) => (
-                    <span key={uid} className="inline-flex items-center gap-1">
-                      <UnitIcon id={uid} className="h-6" />
-                      <span className={COST_TEXT[unitById(uid)?.cost ?? 1]}>{unitById(uid)?.name}</span>
-                    </span>
-                  ))}
+              {(next || act.needComponents.length > 0 || act.sellUnits.length > 0) && (
+                <div className="mb-3 space-y-1.5 rounded bg-surface-2/60 px-2 py-2 text-xs">
+                  {next && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="mr-1 w-24 text-muted">다음 목표 <span className="num text-text">{next.level}렙</span></span>
+                      {next.buy.map((uid) => (
+                        <span key={uid} className="inline-flex items-center gap-1">
+                          <UnitIcon id={uid} className="h-6" />
+                          <span className={COST_TEXT[unitById(uid)?.cost ?? 1]}>{unitById(uid)?.name}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {act.needComponents.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1">
+                      <span className="mr-1 w-24 text-muted">집을 재료</span>
+                      {act.needComponents.map((c, i) => <ItemIcon key={i} id={c} className="size-6!" />)}
+                    </div>
+                  )}
+                  {act.sellUnits.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="mr-1 w-24 text-muted">팔아도 됨</span>
+                      {act.sellUnits.map((uid) => (
+                        <span key={uid} className="inline-flex items-center gap-1 opacity-70">
+                          <UnitIcon id={uid} className="h-6" />
+                          <span className="text-muted">{unitById(uid)?.name}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

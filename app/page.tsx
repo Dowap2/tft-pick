@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { COMPONENTS, ITEMS, UNITS, type ComponentId, type UnitId } from "@/lib/data";
 import { MAX_COMPONENTS } from "@/lib/params";
+import { carouselPriority } from "@/lib/score";
+
+const CAROUSEL = carouselPriority().slice(0, 5);
 import { COST_TEXT, ItemIcon, UnitIcon } from "@/app/icons";
 
 const STORAGE_KEY = "tft-pick:input";
@@ -91,6 +94,38 @@ export default function Home() {
           </p>
         </div>
       </header>
+
+      {/* 1-1 회전목마 가이드 */}
+      <section className="panel mb-8 rounded-lg bg-surface p-4">
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="text-sm font-semibold">
+            <span className="num mr-1 text-accent">1-1</span>회전목마 추천 재료
+          </h2>
+          <span className="text-[10px] text-muted/70">S/A 덱 캐리템 레시피 × 픽률</span>
+        </div>
+        <ol className="grid gap-1.5 sm:grid-cols-5">
+          {CAROUSEL.map((c, i) => (
+            <li key={c.component}>
+              <button
+                onClick={() => addComponent(c.component)}
+                disabled={slotsUsed >= MAX_COMPONENTS}
+                className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors duration-150 hover:bg-surface-2 disabled:opacity-40 sm:flex-col sm:items-stretch"
+                title={`${c.decks.map((d) => d.name).join(", ")} · 클릭하면 재료에 추가`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="num w-4 text-xs text-muted">{i + 1}</span>
+                  <ItemIcon id={c.component} className="size-7!" />
+                  <span className="text-xs">{COMPONENTS.find((x) => x.id === c.component)?.name}</span>
+                </div>
+                <div className="ml-auto flex-1 sm:ml-0 sm:mt-1">
+                  <div className="h-1 w-full overflow-hidden rounded bg-surface-2"><div className="h-full bg-accent" style={{ width: `${Math.round(c.score * 100)}%` }} /></div>
+                  <div className="mt-0.5 truncate text-[10px] text-muted/70">{c.decks.slice(0, 2).map((d) => d.name).join(" · ")}</div>
+                </div>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       {/* 아이템 선택 */}
       <section className="mb-8">
