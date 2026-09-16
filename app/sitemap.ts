@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(meta.metaUpdated ?? meta.syncedAt);
   return [
     { url: SITE_URL, lastModified, changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE_URL}/decks`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     ...DECKS.map((d) => ({
       url: `${SITE_URL}/deck/${d.id}`,
       lastModified,

@@ -6,6 +6,7 @@ import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
 import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
+import { LevelComps } from "@/app/levels";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 type Params = Promise<{ id: string }>;
@@ -129,23 +130,7 @@ export default async function DeckDetailPage({
       {deck.levels && (
         <section className="mb-6">
           <h2 className="mb-3 text-lg font-semibold">레벨별 조합</h2>
-          <div className="panel divide-y divide-gold/15 rounded-lg bg-panel/70">
-            {Object.entries(deck.levels).map(([lv, comp]) => (
-              <div key={lv} className="flex items-center gap-3 px-3 py-2">
-                <div className="w-10 shrink-0">
-                  <div className="text-sm font-bold text-gold-light">{lv}렙</div>
-                  <div className="text-[10px] text-muted/70">{comp.avg.toFixed(2)}등</div>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {comp.units.map((uid) => (
-                    <Link key={uid} href={toggleHref(uid)} replace scroll={false} title={unitById(uid)?.name}>
-                      <UnitIcon id={uid} size="sm" className={`h-9! ${userUnitIds.has(uid) ? "" : "opacity-45"}`} />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <LevelComps deck={deck} ownedIds={userUnitIds} hrefFor={toggleHref} />
           <p className="mt-1 text-[10px] text-muted/60">각 레벨에서 가장 많이 쓰인 조합 · 흐림 = 미보유 · 클릭하면 보유 토글</p>
         </section>
       )}
