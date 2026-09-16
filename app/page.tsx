@@ -14,6 +14,7 @@ type PickedUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 export default function Home() {
   const router = useRouter();
   const [components, setComponents] = useState<ComponentId[]>([]);
+  const [completed, setCompleted] = useState<string[]>([]); // 완성 아이템 (분해 불가라 재료로 풀지 않음)
   const [units, setUnits] = useState<PickedUnit[]>([]);
   const [query, setQuery] = useState("");
   const [costTab, setCostTab] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
@@ -25,23 +26,26 @@ export default function Home() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
       if (saved?.components) setComponents(saved.components);
+      if (saved?.completed) setCompleted(saved.completed);
       if (saved?.units) setUnits(saved.units);
     } catch {}
     setRestored(true);
   }, []);
   useEffect(() => {
     if (!restored) return; // 복원 전에 빈 값으로 덮어쓰지 않도록
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, units })); } catch {}
-  }, [restored, components, units]);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, completed, units })); } catch {}
+  }, [restored, components, completed, units]);
+
+  // 재료 상한은 "재료 환산" 기준: 완성템 1개 = 재료 2개
+  const slotsUsed = components.length + completed.length * 2;
 
   const addComponent = (id: ComponentId) => {
-    if (components.length >= MAX_COMPONENTS) return;
+    if (slotsUsed >= MAX_COMPONENTS) return;
     setComponents([...components, id]);
   };
-  // 완성 아이템 = 재료 2개로 풀어서 추가 (점수 로직은 재료 기준 그대로)
-  const addItem = (recipe: [ComponentId, ComponentId]) => {
-    if (components.length + 2 > MAX_COMPONENTS) return;
-    setComponents([...components, ...recipe]);
+  const addItem = (id: string) => {
+    if (slotsUsed + 2 > MAX_COMPONENTS) return;
+    setCompleted([...completed, id]);
   };
   const removeComponent = (idx: number) => {
     setComponents(components.filter((_, i) => i !== idx));
@@ -68,12 +72,13 @@ export default function Home() {
   const submit = () => {
     const params = new URLSearchParams();
     if (components.length) params.set("items", components.join(","));
+    if (completed.length) params.set("done", completed.join(","));
     if (units.length)
       params.set("units", units.map((u) => `${u.unitId}:${u.star}`).join(","));
     router.push(`/recommend?${params.toString()}`);
   };
 
-  const canSubmit = components.length > 0 || units.length > 0;
+  const canSubmit = components.length > 0 || completed.length > 0 || units.length > 0;
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
@@ -88,11 +93,21 @@ export default function Home() {
       <section className="mb-8">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gold-light">아이템</h2>
-          <span className="text-sm text-muted/80">재료 {components.length}/{MAX_COMPONENTS}</span>
+          <span className="text-sm text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
         </div>
 
-        {components.length > 0 && (
+        {(components.length > 0 || completed.length > 0) && (
           <div className="mb-3 flex flex-wrap gap-2">
+            {completed.map((id, i) => (
+              <button
+                key={`c${i}`}
+                onClick={() => setCompleted(completed.filter((_, j) => j !== i))}
+                className="flex items-center gap-1.5 rounded-full bg-gold-dark/90 py-1 pl-1 pr-3 text-sm hover:bg-gold-dark"
+                title="완성 아이템 (분해 불가)"
+              >
+                <ItemIcon id={id} className="size-6" /> {ITEMS.find((x) => x.id === id)?.name} ✕
+              </button>
+            ))}
             {components.map((id, i) => {
               const c = COMPONENTS.find((x) => x.id === id);
               return (
@@ -113,7 +128,7 @@ export default function Home() {
             <button
               key={c.id}
               onClick={() => addComponent(c.id)}
-              disabled={components.length >= MAX_COMPONENTS}
+              disabled={slotsUsed >= MAX_COMPONENTS}
               className="flex flex-col items-center gap-1 rounded-lg border border-gold/25 bg-panel px-2 py-2 text-xs transition hover:border-gold/70 hover:bg-panel-2 disabled:opacity-40"
             >
               <ItemIcon id={c.id} size="md" />
@@ -126,15 +141,15 @@ export default function Home() {
           onClick={() => setShowItems(!showItems)}
           className="mt-3 text-sm text-muted hover:text-gold-light"
         >
-          {showItems ? "▾" : "▸"} 완성 아이템으로 추가
+          {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
         </button>
         {showItems && (
           <div className="mt-2 grid grid-cols-6 gap-1.5 rounded-lg border border-gold/15 p-2 sm:grid-cols-9">
             {ITEMS.map((it) => (
               <button
                 key={it.id}
-                onClick={() => addItem(it.recipe)}
-                disabled={components.length + 2 > MAX_COMPONENTS}
+                onClick={() => addItem(it.id)}
+                disabled={slotsUsed + 2 > MAX_COMPONENTS}
                 title={it.name}
                 className="rounded transition hover:bg-panel-2 disabled:opacity-40"
               >
@@ -239,6 +254,7 @@ export default function Home() {
           onClick={(e) => {
             e.preventDefault();
             setComponents([]);
+            setCompleted([]);
             setUnits([]);
             setQuery("");
             try { localStorage.removeItem(STORAGE_KEY); } catch {}

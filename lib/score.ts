@@ -4,7 +4,8 @@ import {
 } from "./data";
 
 export type UserUnit = { unitId: UnitId; star: 1 | 2 | 3 };
-export type UserInput = { components: ComponentId[]; units: UserUnit[] };
+// completed = 이미 완성된 아이템(분해 불가) → 캐리템과 정확히 일치할 때만 인정
+export type UserInput = { components: ComponentId[]; completed: string[]; units: UserUnit[] };
 
 export type Reason = { kind: "good" | "warn" | "info"; text: string };
 export type ScoreBreakdown = {
@@ -103,17 +104,24 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
 
   // ---- 2) 캐리 아이템 적합도 (0~30) ----
   const pool = { ...countBy(input.components) } as Record<ComponentId, number>;
+  const donePool = countBy(input.completed);
   const buildable: string[] = [];
+  const owned: string[] = [];
   for (const iid of carryItems) {
-    if (tryBuildItem(iid, pool)) buildable.push(iid);
+    if ((donePool[iid] ?? 0) > 0) { donePool[iid] -= 1; buildable.push(iid); owned.push(iid); }
+    else if (tryBuildItem(iid, pool)) buildable.push(iid);
+  }
+  if (owned.length > 0 && carry) {
+    reasons.push({ kind: "good", text: `${carry.name} 핵심 아이템 ${owned.length}개 이미 완성 (${owned.map((id) => itemById(id)?.name).join(", ")})` });
   }
   const carryItemScore = carryItems.length === 0 ? 0 : (buildable.length / carryItems.length) * 30;
 
-  if (buildable.length > 0 && carry) {
-    const names = buildable.map((id) => itemById(id)?.name).filter(Boolean).join(", ");
+  const craftable = buildable.filter((id) => !owned.includes(id));
+  if (craftable.length > 0 && carry) {
+    const names = craftable.map((id) => itemById(id)?.name).filter(Boolean).join(", ");
     reasons.push({
       kind: "good",
-      text: `보유 재료로 ${carry.name}의 핵심 아이템 ${buildable.length}/${carryItems.length}개 조합 가능 (${names})`,
+      text: `보유 재료로 ${carry.name}의 핵심 아이템 ${craftable.length}개 조합 가능 (${names}) → 총 ${buildable.length}/${carryItems.length}`,
     });
   }
 

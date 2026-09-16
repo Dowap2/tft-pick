@@ -1,4 +1,4 @@
-import type { ComponentId, UnitId } from "./data";
+import { ITEMS, type ComponentId, type UnitId } from "./data";
 import type { UserInput, UserUnit } from "./score";
 
 // 재료 상한: 완성템 3개 + 여분 2개
@@ -11,12 +11,19 @@ const VALID_COMPONENTS = new Set<ComponentId>([
 export function parseUserInput(sp: Record<string, string | string[] | undefined>): UserInput {
   const itemsRaw = typeof sp.items === "string" ? sp.items : "";
   const unitsRaw = typeof sp.units === "string" ? sp.units : "";
+  const doneRaw = typeof sp.done === "string" ? sp.done : "";
 
   const components: ComponentId[] = itemsRaw
     .split(",")
     .map((s) => s.trim())
     .filter((s): s is ComponentId => VALID_COMPONENTS.has(s as ComponentId))
     .slice(0, MAX_COMPONENTS);
+
+  const completed = doneRaw
+    .split(",")
+    .map((s) => s.trim())
+    .filter((id) => ITEMS.some((i) => i.id === id))
+    .slice(0, 4);
 
   const units: UserUnit[] = unitsRaw
     .split(",")
@@ -28,12 +35,13 @@ export function parseUserInput(sp: Record<string, string | string[] | undefined>
       return { unitId: id as UnitId, star };
     });
 
-  return { components, units };
+  return { components, completed, units };
 }
 
 export function buildQuery(input: UserInput): string {
   const p = new URLSearchParams();
   if (input.components.length) p.set("items", input.components.join(","));
+  if (input.completed.length) p.set("done", input.completed.join(","));
   if (input.units.length)
     p.set("units", input.units.map((u) => `${u.unitId}:${u.star}`).join(","));
   return p.toString();

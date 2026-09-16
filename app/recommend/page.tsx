@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { componentById, unitById } from "@/lib/data";
+import { componentById, itemById, unitById } from "@/lib/data";
 import { parseUserInput, buildQuery } from "@/lib/params";
 import { nextStep, recommend, toStars, transitionLabel } from "@/lib/score";
 import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
@@ -37,7 +37,12 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
         <div className="space-y-2 text-sm">
           <div>
             <span className="text-muted/80">아이템: </span>
-            {input.components.length === 0 ? (
+            {input.completed.map((id, i) => (
+              <span key={`d${i}`} className="mr-2 inline-flex items-center gap-1 rounded bg-gold-dark/60 py-0.5 pl-0.5 pr-2 align-middle" title="완성 아이템">
+                <ItemIcon id={id} className="size-5" /> {itemById(id)?.name}
+              </span>
+            ))}
+            {input.components.length + input.completed.length === 0 ? (
               <span className="text-muted/50">없음</span>
             ) : (
               input.components.map((c, i) => (
