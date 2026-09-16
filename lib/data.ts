@@ -5,6 +5,8 @@ import itemsJson from "./gen/items.json";
 import decksJson from "./gen/decks.json";
 import traitsJson from "./gen/traits.json";
 import codesJson from "./gen/codes.json";
+import augmentsJson from "./gen/augments.json";
+import augmentTiersJson from "./gen/augment_tiers.json";
 
 export type ComponentId =
   | "bf" | "bow" | "rod" | "tear"
@@ -75,8 +77,12 @@ export type Trait = { name: string; img: string; breakpoints: number[] };
 // 덱은 `node scripts/sync-meta.mjs` 로 metatft 통계에서 생성 (lib/gen/decks.json)
 export const DECKS = decksJson as unknown as Deck[];
 export const TRAITS = traitsJson as Record<string, Trait>;
+export type Augment = { name: string; img: string; desc: string };
+export const AUGMENTS = augmentsJson as Record<string, Augment>;
+export const AUGMENT_TIERS = augmentTiersJson as Record<string, string>;
 const CODES = codesJson as { set: string; codes: Record<string, string> };
 const TRAIT_BY_NAME = new Map(Object.values(TRAITS).map((t) => [t.name, t]));
+export const traitByName = (name: string) => TRAIT_BY_NAME.get(name);
 
 /** 유닛 목록의 활성 시너지: 인원수와 도달 단계(0 = 미활성). 인원 많은 순. */
 export function activeTraits(unitIds: UnitId[]) {
@@ -104,4 +110,13 @@ export function teamCode(unitIds: UnitId[]): string | null {
   if (ids.length === 0) return null;
   const slots = Array.from({ length: 10 }, (_, i) => CODES.codes[ids[i]] ?? "000").join("");
   return `02${slots}${CODES.set}`;
+}
+
+/** 유닛이 최종 조합에 들어가는 덱 + 그 덱들에서 쓰는 아이템(빈도순) */
+export function unitUsage(unitId: UnitId) {
+  const decks = DECKS.filter((d) => d.coreUnits.some((u) => u.unitId === unitId)).sort((a, b) => a.avgPlacement - b.avgPlacement);
+  const count = new Map<string, number>();
+  for (const d of decks) for (const ci of d.coreItems) if (ci.unitId === unitId) count.set(ci.itemId, (count.get(ci.itemId) ?? 0) + 1);
+  const items = [...count].sort((a, b) => b[1] - a[1]).map(([id]) => id);
+  return { decks, items, carryOf: decks.filter((d) => d.carryId === unitId) };
 }

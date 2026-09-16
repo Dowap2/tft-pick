@@ -7,13 +7,17 @@ import meta from "@/lib/gen/meta.json";
 const MENU = [
   { href: "/", label: "덱 추천", match: (p: string) => p === "/" || p.startsWith("/recommend") },
   { href: "/decks", label: "덱 티어 리스트", match: (p: string) => p.startsWith("/deck") },
+  { href: "/champions", label: "챔피언", match: (p: string) => p.startsWith("/champions") },
+  { href: "/items", label: "아이템", match: (p: string) => p.startsWith("/items") },
+  { href: "/traits", label: "시너지", match: (p: string) => p.startsWith("/traits") },
+  { href: "/augments", label: "증강", match: (p: string) => p.startsWith("/augments") },
 ];
 
 export function Header() {
   const path = usePathname();
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg/95">
-      <nav className="mx-auto flex w-full max-w-3xl items-center gap-1 px-4">
+      <nav className="mx-auto flex w-full max-w-3xl items-center gap-0.5 overflow-x-auto px-4">
         <Link href="/" className="mr-4 flex items-center gap-2">
           <img src="/logo-128.png" alt="" className="size-7" />
           <span className="num text-base uppercase tracking-wider text-text">TFT Pick</span>
@@ -24,7 +28,7 @@ export function Header() {
             <Link
               key={m.href}
               href={m.href}
-              className={`border-b-2 px-3 py-2.5 text-sm transition-colors duration-150 ${
+              className={`shrink-0 border-b-2 px-2.5 py-2.5 text-sm transition-colors duration-150 ${
                 active ? "border-accent font-semibold text-text" : "border-transparent text-muted hover:text-text"
               }`}
             >

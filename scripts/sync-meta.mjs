@@ -144,6 +144,17 @@ for (const c of clusters) {
 
 writeFileSync("lib/gen/decks.json", JSON.stringify(decks, null, 2) + "\n");
 
+// ---- 증강 티어 (metatft 큐레이션 S/A/B/C)
+try {
+  const tl = (await get("../tft-stat-api/augments_tiers")).content.content.tierList;
+  const tiers = {};
+  for (const t of tl) for (const a of t.content) if (a.type === "augment") tiers[a.id] = t.label;
+  writeFileSync("lib/gen/augment_tiers.json", JSON.stringify(tiers, null, 2) + "\n");
+  console.log(`증강 티어: ${Object.keys(tiers).length}개`);
+} catch (e) {
+  console.warn("증강 티어 실패 (기존 유지):", e.message);
+}
+
 // ---- 팀 플래너 코드용 유닛 코드 (metatft 룩업). 코드 = "02" + 10슬롯×3hex + "TFTSet18"
 try {
   const lookup = await (await fetch(`https://data.metatft.com/lookups/${ci.tft_set}_latest_en_us.json`, UA)).json();
