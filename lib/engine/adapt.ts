@@ -1,5 +1,5 @@
 // 현재 정적 JSON(lib/data.ts) → 엔진 입력. DB 전환 전까지의 어댑터. DB 붙이면 decks_bundle 행을 같은 모양으로 매핑하면 됨.
-import { DECKS, ITEMS, TRAITS, UNITS, componentById, type Deck } from "@/lib/data";
+import { ITEMS, TRAITS, UNITS, componentById, type Deck } from "@/lib/data";
 import type { EngineCtx, EngineDeck, ItemRole } from "./score";
 
 const unit = new Map(UNITS.map((u) => [u.id, u]));
@@ -44,5 +44,3 @@ export function toEngineDeck(d: Deck): EngineDeck {
     items, levels: d.levels, counters: d.counters,
   };
 }
-
-export const engineDecks: EngineDeck[] = DECKS.map(toEngineDeck);

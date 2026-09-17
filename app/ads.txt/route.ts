@@ -1,5 +1,7 @@
 import { ADSENSE_CLIENT } from "@/lib/ads";
 
+export const dynamic = "force-static";
+
 // AdSense 소유 확인용 /ads.txt
 export function GET() {
   const client = ADSENSE_CLIENT.replace(/^ca-/, "");

@@ -1,6 +1,8 @@
 // 엔진 회귀 테스트: npx tsx scripts/test-engine.ts
 import { recommend, type RecommendInput } from "../lib/engine/score";
-import { engineDecks, jsonCtx } from "../lib/engine/adapt";
+import { jsonCtx, toEngineDeck } from "../lib/engine/adapt";
+import { DECKS_JSON } from "../lib/decks";
+const engineDecks = DECKS_JSON.map(toEngineDeck);
 
 const U = (s: string) => s.split(",").filter(Boolean).map((p) => { const [unitId, st] = p.split(":"); return { unitId, star: (Number(st) || 1) as 1 | 2 | 3 }; });
 const cases: Array<{ name: string; input: RecommendInput }> = [

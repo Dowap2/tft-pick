@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { DECKS, TRAITS, UNITS, activeTraits } from "@/lib/data";
+import { TRAITS, UNITS, activeTraits } from "@/lib/data";
+import { getDecks } from "@/lib/decks";
+
+export const dynamic = "force-static";
 import { TierBadge, UnitIcon } from "@/app/icons";
 import meta from "@/lib/gen/meta.json";
 
@@ -9,7 +12,8 @@ export const metadata = {
   alternates: { canonical: "/traits" },
 };
 
-export default function TraitsPage() {
+export default async function TraitsPage() {
+  const DECKS = await getDecks();
   const rows = Object.values(TRAITS)
     .map((t) => ({
       ...t,

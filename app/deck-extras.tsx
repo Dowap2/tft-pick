@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AUGMENTS, deckById, type Deck } from "@/lib/data";
+import { deckById, type Deck } from "@/lib/data";
+import { AUGMENTS } from "@/lib/augments";
 import { ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 
 /** 덱별 추천 증강: S는 펼쳐서, A는 접어서 */
@@ -39,8 +40,8 @@ export function DeckAugments({ deck }: { deck: Deck }) {
 }
 
 /** 상성: 같이 만나면 등수가 나빠지는/좋아지는 덱 */
-export function DeckCounters({ deck }: { deck: Deck }) {
-  const rows = (deck.counters ?? []).map((c) => ({ ...c, deck: deckById(c.deckId) })).filter((c) => c.deck);
+export function DeckCounters({ deck, decks }: { deck: Deck; decks: Deck[] }) {
+  const rows = (deck.counters ?? []).map((c) => ({ ...c, deck: deckById(c.deckId, decks) })).filter((c) => c.deck);
   if (rows.length === 0) return null;
   const bad = rows.filter((c) => c.placeChange > 0).sort((a, b) => b.placeChange - a.placeChange).slice(0, 3);
   const good = rows.filter((c) => c.placeChange < 0).sort((a, b) => a.placeChange - b.placeChange).slice(0, 3);

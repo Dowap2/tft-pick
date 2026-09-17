@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Deck } from "@/lib/data";
 import { unitById } from "@/lib/data";
 import { UnitIcon } from "@/app/icons";
@@ -6,11 +5,11 @@ import { UnitIcon } from "@/app/icons";
 type Props = {
   deck: Deck;
   ownedIds?: Set<string>;                 // 있으면 미보유 흐림
-  hrefFor?: (unitId: string) => string;   // 있으면 클릭으로 보유 토글
+  onToggle?: (unitId: string) => void;    // 있으면 클릭으로 보유 토글
 };
 
 // 레벨별(4~10) 최빈 조합 표. 덱 상세·덱 목록에서 공용.
-export function LevelComps({ deck, ownedIds, hrefFor }: Props) {
+export function LevelComps({ deck, ownedIds, onToggle }: Props) {
   if (!deck.levels) return null;
   return (
     <div className="panel divide-y divide-line rounded-lg bg-surface">
@@ -23,8 +22,8 @@ export function LevelComps({ deck, ownedIds, hrefFor }: Props) {
           <div className="flex flex-wrap gap-1">
             {comp.units.map((uid) => {
               const icon = <UnitIcon id={uid} size="sm" className={`h-9! ${!ownedIds || ownedIds.has(uid) ? "" : "opacity-45"}`} />;
-              return hrefFor ? (
-                <Link key={uid} href={hrefFor(uid)} replace scroll={false} title={unitById(uid)?.name}>{icon}</Link>
+              return onToggle ? (
+                <button key={uid} type="button" onClick={() => onToggle(uid)} title={unitById(uid)?.name} aria-pressed={ownedIds?.has(uid)}>{icon}</button>
               ) : (
                 <span key={uid} title={unitById(uid)?.name}>{icon}</span>
               );

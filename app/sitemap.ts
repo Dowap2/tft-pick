@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
-import { DECKS } from "@/lib/data";
+import { getDecks } from "@/lib/decks";
 import meta from "@/lib/gen/meta.json";
 import { SITE_URL } from "./layout";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const DECKS = await getDecks();
   const lastModified = new Date(meta.metaUpdated ?? meta.syncedAt);
   return [
     { url: SITE_URL, lastModified, changeFrequency: "weekly", priority: 1 },

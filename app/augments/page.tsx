@@ -1,4 +1,6 @@
-import { AUGMENTS, AUGMENT_TIERS } from "@/lib/data";
+import { AUGMENTS, AUGMENT_TIERS } from "@/lib/augments";
+
+export const dynamic = "force-static";
 import { TierBadge } from "@/app/icons";
 import meta from "@/lib/gen/meta.json";
 

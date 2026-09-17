@@ -2,12 +2,8 @@
 // 덱 데이터 출처: metatft.com 통계 (scripts/sync-meta.mjs)
 import unitsJson from "./gen/units.json";
 import itemsJson from "./gen/items.json";
-import decksJson from "./gen/decks.json";
 import traitsJson from "./gen/traits.json";
 import codesJson from "./gen/codes.json";
-import augmentsJson from "./gen/augments.json";
-import augmentTiersJson from "./gen/augment_tiers.json";
-import { DECK_NOTES } from "./deck-notes";
 
 export type ComponentId =
   | "bf" | "bow" | "rod" | "tear"
@@ -78,12 +74,8 @@ export type Deck = {
 };
 export type Trait = { name: string; img: string; breakpoints: number[] };
 
-// 덱은 `node scripts/sync-meta.mjs` 로 metatft 통계에서 생성 (lib/gen/decks.json)
-export const DECKS = (decksJson as unknown as Deck[]).map((d) => ({ ...d, ...DECK_NOTES[d.name] }));
+// 덱 데이터는 lib/decks.ts (DB → 폴백 lib/gen/decks.json). 증강은 lib/augments.ts. 이 파일은 클라이언트 번들에도 들어가므로 가볍게 유지.
 export const TRAITS = traitsJson as Record<string, Trait>;
-export type Augment = { name: string; img: string; desc: string };
-export const AUGMENTS = augmentsJson as Record<string, Augment>;
-export const AUGMENT_TIERS = augmentTiersJson as Record<string, string>;
 const CODES = codesJson as { set: string; codes: Record<string, string> };
 const TRAIT_BY_NAME = new Map(Object.values(TRAITS).map((t) => [t.name, t]));
 export const traitByName = (name: string) => TRAIT_BY_NAME.get(name);
@@ -104,7 +96,7 @@ export function activeTraits(unitIds: UnitId[]) {
 
 export const unitById = (id: UnitId) => UNITS.find((u) => u.id === id);
 export const itemById = (id: string) => ITEMS.find((i) => i.id === id);
-export const deckById = (id: string) => DECKS.find((d) => d.id === id);
+export const deckById = (id: string, decks: Deck[]) => decks.find((d) => d.id === id);
 export const componentById = (id: ComponentId) =>
   COMPONENTS.find((c) => c.id === id);
 
@@ -117,8 +109,8 @@ export function teamCode(unitIds: UnitId[]): string | null {
 }
 
 /** 유닛이 최종 조합에 들어가는 덱 + 그 덱들에서 쓰는 아이템(빈도순) */
-export function unitUsage(unitId: UnitId) {
-  const decks = DECKS.filter((d) => d.coreUnits.some((u) => u.unitId === unitId)).sort((a, b) => a.avgPlacement - b.avgPlacement);
+export function unitUsage(unitId: UnitId, all: Deck[]) {
+  const decks = all.filter((d) => d.coreUnits.some((u) => u.unitId === unitId)).sort((a, b) => a.avgPlacement - b.avgPlacement);
   const count = new Map<string, number>();
   for (const d of decks) for (const ci of d.coreItems) if (ci.unitId === unitId) count.set(ci.itemId, (count.get(ci.itemId) ?? 0) + 1);
   const items = [...count].sort((a, b) => b[1] - a[1]).map(([id]) => id);

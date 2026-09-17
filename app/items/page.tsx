@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { COMPONENTS, DECKS, ITEMS, unitById, type ComponentId } from "@/lib/data";
+import { COMPONENTS, ITEMS, unitById, type ComponentId } from "@/lib/data";
+import { getDecks } from "@/lib/decks";
+
+export const dynamic = "force-static";
 import { ItemIcon, UnitIcon } from "@/app/icons";
 import meta from "@/lib/gen/meta.json";
 
@@ -9,7 +12,8 @@ export const metadata = {
   alternates: { canonical: "/items" },
 };
 
-export default function ItemsPage() {
+export default async function ItemsPage() {
+  const DECKS = await getDecks();
   const comps = COMPONENTS.map((c) => c.id);
   const byRecipe = new Map(ITEMS.map((i) => [[...i.recipe].sort().join("+"), i]));
   const find = (a: ComponentId, b: ComponentId) => byRecipe.get([a, b].sort().join("+"));

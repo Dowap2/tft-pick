@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { UNITS, traitByName, unitUsage } from "@/lib/data";
+import { getDecks } from "@/lib/decks";
+
+export const dynamic = "force-static";
 import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 import meta from "@/lib/gen/meta.json";
 
@@ -9,7 +12,8 @@ export const metadata = {
   alternates: { canonical: "/champions" },
 };
 
-export default function ChampionsPage() {
+export default async function ChampionsPage() {
+  const decks = await getDecks();
   const byCost = [1, 2, 3, 4, 5].map((c) => ({ cost: c, units: UNITS.filter((u) => u.cost === c) }));
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
@@ -27,7 +31,7 @@ export default function ChampionsPage() {
           <h2 className={`mb-2 text-base font-semibold ${COST_TEXT[cost]}`}>{cost}코스트 <span className="num text-muted">{units.length}</span></h2>
           <div className="panel divide-y divide-line rounded-xl bg-surface">
             {units.map((u) => {
-              const use = unitUsage(u.id);
+              const use = unitUsage(u.id, decks);
               return (
                 <article key={u.id} id={u.id} className="flex flex-wrap items-center gap-3 px-3 py-2.5">
                   <UnitIcon id={u.id} size="md" />

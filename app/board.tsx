@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { unitById, type Deck } from "@/lib/data";
 import { placeUnits } from "@/lib/board";
 import { ItemIcon, UnitIcon } from "@/app/icons";
@@ -7,11 +6,11 @@ type Props = {
   deck: Deck;
   carryId: string;
   ownedIds: Set<string>;
-  hrefFor?: (unitId: string) => string; // 있으면 클릭으로 보유 토글
+  onToggle?: (unitId: string) => void; // 있으면 클릭으로 보유 토글
 };
 
 // 4행 × 7열 육각 배치도. row 0 = 최전방(위). 홀수 행은 반 칸 오른쪽 (인게임과 동일).
-export function Board({ deck, carryId, ownedIds, hrefFor }: Props) {
+export function Board({ deck, carryId, ownedIds, onToggle }: Props) {
   const byPos = new Map(placeUnits(deck).map((u) => [u.pos.join(","), u]));
   const itemsByUnit = new Map<string, string[]>();
   for (const ci of deck.coreItems) itemsByUnit.set(ci.unitId, [...(itemsByUnit.get(ci.unitId) ?? []), ci.itemId]);
@@ -44,8 +43,8 @@ export function Board({ deck, carryId, ownedIds, hrefFor }: Props) {
                 </span>
               </div>
             );
-            return hrefFor ? (
-              <Link key={col} href={hrefFor(u.unitId)} replace scroll={false} className="shrink-0 hover:opacity-100">{cell}</Link>
+            return onToggle ? (
+              <button key={col} type="button" onClick={() => onToggle(u.unitId)} className="shrink-0 hover:opacity-100" aria-pressed={owned}>{cell}</button>
             ) : (
               <div key={col} className="shrink-0">{cell}</div>
             );
@@ -54,7 +53,7 @@ export function Board({ deck, carryId, ownedIds, hrefFor }: Props) {
       ))}
       <div className="mt-1 flex justify-between text-[10px] text-muted/70">
         <span>↑ 최전방</span>
-        <span className="opacity-60">흐림 = 미보유{hrefFor && " · 클릭하면 보유 토글"} · 청록 = 캐리</span>
+        <span className="opacity-60">흐림 = 미보유{onToggle && " · 클릭하면 보유 토글"} · 인디고 = 캐리</span>
       </div>
     </div>
   );
