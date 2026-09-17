@@ -7,6 +7,7 @@ import traitsJson from "./gen/traits.json";
 import codesJson from "./gen/codes.json";
 import augmentsJson from "./gen/augments.json";
 import augmentTiersJson from "./gen/augment_tiers.json";
+import { DECK_NOTES } from "./deck-notes";
 
 export type ComponentId =
   | "bf" | "bow" | "rod" | "tear"
@@ -77,7 +78,7 @@ export type Deck = {
 export type Trait = { name: string; img: string; breakpoints: number[] };
 
 // 덱은 `node scripts/sync-meta.mjs` 로 metatft 통계에서 생성 (lib/gen/decks.json)
-export const DECKS = decksJson as unknown as Deck[];
+export const DECKS = (decksJson as unknown as Deck[]).map((d) => ({ ...d, ...DECK_NOTES[d.name] }));
 export const TRAITS = traitsJson as Record<string, Trait>;
 export type Augment = { name: string; img: string; desc: string };
 export const AUGMENTS = augmentsJson as Record<string, Augment>;
