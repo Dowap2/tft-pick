@@ -44,7 +44,8 @@ const cellToPos = (cell) => { const n = Number(cell.slice(5)) - 1; return [3 - M
 const { cluster_info: ci } = await get("latest_cluster_info");
 const builds = (await get("comp_builds")).results;
 const compsData = (await get("comps_data")).results.data.cluster_details;   // levelling, difficulty, 3성 목표, 아이템 우선순위
-const compsStats = (await get("comps_stats")).results;                     // 등수 분포 → 1등률/Top4/픽률
+const compsStats = (await get("comps_stats")).results;
+const augTiers = (await get("comp_augment_tiers")).results;                 // 덱별 추천 증강 S/A/B                     // 등수 분포 → 1등률/Top4/픽률
 const totalBoards = compsStats.find((s) => s.cluster === "")?.places?.[0] ?? 0;
 const statsOf = Object.fromEntries(compsStats.filter((s) => s.cluster).map((s) => [s.cluster, s]));
 // metatft 기준: difficulty < -0.05 Easy, > 0.07 또는 Fast 9 Hard
@@ -130,6 +131,10 @@ for (const c of clusters) {
     .filter((x) => String(x.against) !== String(c.Cluster) && clusters.some((k) => String(k.Cluster) === String(x.against)))
     .map((x) => ({ deckId: `mt-${x.against}`, placeChange: Number(x.place_change.toFixed(2)) }));
 
+  // 덱별 추천 증강 (S/A만, cdragon에 있는 것만), 일자별 추세
+  const augments = (augTiers[c.Cluster]?.augments ?? []).filter((a) => a.tier === "S" || a.tier === "A").map((a) => ({ id: a.id, tier: a.tier }));
+  const trends = (d.trends ?? []).map((t) => ({ day: t.day.slice(5, 10), avg: Number(t.avg.toFixed(2)), pick: Number((t.pick * 100).toFixed(2)) }));
+
   const name = c.name.map((p) => (p.type === "trait" ? traits[p.name] : unitByApi[p.name]?.name) ?? p.name).join(" ");
   const tierLabel = tierOf(c.avg);
   decks.push({
@@ -137,7 +142,7 @@ for (const c of clusters) {
     avgPlacement: Number(c.avg.toFixed(2)), games,
     winRate: winRate && Number(winRate.toFixed(4)), top4Rate: top4Rate && Number(top4Rate.toFixed(4)), pickRate: pickRate && Number(pickRate.toFixed(4)),
     levelling, difficulty: difficultyOf(cd.difficulty ?? 0, levelling), threeStarTargets,
-    carryId, coreUnits, coreItems, altItems, levels, counters,
+    carryId, coreUnits, coreItems, altItems, levels, counters, augments, trends,
   });
   console.log(`  ${tierLabel.padEnd(2)} ${c.avg.toFixed(2)} ${name}  [${levelling}/${difficultyOf(cd.difficulty ?? 0, levelling)}] win ${((winRate ?? 0) * 100).toFixed(1)}% top4 ${((top4Rate ?? 0) * 100).toFixed(1)}%`);
 }

@@ -70,6 +70,8 @@ export type Deck = {
   altItems?: Record<UnitId, string[]>;     // 유닛별 대체 아이템
   levels?: Record<string, LevelComp>;      // 레벨별(4~10) 최빈 조합
   counters?: { deckId: string; placeChange: number }[];  // 같이 만나면 불리한 덱 (+ = 내 등수 나빠짐)
+  augments?: { id: string; tier: "S" | "A" | "B" }[];    // 덱별 추천 증강 (metatft)
+  trends?: { day: string; avg: number; pick: number }[];  // 일자별 평균등수·픽률(%)
   playstyle?: string;
 };
 export type Trait = { name: string; img: string; breakpoints: number[] };

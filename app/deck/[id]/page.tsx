@@ -8,6 +8,7 @@ import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
 import { LevelComps } from "@/app/levels";
+import { DeckAugments, DeckCounters, DeckTrends } from "@/app/deck-extras";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 type Params = Promise<{ id: string }>;
@@ -236,6 +237,10 @@ export default async function DeckDetailPage({
           })}
         </div>
       </section>
+
+      <DeckAugments deck={deck} />
+      <DeckCounters deck={deck} />
+      <DeckTrends deck={deck} />
 
       {/* 추천 이유 */}
       <section className="mb-6">
