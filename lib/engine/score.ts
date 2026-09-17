@@ -170,6 +170,11 @@ export function scoreDeck(input: RecommendInput, deck: EngineDeck, ctx: EngineCt
     if (c.units.length && n >= p.window[0] && n <= p.window[1]) comps.push({ label: `${lv}렙`, units: c.units, w: 1 });
   }
   if (p.includeFinal) comps.push({ label: "최종", units: deck.units.map((u) => u.unitId), w: p.finalW });
+  if (comps.length === 0) {
+    // 창 안에 레벨 데이터가 없으면(예: 수집 데이터가 7렙 이상뿐) 가장 낮은 레벨 조합으로 대체
+    const lowest = Object.entries(deck.levels ?? {}).filter(([, c]) => c.units.length).sort((a, b) => Number(a[0]) - Number(b[0]))[0];
+    comps.push(lowest ? { label: `${lowest[0]}렙`, units: lowest[1].units, w: 1 } : { label: "최종", units: deck.units.map((u) => u.unitId), w: 1 });
+  }
   let best = { label: "", ratio: 0, hit: [] as string[], total: 1, units: [] as string[] };
   for (const c of comps) {
     const hit = c.units.filter((u) => starOf.has(u));
