@@ -6,7 +6,8 @@ import { useEffect } from "react";
 //   NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
 //   NEXT_PUBLIC_ADSENSE_SLOT_LEFT=1234567890
 //   NEXT_PUBLIC_ADSENSE_SLOT_RIGHT=0987654321
-export const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+// 퍼블리셔 ID는 공개값이라 코드에 기본값. 슬롯은 환경변수.
+export const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-8923116744431536";
 const SLOTS = {
   left: process.env.NEXT_PUBLIC_ADSENSE_SLOT_LEFT,
   right: process.env.NEXT_PUBLIC_ADSENSE_SLOT_RIGHT,
