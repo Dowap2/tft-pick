@@ -9,7 +9,6 @@
 //
 // 필요 env: RIOT_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // 레이트 리밋(개발 키): 20 req/s, 100 req/2min → 아래 limiter 가 자동으로 맞춤. 429 는 Retry-After 대기.
-import { createClient } from "@supabase/supabase-js";
 
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.startsWith("--") ? [a.slice(2), all[i + 1]?.startsWith("--") || all[i + 1] == null ? true : all[i + 1]] : []).filter(Boolean));
 const TIERS = String(args.tiers ?? "challenger,grandmaster").split(",");
@@ -61,20 +60,23 @@ async function riot(url, attempt = 0) {
   return res.json();
 }
 
-// ---- Supabase (service role) ----
-const sb = DRY ? null : createClient(NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
-async function rpc(fn, params) {
-  const { data, error } = await sb.rpc(fn, params);
-  if (error) throw new Error(`${fn}: ${error.message}`);
-  return data;
+// ---- Supabase PostgREST 직접 호출 (supabase-js 는 Node 20에서 WebSocket 요구 → fetch 로 충분) ----
+const SB_HEADERS = { apikey: SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json" };
+async function rpc(fn, params = {}) {
+  const res = await fetch(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/rpc/${fn}`, { method: "POST", headers: SB_HEADERS, body: JSON.stringify(params) });
+  if (!res.ok) throw new Error(`${fn}: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+async function select(table, query) {
+  const res = await fetch(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}?${query}`, { headers: SB_HEADERS });
+  if (!res.ok) throw new Error(`${table}: ${res.status} ${await res.text()}`);
+  return res.json();
 }
 
 // ---- 1) 현재 패치 (match 응답의 game_version 은 "TFT Unreal Version ?.?.?.?" 라 쓸모없음 → patches.is_current) ----
 let patch = null;
 if (!DRY) {
-  const { data, error } = await sb.from("patches").select("id, set_number, version").eq("is_current", true).maybeSingle();
-  if (error) die(error.message);
-  patch = data;
+  [patch] = await select("patches", "select=id,set_number,version&is_current=eq.true");
   if (!patch) die("patches 에 is_current 행이 없음. 먼저: insert into patches (set_number, version, is_current) values (18, '16.18', true);");
   console.log(`패치: set ${patch.set_number} / ${patch.version} (id ${patch.id})`);
 }
