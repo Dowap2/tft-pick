@@ -8,6 +8,14 @@ const FRONT = new Set(["엄호대", "선봉대", "싸움꾼", "전쟁기계", "�
 const CENTER_OUT: Col[] = [3, 2, 4, 1, 5, 0, 6];
 
 // ponytail: 특성 기반 휴리스틱. 덱별 정확한 자리는 DeckUnit.pos 로 덮어쓴다.
+/** 레벨별 조합을 보드에 올릴 덱 뷰: 최종 조합에 있는 유닛은 최종 자리·성 유지, 아니면 자동 배치·1성 */
+export function deckAtLevel(deck: Deck, level: string): Deck {
+  const units = deck.levels?.[level]?.units;
+  if (!units) return deck;
+  const final = new Map(deck.coreUnits.map((u) => [u.unitId, u]));
+  return { ...deck, coreUnits: units.map((unitId) => final.get(unitId) ?? { unitId, star: 1 }) };
+}
+
 export function placeUnits(deck: Deck): Placed[] {
   const taken = new Set<string>();
   const out: Placed[] = [];

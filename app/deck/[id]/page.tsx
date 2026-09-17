@@ -8,6 +8,7 @@ import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
 import { LevelComps } from "@/app/levels";
+import { deckAtLevel } from "@/lib/board";
 import { DeckAugments, DeckCounters, DeckTrends } from "@/app/deck-extras";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
@@ -40,6 +41,10 @@ export default async function DeckDetailPage({
   if (!deck) notFound();
 
   const input = parseUserInput(sp);
+  // 배치도 레벨 탭 (?lv=7). 없으면 최종
+  const lvKeys = Object.keys(deck.levels ?? {}).sort((a, b) => Number(a) - Number(b));
+  const lv = typeof sp.lv === "string" && lvKeys.includes(sp.lv) ? sp.lv : null;
+  const boardDeck = lv ? deckAtLevel(deck, lv) : deck;
   const score = scoreDeck(input, deck);
   const q = buildQuery(input);
   const trans = transitionLabel(score);
@@ -49,7 +54,7 @@ export default async function DeckDetailPage({
   const userUnitIds = new Set(input.units.map((u) => u.unitId));
   // 유닛 클릭 → 보유 토글 (덱 목표 성으로 추가). URL만 바뀌고 점수/배치/레벨이 전부 다시 계산됨.
   const toggleHref = (uid: string) =>
-    `/deck/${deck.id}?${toggleUnitQuery(input, uid, deck.coreUnits.find((u) => u.unitId === uid)?.star ?? 1)}`;
+    `/deck/${deck.id}?${toggleUnitQuery(input, uid, deck.coreUnits.find((u) => u.unitId === uid)?.star ?? 1)}${lv ? `&lv=${lv}` : ""}`;
 
   // 유닛별 그룹: {unitId: [itemIds]}
   const itemsByUnit = deck.coreItems.reduce<Record<string, string[]>>((acc, ci) => {
@@ -144,12 +149,27 @@ export default async function DeckDetailPage({
         </section>
       )}
 
-      {/* 배치도 */}
+      {/* 배치도 (레벨 탭) */}
       <section className="mb-6">
-        <h2 className="mb-3 text-lg font-semibold">최종 배치</h2>
-        <div className="panel overflow-x-auto rounded-lg bg-surface p-4">
-          <Board deck={deck} carryId={score.carryId} ownedIds={userUnitIds} hrefFor={toggleHref} />
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <h2 className="text-lg font-semibold">{lv ? `${lv}렙 배치` : "최종 배치"}</h2>
+          <div className="ml-auto flex gap-0.5">
+            {lvKeys.map((k) => (
+              <Link key={k} href={`/deck/${deck.id}?${q}${q ? "&" : ""}lv=${k}`} replace scroll={false}
+                className={`num rounded px-2 py-0.5 text-xs transition-colors duration-150 ${lv === k ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+                {k}
+              </Link>
+            ))}
+            <Link href={q ? `/deck/${deck.id}?${q}` : `/deck/${deck.id}`} replace scroll={false}
+              className={`rounded px-2 py-0.5 text-xs transition-colors duration-150 ${!lv ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+              최종
+            </Link>
+          </div>
         </div>
+        <div className="panel overflow-x-auto rounded-lg bg-surface p-4">
+          <Board deck={boardDeck} carryId={score.carryId} ownedIds={userUnitIds} hrefFor={toggleHref} />
+        </div>
+        {lv && <p className="mt-1 text-[10px] text-muted/60">최종 조합에 있는 유닛은 최종 자리 그대로, 나머지는 특성 기준 자동 배치. {deck.levels?.[lv]?.avg.toFixed(2)}등 · {deck.levels?.[lv]?.count.toLocaleString()}판</p>}
       </section>
 
       {/* 필수 유닛 */}
