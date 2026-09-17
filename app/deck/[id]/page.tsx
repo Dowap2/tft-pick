@@ -10,7 +10,7 @@ import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon
 import { Board } from "@/app/board";
 import { LevelComps } from "@/app/levels";
 import { deckAtLevel } from "@/lib/board";
-import { DeckAugments, DeckCounters, DeckTrends } from "@/app/deck-extras";
+import { DeckAugments, DeckCounters, DeckProComps, DeckTrends } from "@/app/deck-extras";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 type Params = Promise<{ id: string }>;
@@ -260,6 +260,7 @@ export default async function DeckDetailPage({
         </div>
       </section>
 
+      <DeckProComps deck={deck} />
       <DeckAugments deck={deck} />
       <DeckCounters deck={deck} />
       <DeckTrends deck={deck} />

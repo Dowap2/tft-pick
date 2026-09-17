@@ -73,6 +73,7 @@ export type Deck = {
   counters?: { deckId: string; placeChange: number }[];  // 같이 만나면 불리한 덱 (+ = 내 등수 나빠짐)
   augments?: { id: string; tier: "S" | "A" | "B" }[];    // 덱별 추천 증강 (metatft)
   trends?: { day: string; avg: number; pick: number }[];  // 일자별 평균등수·픽률(%)
+  proComps?: { title: string; author: string; notes: string; units: { unitId: UnitId; items: string[] }[] }[];  // 고랭커 공개 보드
   playstyle?: string;
 };
 export type Trait = { name: string; img: string; breakpoints: number[] };

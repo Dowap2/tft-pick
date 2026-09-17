@@ -135,6 +135,15 @@ for (const c of clusters) {
   const augments = (augTiers[c.Cluster]?.augments ?? []).filter((a) => a.tier === "S" || a.tier === "A").map((a) => ({ id: a.id, tier: a.tier }));
   const trends = (d.trends ?? []).map((t) => ({ day: t.day.slice(5, 10), avg: Number(t.avg.toFixed(2)), pick: Number((t.pick * 100).toFixed(2)) }));
 
+  // 고랭커/프로 공개 팀 빌더 보드 (유사도 높은 순 최대 2개)
+  const proComps = (d.proComps ?? []).slice(0, 2).map((p) => {
+    const cc = p.content?.content ?? {};
+    const units = Object.values(cc.unit_positions ?? {})
+      .filter((u) => u.type === "unit" && unitByApi[u.apiName])
+      .map((u) => ({ unitId: unitByApi[u.apiName].id, items: (u.items ?? []).map((i) => itemId(i.apiName)).filter(Boolean) }));
+    return { title: p.content?.metadata?.title ?? "", author: p.content?.author?.riotid ?? "", notes: (cc.notes ?? "").slice(0, 300), units };
+  }).filter((p) => p.units.length >= 5);
+
   const name = c.name.map((p) => (p.type === "trait" ? traits[p.name] : unitByApi[p.name]?.name) ?? p.name).join(" ");
   const tierLabel = tierOf(c.avg);
   decks.push({
@@ -142,7 +151,7 @@ for (const c of clusters) {
     avgPlacement: Number(c.avg.toFixed(2)), games,
     winRate: winRate && Number(winRate.toFixed(4)), top4Rate: top4Rate && Number(top4Rate.toFixed(4)), pickRate: pickRate && Number(pickRate.toFixed(4)),
     levelling, difficulty: difficultyOf(cd.difficulty ?? 0, levelling), threeStarTargets,
-    carryId, coreUnits, coreItems, altItems, levels, counters, augments, trends,
+    carryId, coreUnits, coreItems, altItems, levels, counters, augments, trends, proComps,
   });
   console.log(`  ${tierLabel.padEnd(2)} ${c.avg.toFixed(2)} ${name}  [${levelling}/${difficultyOf(cd.difficulty ?? 0, levelling)}] win ${((winRate ?? 0) * 100).toFixed(1)}% top4 ${((top4Rate ?? 0) * 100).toFixed(1)}%`);
 }

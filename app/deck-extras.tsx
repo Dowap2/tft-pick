@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AUGMENTS, deckById, type Deck } from "@/lib/data";
-import { TierBadge } from "@/app/icons";
+import { ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 
 /** 덱별 추천 증강: S는 펼쳐서, A는 접어서 */
 export function DeckAugments({ deck }: { deck: Deck }) {
@@ -97,6 +97,36 @@ export function DeckTrends({ deck }: { deck: Deck }) {
           {avgs.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r={2.5} className="fill-accent" />)}
         </svg>
         <div className="flex justify-between text-[10px] text-muted/60"><span>{first.day}</span><span>선 = 평균 등수(위가 좋음) · 막대 = 픽률</span><span>{last.day}</span></div>
+      </div>
+    </section>
+  );
+}
+
+/** 고랭커/프로가 공개한 팀 빌더 보드 (metatft 팀 빌더, 유사도순) */
+export function DeckProComps({ deck }: { deck: Deck }) {
+  const list = deck.proComps ?? [];
+  if (list.length === 0) return null;
+  return (
+    <section className="mb-6">
+      <h2 className="mb-3 text-lg font-semibold">고랭커 보드 <span className="text-xs font-normal text-muted/70">metatft 팀 빌더 공개 덱</span></h2>
+      <div className="space-y-2">
+        {list.map((p, i) => (
+          <article key={i} className="panel rounded-lg bg-surface p-3">
+            <div className="flex flex-wrap items-baseline gap-2 text-xs">
+              <span className="font-semibold text-text">{p.title}</span>
+              <span className="num text-muted">{p.author}</span>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {p.units.map((u, j) => (
+                <div key={j} className="flex flex-col items-center gap-0.5">
+                  <UnitIcon id={u.unitId} size="sm" className="h-9!" />
+                  <div className="flex gap-px">{u.items.map((it, k) => <ItemIcon key={k} id={it} className="size-3.5! rounded-sm border-0" />)}</div>
+                </div>
+              ))}
+            </div>
+            {p.notes && <p className="mt-2 whitespace-pre-line text-[11px] leading-4 text-muted">{p.notes}</p>}
+          </article>
+        ))}
       </div>
     </section>
   );
