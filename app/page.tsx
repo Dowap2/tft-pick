@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { COMPONENTS, ITEMS, UNITS, type ComponentId, type UnitId } from "@/lib/data";
 import { MAX_COMPONENTS } from "@/lib/params";
-import { carouselPriority } from "@/lib/score";
+import { STAGES, carouselPriority } from "@/lib/score";
+
+const HISTORY_KEY = "tft-pick:history"; // 이번 판 기록 (라운드별 입력 스냅샷)
+type HistoryEntry = { at: number; stage: string; query: string; summary: string };
 
 const CAROUSEL = carouselPriority().slice(0, 5);
 import { COST_TEXT, ItemIcon, UnitIcon } from "@/app/icons";
@@ -25,6 +28,8 @@ export default function Home() {
   const [rivals, setRivals] = useState<UnitId[]>([]);      // 로비 스카우팅: 상대 보드에서 본 유닛
   const [rivalQuery, setRivalQuery] = useState("");
   const [showRivals, setShowRivals] = useState(false);
+  const [stage, setStage] = useState<string>("");
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   // 마지막 입력 복원/저장 (라운드마다 다시 입력하지 않도록)
   const [restored, setRestored] = useState(false);
@@ -34,13 +39,15 @@ export default function Home() {
       if (saved?.components) setComponents(saved.components);
       if (saved?.completed) setCompleted(saved.completed);
       if (saved?.rivals) { setRivals(saved.rivals); if (saved.rivals.length) setShowRivals(true); }
+      if (saved?.stage) setStage(saved.stage);
+      setHistory(JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]"));
       if (saved?.units) setUnits(saved.units);
     } catch {}
     setRestored(true);
   }, []);
   useEffect(() => {
     if (!restored) return; // 복원 전에 빈 값으로 덮어쓰지 않도록
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, completed, units, rivals })); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ components, completed, units, rivals, stage })); } catch {}
   }, [restored, components, completed, units, rivals]);
 
   // 재료 상한은 "재료 환산" 기준: 완성템 1개 = 재료 2개
@@ -81,9 +88,19 @@ export default function Home() {
     if (components.length) params.set("items", components.join(","));
     if (completed.length) params.set("done", completed.join(","));
     if (rivals.length) params.set("rivals", rivals.join(","));
+    if (stage) params.set("stage", stage);
     if (units.length)
       params.set("units", units.map((u) => `${u.unitId}:${u.star}`).join(","));
-    router.push(`/recommend?${params.toString()}`);
+    const query = params.toString();
+    // 이번 판 기록: 같은 스테이지는 덮어쓰기, 최대 10개
+    const summary = [
+      ...units.map((u) => `${UNITS.find((x) => x.id === u.unitId)?.name}${u.star > 1 ? "★".repeat(u.star) : ""}`),
+      ...completed.map((id) => ITEMS.find((x) => x.id === id)?.name),
+      ...components.map((c) => COMPONENTS.find((x) => x.id === c)?.name),
+    ].filter(Boolean).join(", ");
+    const next = [...history.filter((h) => !stage || h.stage !== stage), { at: Date.now(), stage, query, summary }].slice(-10);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+    router.push(`/recommend?${query}`);
   };
 
   const canSubmit = components.length > 0 || completed.length > 0 || units.length > 0;
@@ -99,6 +116,36 @@ export default function Home() {
           </p>
         </div>
       </header>
+
+      {/* 스테이지 + 이번 판 기록 */}
+      <section className="mb-6">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-xs text-muted">지금 스테이지</span>
+          <button onClick={() => setStage("")} className={`num rounded-md px-2 py-1 text-xs transition-colors duration-150 ${!stage ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>전체</button>
+          {STAGES.map((s) => (
+            <button key={s} onClick={() => setStage(s)} className={`num rounded-md px-2 py-1 text-xs transition-colors duration-150 ${stage === s ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>{s}</button>
+          ))}
+          <span className="ml-1 text-[10px] text-muted/60">고르면 그 시점 레벨 조합으로만 계산</span>
+        </div>
+        {history.length > 0 && (
+          <div className="mt-3 rounded-lg border border-line p-3">
+            <div className="mb-1.5 flex items-center justify-between text-xs">
+              <span className="font-semibold">이번 판 기록</span>
+              <button onClick={() => { setHistory([]); try { localStorage.removeItem(HISTORY_KEY); } catch {} }} className="text-muted hover:text-text">새 판 시작</button>
+            </div>
+            <ol className="space-y-0.5 text-xs">
+              {history.map((h) => (
+                <li key={h.at}>
+                  <Link href={`/recommend?${h.query}`} className="flex gap-2 rounded px-1.5 py-1 transition-colors duration-150 hover:bg-surface-2">
+                    <span className="num w-8 shrink-0 text-accent">{h.stage || "—"}</span>
+                    <span className="truncate text-muted">{h.summary || "입력 없음"}</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </section>
 
       {/* 1-1 회전목마 가이드 */}
       <section className="panel mb-8 rounded-lg bg-surface p-4">
@@ -335,6 +382,7 @@ export default function Home() {
             setComponents([]);
             setCompleted([]);
             setRivals([]);
+            setStage("");
             setUnits([]);
             setQuery("");
             try { localStorage.removeItem(STORAGE_KEY); } catch {}

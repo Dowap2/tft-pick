@@ -1,5 +1,5 @@
 import { ITEMS, UNITS, type ComponentId, type UnitId } from "./data";
-import type { UserInput, UserUnit } from "./score";
+import { STAGES, type UserInput, type UserUnit } from "./score";
 
 // 재료 상한: 완성템 3개 + 여분 2개
 export const MAX_COMPONENTS = 8;
@@ -38,7 +38,9 @@ export function parseUserInput(sp: Record<string, string | string[] | undefined>
 
   const rivals = rivalsRaw.split(",").map((s) => s.trim()).filter((id) => UNITS.some((u) => u.id === id)).slice(0, 20);
 
-  return { components, completed, units, rivals };
+  const stage = typeof sp.stage === "string" && (STAGES as readonly string[]).includes(sp.stage) ? sp.stage : undefined;
+
+  return { components, completed, units, rivals, stage };
 }
 
 export function buildQuery(input: UserInput): string {
@@ -46,6 +48,7 @@ export function buildQuery(input: UserInput): string {
   if (input.components.length) p.set("items", input.components.join(","));
   if (input.completed.length) p.set("done", input.completed.join(","));
   if (input.rivals?.length) p.set("rivals", input.rivals.join(","));
+  if (input.stage) p.set("stage", input.stage);
   if (input.units.length)
     p.set("units", input.units.map((u) => `${u.unitId}:${u.star}`).join(","));
   return p.toString();

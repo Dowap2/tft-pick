@@ -7,7 +7,16 @@ const componentName = (c: ComponentId) => componentById(c)?.name ?? c;
 export type UserUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 // completed = 이미 완성된 아이템(분해 불가) → 캐리템과 정확히 일치할 때만 인정
 // rivals = 다른 플레이어 보드에서 본 유닛 (로비 스카우팅, 선택)
-export type UserInput = { components: ComponentId[]; completed: string[]; units: UserUnit[]; rivals?: UnitId[] };
+// stage = 현재 스테이지("2-1" 등, 선택). 있으면 그 시점 레벨(±1)의 조합만으로 초반 점수 계산
+export type UserInput = { components: ComponentId[]; completed: string[]; units: UserUnit[]; rivals?: UnitId[]; stage?: string };
+
+export const STAGES = ["2-1", "2-3", "2-5", "3-1", "3-3", "3-5", "4-1", "4-3", "4-5", "5-1"] as const;
+/** 스테이지 → 그 시점의 일반적인 레벨 (metatft levels 통계: 5렙 2-5, 6렙 3-2, 7렙 3-6, 8렙 4-2, 9렙 6-1) */
+export function stageLevel(stage: string): number {
+  const [s, r] = stage.split("-").map(Number);
+  const t = s * 10 + r;
+  return t < 25 ? 4 : t < 32 ? 5 : t < 36 ? 6 : t < 42 ? 7 : t < 61 ? 8 : 9;
+}
 
 export type Reason = { kind: "good" | "warn" | "info"; text: string };
 export type ScoreBreakdown = {
@@ -89,10 +98,11 @@ export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
 
   // ---- 1) 초반 조합 일치 (0~40) ----
   // 4~7렙 각 레벨의 최빈 조합과 성 가중 일치율. 가장 잘 맞는 레벨 기준. 최종 조합도 후보에 포함(리롤 덱 등).
+  const stageLv = input.stage ? stageLevel(input.stage) : null;
   const comps: Array<{ label: string; units: UnitId[] }> = Object.entries(deck.levels ?? {})
-    .filter(([lv, c]) => Number(lv) <= 7 && c.units.length > 0)
+    .filter(([lv, c]) => c.units.length > 0 && (stageLv ? Math.abs(Number(lv) - stageLv) <= 1 : Number(lv) <= 7))
     .map(([lv, c]) => ({ label: `${lv}렙`, units: c.units }));
-  comps.push({ label: "최종", units: deck.coreUnits.map((u) => u.unitId) });
+  if (!stageLv || stageLv >= 8) comps.push({ label: "최종", units: deck.coreUnits.map((u) => u.unitId) });
   let best = { label: "", ratio: 0, hit: [] as UnitId[], total: 1 };
   for (const c of comps) {
     const hit = c.units.filter((u) => starOf.has(u));

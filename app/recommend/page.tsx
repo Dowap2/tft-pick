@@ -25,6 +25,7 @@ export default async function RecommendPage({ searchParams }: { searchParams: SP
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8 flex items-center justify-between">
+        {input.stage && <span className="num order-last rounded-md border border-accent/50 px-2 py-0.5 text-xs text-accent">STAGE {input.stage}</span>}
         <div>
           <Link href="/" className="text-sm text-muted hover:text-text">
             ← 다시 입력
