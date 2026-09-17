@@ -4,7 +4,8 @@ import "./globals.css";
 import meta from "@/lib/gen/meta.json";
 import Script from "next/script";
 import { Header } from "./header";
-import { ADSENSE_CLIENT, SideAd } from "./ads";
+import { SideAd } from "./ads";
+import { ADSENSE_CLIENT } from "@/lib/ads";
 
 const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-rajdhani" });
 
