@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Rajdhani } from "next/font/google";
 import "./globals.css";
 import meta from "@/lib/gen/meta.json";
 import Script from "next/script";
 import { Header } from "./header";
 import { SideAd } from "./ads";
 import { ADSENSE_CLIENT } from "@/lib/ads";
-
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-rajdhani" });
 
 export const SITE_URL = "https://panlab.lol";
 
@@ -23,8 +20,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`h-full antialiased ${rajdhani.variable}`}>
+    <html lang="ko" className="h-full antialiased">
       <head>
+        {/* Rajdhani(숫자·영문 라벨) — next/font 는 OpenNext(Workers) 빌드에서 woff2 로더 문제가 있어 링크로 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" />
         {/* Pretendard: Google Fonts에 없어 CDN 사용 (동적 서브셋) */}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
       </head>

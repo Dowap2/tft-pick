@@ -7,9 +7,13 @@
     "build": "next build",
     "start": "next start",
     "sync": "node scripts/sync.mjs",
-    "sync:meta": "node scripts/sync-meta.mjs"
+    "sync:meta": "node scripts/sync-meta.mjs",
+    "build:cf": "opennextjs-cloudflare build",
+    "preview:cf": "opennextjs-cloudflare preview",
+    "deploy:cf": "opennextjs-cloudflare deploy"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.109.0",
     "next": "16.3.5",
@@ -24,6 +28,7 @@
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.133.0"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // OpenNext 는 Cloudflare "Workers"(정적 에셋 포함) 를 대상으로 함. Pages 프로젝트가 아니라 Workers 프로젝트로 연결할 것.
+  "name": "panlab",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true }
+}
