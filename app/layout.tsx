@@ -8,7 +8,7 @@ import { ADSENSE_CLIENT, SideAd } from "./ads";
 
 const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-rajdhani" });
 
-export const SITE_URL = "https://tft-pick.netlify.app";
+export const SITE_URL = "https://panlab.lol";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
