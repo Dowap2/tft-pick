@@ -10,7 +10,7 @@ import { carouselPriority } from "@/lib/score";
 const CAROUSEL = carouselPriority().slice(0, 5);
 import { COST_TEXT, ItemIcon, UnitIcon } from "@/app/icons";
 
-const STORAGE_KEY = "tft-pick:input";
+const STORAGE_KEY = "tft-pick:input"; // app/sync-input.tsx 와 동일 키
 
 type PickedUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 

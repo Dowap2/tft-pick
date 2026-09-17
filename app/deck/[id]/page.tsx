@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { deckById, itemById, teamCode, unitById } from "@/lib/data";
 import { CopyTeamCode } from "@/app/team-code";
+import { SyncInput } from "@/app/sync-input";
 import { parseUserInput, buildQuery, toggleUnitQuery } from "@/lib/params";
 import { scoreDeck, transitionLabel } from "@/lib/score";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
@@ -64,6 +65,7 @@ export default async function DeckDetailPage({
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
+      <SyncInput input={input} />
       <header className="mb-8">
         <Link
           href={q ? `/recommend?${q}` : "/recommend"}
