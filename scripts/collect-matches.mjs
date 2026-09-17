@@ -116,16 +116,14 @@ for (const [i, id] of todo.entries()) {
   if (QUEUE && (info.queue_id ?? info.queueId) !== QUEUE) { skipped++; continue; }
   if (patch && info.tft_set_number !== patch.set_number) { skipped++; continue; }
 
-  const participants = info.participants.map((p) => {
-    const top4 = p.placement <= 4;   // 지시서: 보드는 1~4등만 저장
-    return {
-      puuid: p.puuid, placement: p.placement, level: p.level, last_round: p.last_round ?? null,
-      tier: seeds.get(p.puuid) ?? null,
-      units: top4 ? p.units.map((u) => ({ character_id: u.character_id, tier: u.tier, items: u.itemNames ?? [] })) : null,
-      traits: top4 ? p.traits.filter((t) => t.tier_current > 0).map((t) => ({ name: t.name, num_units: t.num_units, tier_current: t.tier_current })) : null,
-      augments: top4 ? (p.augments ?? []) : [],
-    };
-  });
+  // 보드는 1~8등 전부 저장 (5~8등이 있어야 덱별 평균등수·Top4·승률이 의미 있음)
+  const participants = info.participants.map((p) => ({
+    puuid: p.puuid, placement: p.placement, level: p.level, last_round: p.last_round ?? null,
+    tier: seeds.get(p.puuid) ?? null,
+    units: p.units.map((u) => ({ character_id: u.character_id, tier: u.tier, items: u.itemNames ?? [] })),
+    traits: p.traits.filter((t) => t.tier_current > 0).map((t) => ({ name: t.name, num_units: t.num_units, tier_current: t.tier_current })),
+    augments: p.augments ?? [],
+  }));
   const row = {
     match_id: id, patch_id: patch?.id ?? 0,
     game_version: `${info.tft_set_core_name ?? "set"}/${info.game_version ?? ""}`.slice(0, 80),
