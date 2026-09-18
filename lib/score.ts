@@ -1,6 +1,6 @@
 // UI 점수 레이어: 엔진(lib/engine/score.ts) 을 UI Deck 타입으로 감싼다. 점수 로직은 엔진에만 있음.
 import { itemById, type ComponentId, type Deck, type UnitId } from "./data";
-import { recommend as engineRecommend, scoreDeck as engineScore, STAGES as ENGINE_STAGES, stageLevel as engineStageLevel, type RecommendOptions } from "./engine/score";
+import { recommend as engineRecommend, scoreDeck as engineScore, STAGES as ENGINE_STAGES, stageLevel as engineStageLevel, type EngineDeck, type RecommendOptions, type ScoreBreakdown as EngineScore } from "./engine/score";
 import { jsonCtx, toEngineDeck } from "./engine/adapt";
 
 export type UserUnit = { unitId: UnitId; star: 1 | 2 | 3 };
@@ -28,23 +28,30 @@ export type ScoreBreakdown = {
 
 export const getCarry = (deck: Deck): UnitId => deck.carryId ?? deck.coreUnits[0]?.unitId ?? "";
 
-export function scoreDeck(input: UserInput, deck: Deck): ScoreBreakdown {
-  const ed = toEngineDeck(deck);
-  const s = engineScore(input, ed, jsonCtx);
+// 엔진 결과 → UI 점수 (한 번 계산한 걸 매핑만)
+function toUiScore(input: UserInput, deck: Deck, ed: EngineDeck, s: EngineScore): ScoreBreakdown {
+  const owned = new Set(input.units.map((x) => x.unitId));
   return {
     earlyScore: s.earlyScore, itemScore: s.itemScore, carryScore: s.carryScore, metaScore: s.metaScore, total: s.total,
     reasons: s.reasons, carryId: ed.carryUnitId,
     carryItems: deck.coreItems.filter((ci) => ci.unitId === ed.carryUnitId).map((ci) => ci.itemId),
     buildableCarryItems: s.buildableCarryItems, hasCarry: s.hasCarry, matchedSupports: s.matchedUnits,
-    missingUnits: deck.coreUnits.map((u) => u.unitId).filter((id) => !input.units.some((x) => x.unitId === id)),
+    missingUnits: deck.coreUnits.map((u) => u.unitId).filter((id) => !owned.has(id)),
   };
 }
 
-/** 추천 (코어 게이트 기본 stage: 초반엔 게이트 없음 → 6~7렙 any → 8렙~ all) */
-export function recommend(input: UserInput, decks: Deck[], opts: RecommendOptions = {}): Array<{ deck: Deck; score: ScoreBreakdown; confidence: number }> {
+/** 덱 1개 점수. engineDeck 을 넘기면 변환 생략 (API 는 번들에 미리 변환해 둔 것을 씀) */
+export function scoreDeck(input: UserInput, deck: Deck, engineDeck?: EngineDeck): ScoreBreakdown {
+  const ed = engineDeck ?? toEngineDeck(deck);
+  return toUiScore(input, deck, ed, engineScore(input, ed, jsonCtx));
+}
+
+/** 추천 (코어 게이트 기본 stage: 초반엔 게이트 없음 → 6~7렙 any → 8렙~ all). 점수는 엔진에서 1회만 계산. */
+export function recommend(input: UserInput, decks: Deck[], opts: RecommendOptions = {}, engineDecks?: EngineDeck[]): Array<{ deck: Deck; score: ScoreBreakdown; confidence: number }> {
   const byId = new Map(decks.map((d) => [d.id, d]));
-  return engineRecommend(input, decks.map(toEngineDeck), jsonCtx, { coreGate: "stage", ...opts })
-    .map((r) => ({ deck: byId.get(r.deck.id)!, score: scoreDeck(input, byId.get(r.deck.id)!), confidence: r.confidence }));
+  const eds = engineDecks ?? decks.map(toEngineDeck);
+  return engineRecommend(input, eds, jsonCtx, { coreGate: "stage", ...opts })
+    .map((r) => ({ deck: byId.get(r.deck.id)!, score: toUiScore(input, byId.get(r.deck.id)!, r.deck, r.score), confidence: r.confidence }));
 }
 
 const countBy = <T extends string>(xs: T[]): Record<T, number> => {

@@ -47,13 +47,13 @@ export async function handleRecommendPost(req: Request): Promise<Response> {
   let body: unknown;
   try { body = await req.json(); } catch { return json({ error: "invalid json" }, { status: 400 }); }
   const { input, opts, deckIds } = parse(body);
-  const { decks, source, patch } = await getDecksMeta();
+  const { decks, engineDecks, source, patch } = await getDecksMeta();
   const owned = new Set(input.units.map((u) => u.unitId));
 
   // deckIds 지정 = 특정 덱 점수만 (덱 상세 페이지). 게이트 없이 항상 계산.
   const results = deckIds.length
-    ? decks.filter((d) => deckIds.includes(d.id)).map((deck) => ({ deck, score: scoreDeck(input, deck), confidence: 100 }))
-    : recommend(input, decks, opts);
+    ? decks.map((deck, i) => ({ deck, ed: engineDecks[i] })).filter(({ deck }) => deckIds.includes(deck.id)).map(({ deck, ed }) => ({ deck, score: scoreDeck(input, deck, ed), confidence: 100 }))
+    : recommend(input, decks, opts, engineDecks);
   const rivalDecks = input.rivals?.length ? inferDecks(input.rivals, decks).map((d) => d.name) : [];
 
   return json(
