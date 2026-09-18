@@ -3,6 +3,7 @@ import { getDecksMeta } from "@/lib/decks";
 export const dynamic = "force-static";   // 빌드 타임 프리렌더 (Workers 호출 0)
 import meta from "@/lib/gen/meta.json";
 import { DeckList } from "./deck-list";
+import { describeDeck } from "@/lib/describe";
 
 export const metadata = {
   title: "TFT 덱 티어 리스트 - 최신 패치 조합 분석",
@@ -21,7 +22,7 @@ export default async function DecksPage() {
           현재 패치 기준 인기 조합과 핵심 아이템을 확인하세요. <span className="num text-muted">SET {meta.set} · {source === "db" ? "자체 통계" : meta.metaUpdated}</span>
         </p>
       </header>
-      <DeckList decks={decks} />
+      <DeckList decks={decks} guides={Object.fromEntries(decks.map((d) => [d.id, describeDeck(d).slice(0, 2).join(" ")]))} />
     </main>
   );
 }

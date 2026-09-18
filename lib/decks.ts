@@ -3,6 +3,7 @@
 import { DECK_NOTES } from "./deck-notes";
 import type { Deck, DeckUnit } from "./data";
 import type { EngineDeck } from "./engine/score";
+import { toEngineDeck } from "./engine/adapt";
 
 // JSON 폴백은 지연 로드 — 135KB 파싱을 Worker 콜드 스타트마다 하지 않도록 (DB 실패 시에만)
 export async function loadDecksJson(): Promise<Deck[]> {
@@ -51,7 +52,6 @@ function toDeck(d: Row, tier: string | undefined): Deck {
 
 export async function getDecksMeta(): Promise<Cached> {
   if (cache && Date.now() - cache.at < TTL_MS) return cache;
-  const { toEngineDeck } = await import("./engine/adapt");
   let decks: Deck[] | null = null, source: Cached["source"] = "db", patch = "json";
   try {
     const [p] = await rest("patches?select=id,version&is_current=eq.true");

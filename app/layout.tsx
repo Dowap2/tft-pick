@@ -40,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SideAd side="right" />
         </div>
         <footer className="mt-auto border-t border-line px-4 py-5 text-center text-[11px] text-muted/70">
-          <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 덱 통계 {meta.metaUpdated} (metatft) · 이미지 CommunityDragon
+          <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 데이터 Riot API(KR 챌린저·그마) · 이미지 CommunityDragon · <a href="/about" className="underline hover:text-text">방법론</a>
         </footer>
         {ADSENSE_CLIENT && (
           <Script

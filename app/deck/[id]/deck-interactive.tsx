@@ -19,7 +19,7 @@ const EMPTY: UserInput = { components: [], completed: [], units: [], rivals: [] 
 type Score = { total: number; carryId: string; carryItems: string[]; buildableCarryItems: string[]; hasCarry: boolean; reasons: Reason[] };
 type Trans = { emoji: string; text: string };
 
-export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNode }) {
+export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extras?: ReactNode; guide?: string[] }) {
   const [input, setInput] = useState<UserInput>(EMPTY);
   const [score, setScore] = useState<Score | null>(null);
   const [trans, setTrans] = useState<Trans | null>(null);
@@ -75,9 +75,7 @@ export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNo
               {deck.games && <span className="text-xs">{deck.games.toLocaleString()}판</span>}
             </div>
             <TraitRow unitIds={deck.coreUnits.map((u) => u.unitId)} className="mt-2" />
-            {deck.playstyle && (
-              <p className="mt-2 text-sm text-muted">{deck.playstyle}</p>
-            )}
+
           </div>
           <div className="text-right">
             <div className="num text-4xl text-accent">
@@ -134,6 +132,17 @@ export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNo
           </div>
         )}
       </section>
+
+      {/* 덱 가이드 (데이터로 자동 생성 + 수동 메모) */}
+      {(guide.length > 0 || deck.playstyle) && (
+        <section className="panel mb-6 rounded-lg bg-surface p-4">
+          <h2 className="mb-2 text-sm font-semibold">이 덱은</h2>
+          <div className="space-y-1.5 text-sm leading-6 text-text/90">
+            {deck.playstyle && <p className="text-accent">{deck.playstyle}</p>}
+            {guide.map((p, i) => <p key={i}>{p}</p>)}
+          </div>
+        </section>
+      )}
 
       {/* 레벨별 조합 */}
       {deck.levels && (

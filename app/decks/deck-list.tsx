@@ -10,7 +10,7 @@ import { LevelComps } from "@/app/levels";
 const TIERS = ["전체", "OP", "S", "A", "B", "C"] as const;
 const SORTS = { avg: "평균 등수", games: "게임 수" } as const;
 
-export function DeckList({ decks }: { decks: Deck[] }) {
+export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<string, string> }) {
   const [q, setQ] = useState("");
   const [tier, setTier] = useState<(typeof TIERS)[number]>("전체");
   const [sort, setSort] = useState<keyof typeof SORTS>("avg");
@@ -107,6 +107,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
               </summary>
 
               <div className="space-y-4 border-t border-line p-4">
+                {guides[deck.id] && <p className="text-sm leading-6 text-text/90">{guides[deck.id]}</p>}
                 <div>
                   <h3 className="mb-2 text-sm font-semibold">레벨별 조합</h3>
                   <LevelComps deck={deck} />
