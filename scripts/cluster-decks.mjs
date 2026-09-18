@@ -32,20 +32,28 @@ const raw = await rpcAll("raw_boards", { p_patch_id: pid }, "match_id.asc,puuid.
 const boards = raw.map((b) => {
   const us = (b.units ?? []).map((u) => ({ id: unitByApi.get(u.character_id)?.id, star: Math.min(3, u.tier ?? 1), items: (u.items ?? []).map(riotItemId).filter((i) => i && itemIds.has(i)) })).filter((u) => u.id);
   return { ...b, us, set: new Set(us.map((u) => u.id)), traitLv: new Map((b.traits ?? []).map((t) => [t.name, t.tier_current])) };
-}).filter((b) => b.set.size >= 6).sort((a, b) => a.placement - b.placement);
+}).filter((b) => b.set.size >= 5).sort((a, b) => a.placement - b.placement);
+// 중반 탈락자(최종 레벨 ≤ 7)의 보드 = 그 덱의 6~7렙 중간 단계 표본. 클러스터를 만들진 않고, 최종 보드로 만든 덱에 "포함 비율"로 붙는다.
+const isEarly = (b) => b.level <= 7;
+const CONTAIN = 0.7;   // 초반 보드 유닛의 70% 이상이 덱 대표 유닛에 포함되면 합류
 console.log(`패치 ${patch.version}: 보드 ${raw.length}개 → 유효 ${boards.length}개`);
 
 // ---- 2) 그리디 자카드 클러스터링 (2패스) ----
 const jaccard = (a, b) => { let i = 0; for (const x of a) if (b.has(x)) i++; return i / (a.size + b.size - i); };
+const contain = (board, rep) => { let i = 0; for (const x of board) if (rep.has(x)) i++; return i / board.size; };
+// 대표(centroid)는 최종 보드(8렙+)로만 계산 — 중반 보드가 섞이면 유닛 등장률이 희석됨
 const centroid = (members) => {
+  const late = members.filter((m) => !isEarly(m));
+  const base = late.length >= 3 ? late : members;
   const f = new Map();
-  for (const m of members) for (const u of m.set) f.set(u, (f.get(u) ?? 0) + 1);
-  return new Set([...f].filter(([, n]) => n / members.length >= 0.5).map(([u]) => u));
+  for (const m of base) for (const u of m.set) f.set(u, (f.get(u) ?? 0) + 1);
+  return new Set([...f].filter(([, n]) => n / base.length >= 0.5).map(([u]) => u));
 };
 let clusters = [];
 for (let pass = 0; pass < 2; pass++) {
   const next = pass === 0 ? [] : clusters.map((c) => ({ rep: centroid(c.members), members: [] }));
   for (const b of boards) {
+    if (isEarly(b)) continue;   // 중반 보드는 2패스 후 별도 배정
     let best = null, bs = 0;
     for (const c of next) { const s = jaccard(b.set, c.rep); if (s > bs) { bs = s; best = c; } }
     if (best && bs >= SIM) best.members.push(b);
@@ -59,7 +67,25 @@ for (let pass = 0; pass < 2; pass++) {
   }
 }
 clusters = clusters.filter((c) => c.members.length >= MIN).sort((a, b) => b.members.length - a.members.length);
-console.log(`클러스터 ${clusters.length}개 (표본 ≥ ${MIN})`);
+// 중반 보드 배정: 최종 대표 + (metatft 유사 덱의 4~6렙 초반 라인) 을 합친 집합에 얼마나 포함되는지.
+// 중반 탈락자 보드는 초반 유닛(오른·바루스 등)을 아직 들고 있어 최종 대표만으로는 안 붙는다.
+let metaDecks = [];
+try { metaDecks = J("lib/gen/decks.json"); } catch {}
+for (const c of clusters) {
+  const near = metaDecks.map((m) => ({ m, s: jaccard(c.rep, new Set(m.coreUnits.map((u) => u.unitId))) })).sort((a, b) => b.s - a.s)[0];
+  c.extRep = new Set(c.rep);
+  if (near && near.s >= 0.4) for (const L of ["4", "5", "6", "7"]) for (const u of near.m.levels?.[L]?.units ?? []) if (unitById.has(u)) c.extRep.add(u);
+}
+let earlyAssigned = 0, earlyTotal = 0;
+for (const b of boards.filter(isEarly)) {
+  earlyTotal++;
+  let best = null, bs = 0;
+  for (const c of clusters) { const s = contain(b.set, c.extRep); if (s > bs) { bs = s; best = c; } }
+  if (best && bs >= CONTAIN) { best.members.push(b); earlyAssigned++; }
+  else if (DRY) (globalThis.__miss ??= []).push(bs.toFixed(2));
+}
+if (DRY && globalThis.__miss) { const m = globalThis.__miss.sort(); console.log(`  미배정 포함비율 분포: min ${m[0]} median ${m[m.length >> 1]} max ${m[m.length - 1]}`); }
+console.log(`클러스터 ${clusters.length}개 (표본 ≥ ${MIN}) · 중반(≤7렙) 보드 ${earlyAssigned}/${earlyTotal} 배정`);
 
 // ---- 3) 클러스터 → 덱 ----
 const mode = (xs) => [...xs.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0];
@@ -101,15 +127,16 @@ for (const c of clusters) {
   const levelling = lvMode >= 9 ? "Fast 9" : lvMode <= 7 ? `lvl ${lvMode}` : "Fast 8";
   // 레벨별 조합 (최종 레벨 L인 구성원 보드의 ≥50% 유닛) — Match-V5엔 라운드 스냅샷이 없어 7렙 이상만 근사
   const levels = {};
-  for (const L of [7, 8, 9, 10]) {
+  for (const L of [5, 6, 7, 8, 9, 10]) {
     const ms = c.members.filter((m) => m.level === L);
     if (ms.length < 5) continue;
     const us = centroid(ms);
     if (us.size >= 5) levels[L] = { units: [...us], avg: ms.reduce((s, m) => s + m.placement, 0) / ms.length, count: ms.length };
   }
   const avgPlace = c.members.reduce((s, m) => s + m.placement, 0) / n;
+  const byLevel = Object.fromEntries([5, 6, 7, 8, 9, 10].map((L) => [L, c.members.filter((m) => m.level === L).length]));
   decks.push({
-    id, name, carry, coreIds, levelling, n, avgPlace, deckUnits, starMode, itemFreq, levels,
+    id, name, carry, coreIds, levelling, n, avgPlace, deckUnits, starMode, itemFreq, levels, byLevel,
     signature: { traits: Object.fromEntries([...tf].slice(0, 8)), units: Object.fromEntries([...freq].map(([u, k]) => [u, Number((k / n).toFixed(2))])) },
   });
   for (const m of c.members) pdRows.push({ match_id: m.match_id, puuid: m.puuid, deck_id: id, distance: Number((1 - jaccard(m.set, c.rep)).toFixed(3)) });
@@ -126,7 +153,7 @@ try {
     const mine = d.deckUnits.filter((u) => u.core).map((u) => u.id);
     const best = meta.map((m) => ({ m, s: jac(mine, m.coreUnits.map((u) => u.unitId)) })).sort((a, b) => b.s - a.s)[0];
     if (!best || best.s < 0.4) continue;
-    for (const L of ["4", "5", "6"]) {
+    for (const L of ["4", "5", "6", "7"]) {   // 우리 표본이 없는 레벨만 (7렙은 자체 표본 5개 이상이면 자체 것)
       const lv = best.m.levels?.[L];
       if (!lv || d.levels[L]) continue;
       const units = lv.units.filter((u) => unitById.has(u));
@@ -136,7 +163,7 @@ try {
   console.log(`초반 조합 보강: metatft 에서 ${borrowed}개 레벨 차용`);
 } catch (e) { console.warn("초반 조합 보강 건너뜀:", e.message); }
 
-for (const d of decks) console.log(`  ${String(d.n).padStart(4)}판  avg ${d.avgPlace.toFixed(2)}  ${d.levelling.padEnd(7)} ${d.name.padEnd(14)} 코어[${d.coreIds.map((u) => unitById.get(u).name).join(", ")}]  유닛 ${d.deckUnits.length}  lv[${Object.keys(d.levels).join("/")}]`);
+for (const d of decks) console.log(`  ${String(d.n).padStart(4)}판  avg ${d.avgPlace.toFixed(2)}  ${d.levelling.padEnd(7)} ${d.name.padEnd(14)} 코어[${d.coreIds.map((u) => unitById.get(u).name).join(", ")}]  유닛 ${d.deckUnits.length}  lv[${Object.keys(d.levels).join("/")}]  ${DRY ? "표본/렙 " + [5, 6, 7, 8, 9, 10].map((L) => L + ":" + d.byLevel[L]).join(" ") : ""}`);
 if (DRY) process.exit(0);
 
 // ---- 4) 적재 ----
