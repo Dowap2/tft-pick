@@ -1,9 +1,17 @@
-# 매일 새벽(KST 06:00) 유닛/아이템/덱 데이터 갱신 → 변경 있으면 커밋 → Netlify가 자동 배포
+# 매일 KST 06:00 데이터 파이프라인
+#   1) cdragon/metatft 스냅샷 갱신 (lib/gen) → 변경 시 커밋 → Cloudflare Workers Builds 가 재배포 (정적 페이지에 반영)
+#   2) Riot 매치 수집 → raw  (Secrets: RIOT_API_KEY 없으면 건너뜀)
+#   3) 정제(클러스터링) → decks / deck_stats
+# 필요한 Secrets: RIOT_API_KEY, SUPABASE_SERVICE_ROLE_KEY   (NEXT_PUBLIC_SUPABASE_URL 은 공개값이라 wrangler.jsonc 에서 읽음)
 name: sync-data
 on:
   schedule:
     - cron: "0 21 * * *"   # UTC 21:00 = KST 06:00
-  workflow_dispatch: {}     # 수동 실행
+  workflow_dispatch:
+    inputs:
+      max_matches:
+        description: "수집할 최대 매치 수"
+        default: "800"
 
 permissions:
   contents: write
@@ -11,18 +19,37 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+      - run: npm ci
+
+      # ---- 1) 정적 데이터 (cdragon, metatft) ----
       - run: npm run sync
       - run: npm run sync:meta
-      - name: Commit if changed
+      - name: Commit lib/gen if changed
         run: |
           git config user.name "tft-pick-bot"
           git config user.email "bot@users.noreply.github.com"
           git add lib/gen
           git diff --cached --quiet && echo "no changes" && exit 0
-          git commit -m "data: $(date -u +%Y-%m-%d) 자동 갱신 (patch $(node -p "require('./lib/gen/meta.json').patch"), cluster $(node -p "require('./lib/gen/meta.json').metaCluster"))"
+          git commit -m "data: $(date -u +%Y-%m-%d) 자동 갱신 (patch $(node -p "require('./lib/gen/meta.json').patch"))"
           git push
+
+      # ---- 2) Riot 수집 → 3) 정제 (키·시크릿 있을 때만) ----
+      - name: Supabase URL from wrangler.jsonc
+        run: node -e "const s=require('fs').readFileSync('wrangler.jsonc','utf8').replace(/^\s*\/\/.*$/gm,'');console.log('NEXT_PUBLIC_SUPABASE_URL='+JSON.parse(s).vars.NEXT_PUBLIC_SUPABASE_URL)" >> "$GITHUB_ENV"
+      - name: Collect matches
+        if: env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        run: node scripts/collect-matches.mjs --max-matches ${{ github.event.inputs.max_matches || '800' }}
+      - name: Cluster decks + refresh stats
+        if: env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        run: node scripts/cluster-decks.mjs
+      - name: Skipped collection
+        if: env.RIOT_API_KEY == '' || env.SUPABASE_SERVICE_ROLE_KEY == ''
+        run: echo "RIOT_API_KEY / SUPABASE_SERVICE_ROLE_KEY 시크릿이 없어 수집·정제 건너뜀"
