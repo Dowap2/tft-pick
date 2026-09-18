@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TRAITS, UNITS, activeTraits } from "@/lib/data";
+import { TRAITS, UNITS, activeTraits, traitImgByApi } from "@/lib/data";
 import { getDecks } from "@/lib/decks";
 
 export const dynamic = "force-static";
@@ -33,7 +33,7 @@ export default async function TraitsPage() {
         {rows.map((t) => (
           <article key={t.name} className="px-3 py-3">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="flex size-8 items-center justify-center rounded bg-surface-2"><img src={t.img} alt="" className="size-5 brightness-0 invert" /></span>
+              <span className="flex size-8 items-center justify-center rounded bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-5 brightness-0 invert" /></span>
               <h2 className="text-sm font-semibold">{t.name}</h2>
               <span className="num text-xs text-muted">{t.breakpoints.join(" / ")}</span>
               <div className="ml-auto flex flex-wrap justify-end gap-1 text-[11px]">

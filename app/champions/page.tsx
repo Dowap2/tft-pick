@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UNITS, traitByName, unitUsage } from "@/lib/data";
+import { UNITS, traitByName, traitImgByApi, unitUsage } from "@/lib/data";
 import { getDecks } from "@/lib/decks";
 
 export const dynamic = "force-static";
@@ -40,7 +40,7 @@ export default async function ChampionsPage() {
                     <div className="mt-1 flex flex-wrap gap-1.5 text-[10px] text-muted">
                       {u.traits.map((t) => (
                         <span key={t} className="flex items-center gap-0.5">
-                          {traitByName(t)?.img && <img src={traitByName(t)!.img} alt="" className="size-3 opacity-70 brightness-0 invert" />}{t}
+                          {traitByName(t) && <img src={traitImgByApi(traitByName(t)!.id)} alt="" className="size-3 opacity-70 brightness-0 invert" />}{t}
                         </span>
                       ))}
                     </div>

@@ -32,11 +32,12 @@ jobs:
       # ---- 1) 정적 데이터 (cdragon, metatft) ----
       - run: npm run sync
       - run: npm run sync:meta
+      - run: node scripts/build-images.mjs      # 새 유닛/아이템 이미지만 추가 생성
       - name: Commit lib/gen if changed
         run: |
           git config user.name "tft-pick-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add lib/gen
+          git add lib/gen public/img
           git diff --cached --quiet && echo "no changes" && exit 0
           git commit -m "data: $(date -u +%Y-%m-%d) 자동 갱신 (patch $(node -p "require('./lib/gen/meta.json').patch"))"
           git push

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import meta from "@/lib/gen/meta.json";
 import Script from "next/script";
@@ -8,6 +8,8 @@ import { ADSENSE_CLIENT } from "@/lib/ads";
 
 export const SITE_URL = "https://panlab.lol";
 
+export const viewport: Viewport = { themeColor: "#0b0d12", width: "device-width", initialScale: 1, viewportFit: "cover" };
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "TFT PICK — 롤토체스 덱 추천", template: "%s | TFT PICK" },
@@ -15,6 +17,7 @@ export const metadata: Metadata = {
   keywords: ["롤토체스", "TFT", "전략적 팀 전투", "덱 추천", "메타 덱", `시즌 ${meta.set}`, "배치", "조합"],
   openGraph: { type: "website", locale: "ko_KR", siteName: "TFT PICK" },
   robots: { index: true, follow: true },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "TFT PICK" },
   verification: { google: "OvNLHJXOThBroS7JJu1uc0Cb9xILGz1-RHIDC6Enz3c" },
 };
 

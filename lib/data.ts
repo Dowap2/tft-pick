@@ -72,13 +72,18 @@ export type Deck = {
   proComps?: { title: string; author: string; notes: string; units: { unitId: UnitId; items: string[] }[] }[];  // 고랭커 공개 보드
   playstyle?: string;
 };
-export type Trait = { name: string; img: string; breakpoints: number[] };
+export type Trait = { id: string; name: string; img: string; breakpoints: number[] };
 
 // 덱 데이터는 lib/decks.ts (DB → 폴백 lib/gen/decks.json). 증강은 lib/augments.ts. 이 파일은 클라이언트 번들에도 들어가므로 가볍게 유지.
-export const TRAITS = traitsJson as Record<string, Trait>;
+export const TRAITS = Object.fromEntries(Object.entries(traitsJson as Record<string, Omit<Trait, "id">>).map(([id, t]) => [id, { id, ...t }])) as Record<string, Trait>;
 const CODES = codesJson as { set: string; codes: Record<string, string> };
 const TRAIT_BY_NAME = new Map(Object.values(TRAITS).map((t) => [t.name, t]));
 export const traitByName = (name: string) => TRAIT_BY_NAME.get(name);
+
+// 이미지: scripts/build-images.mjs 가 만든 자체 호스팅 WebP (public/img). gen JSON 의 원격 URL 은 빌드 원본용.
+export const unitImg = (id: string) => `/img/units/${id}.webp`;
+export const itemImg = (id: string) => `/img/items/${id}.webp`;
+export const traitImgByApi = (apiName: string) => `/img/traits/${apiName.toLowerCase()}.webp`;
 
 /** 유닛 목록의 활성 시너지: 인원수와 도달 단계(0 = 미활성). 인원 많은 순. */
 export function activeTraits(unitIds: UnitId[]) {
@@ -88,7 +93,7 @@ export function activeTraits(unitIds: UnitId[]) {
     .map(([name, n]) => {
       const t = TRAIT_BY_NAME.get(name);
       const level = t ? t.breakpoints.filter((b) => n >= b).length : 0;
-      return { name, img: t?.img, count: n, level, max: t?.breakpoints.length ?? 0 };
+      return { name, img: t ? traitImgByApi(t.id) : undefined, count: n, level, max: t?.breakpoints.length ?? 0 };
     })
     .filter((t) => t.level > 0)
     .sort((a, b) => b.level - a.level || b.count - a.count);

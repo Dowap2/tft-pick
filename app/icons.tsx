@@ -1,13 +1,6 @@
-import { itemById, unitById, componentById, activeTraits, type Deck } from "@/lib/data";
-import meta from "@/lib/gen/meta.json";
+import { itemById, unitById, componentById, activeTraits, unitImg, itemImg, type Deck } from "@/lib/data";
 
 // 유닛/완성템 이미지는 lib/gen/*.json (scripts/sync.mjs). 재료 9종만 여기서 고정.
-const COMPONENT_IMG: Record<string, string> = {
-  bf: "bfsword", bow: "recurvebow", rod: "needlesslylargerod", tear: "tearofthegoddess", vest: "chainvest",
-  cloak: "negatroncloak", belt: "giantsbelt", gloves: "sparringgloves", spatula: "spatula", pan: "fryingpan",
-};
-const componentImg = (id: string) =>
-  `https://raw.communitydragon.org/${meta.patch}/game/assets/maps/tft/icons/items/hexcore/tft_item_${COMPONENT_IMG[id]}.png`;
 
 // 코스트별 색 (인게임 기준)
 export const COST_BG: Record<number, string> = {
@@ -29,7 +22,7 @@ export function UnitIcon({ id, size = "md", className = "", carry = false }: { i
   const u = unitById(id);
   const hex = (
     <span className={`hex inline-block shrink-0 p-0.5 ${HEX_H[size]} ${COST_BG[u?.cost ?? 1]} ${carry ? "" : className}`}>
-      <img src={u?.img} alt={u?.name ?? id} title={u?.name} className="hex h-full w-full object-cover" />
+      <img src={unitImg(id)} alt={u?.name ?? id} title={u?.name} width={128} height={128} loading="lazy" decoding="async" className="hex h-full w-full object-cover" />
     </span>
   );
   if (!carry) return hex;
@@ -46,7 +39,11 @@ export function ItemIcon({ id, size = "sm", className = "" }: { id: string; size
   const name = it?.name ?? componentById(id as never)?.name ?? id;
   const img = (
     <img
-      src={it?.img ?? componentImg(id)}
+      src={itemImg(id)}
+      width={96}
+      height={96}
+      loading="lazy"
+      decoding="async"
       alt={name}
       title={it ? undefined : name}
       className={`${SIZE[size]} shrink-0 rounded border border-line ${className}`}
@@ -58,9 +55,9 @@ export function ItemIcon({ id, size = "sm", className = "" }: { id: string; size
     <span className="group relative inline-block shrink-0">
       {img}
       <span className="tip panel absolute bottom-full left-1/2 z-10 mb-1.5 flex items-center gap-1 whitespace-nowrap rounded bg-bg px-1.5 py-1 text-[11px] text-text">
-        <img src={componentImg(it.recipe[0])} alt="" className="size-5 rounded-sm" />
+        <img src={itemImg(it.recipe[0])} alt="" className="size-5 rounded-sm" />
         <span className="text-muted">+</span>
-        <img src={componentImg(it.recipe[1])} alt="" className="size-5 rounded-sm" />
+        <img src={itemImg(it.recipe[1])} alt="" className="size-5 rounded-sm" />
         <span className="ml-1">{name}</span>
       </span>
     </span>

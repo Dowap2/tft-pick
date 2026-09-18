@@ -4,7 +4,7 @@ import type { EngineCtx, EngineDeck, ItemRole } from "./score";
 
 const unit = new Map(UNITS.map((u) => [u.id, u]));
 const item = new Map(ITEMS.map((i) => [i.id, i]));
-const traitByName = new Map(Object.entries(TRAITS).map(([id, t]) => [t.name, { id, ...t }]));
+const traitByName = new Map(Object.values(TRAITS).map((t) => [t.name, t]));
 const traitById = new Map(Object.entries(TRAITS));
 
 export const jsonCtx: EngineCtx = {
