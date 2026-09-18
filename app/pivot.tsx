@@ -1,12 +1,15 @@
 import { unitById, type Deck } from "@/lib/data";
 import { TierBadge, UnitIcon } from "@/app/icons";
 
-const LEVELS = ["4", "5", "6", "7", "8"];
+const ALL_LEVELS = ["4", "5", "6", "7", "8", "9"];
 
 /** 분기 트리: 추천 상위 덱들이 레벨별로 어디까지 같은 유닛을 쓰고 어디서 갈라지는지 */
 export function PivotTree({ decks, ownedIds }: { decks: Deck[]; ownedIds: Set<string> }) {
   const rows = decks.filter((d) => d.levels).slice(0, 3);
   if (rows.length < 2) return null;
+  // 데이터가 하나도 없는 레벨 열은 숨김 (자체 수집 데이터는 7렙 이상만 있음)
+  const LEVELS = ALL_LEVELS.filter((lv) => rows.some((d) => d.levels?.[lv]?.units?.length));
+  if (LEVELS.length === 0) return null;
 
   const sets = LEVELS.map((lv) => rows.map((d) => new Set(d.levels?.[lv]?.units ?? [])));
   const shared = sets.map((s) => [...s[0]].filter((u) => s.every((x) => x.has(u))));

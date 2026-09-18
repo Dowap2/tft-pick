@@ -213,13 +213,13 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
           {COMPONENTS.map((c) => (
             <button
               key={c.id}
               onClick={() => addComponent(c.id)}
               disabled={slotsUsed >= MAX_COMPONENTS}
-              className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-2 py-2 text-xs transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40"
+              className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-1 py-1.5 text-[10px] transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40 sm:px-2 sm:py-2 sm:text-xs"
             >
               <ItemIcon id={c.id} size="md" />
               {c.name}
@@ -367,13 +367,14 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
         )}
       </section>
 
-      <div className="flex gap-3">
+      {/* 모바일: 하단 고정 CTA (입력이 길어서 버튼이 화면 밖으로 나감) */}
+      <div className="sticky bottom-0 -mx-4 flex gap-3 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
         <button
           onClick={submit}
           disabled={!canSubmit}
           className="flex-1 rounded-lg bg-accent py-3 font-semibold text-white transition-colors duration-150 hover:bg-accent/85 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          덱 추천받기
+          덱 추천받기{units.length + components.length + completed.length > 0 && <span className="num ml-2 text-xs font-normal text-white/70">유닛 {units.length} · 재료 {slotsUsed}</span>}
         </button>
         <Link
           href="/"

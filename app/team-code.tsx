@@ -13,7 +13,7 @@ export function CopyTeamCode({ code, className = "" }: { code: string | null; cl
     <button
       onClick={copy}
       title="인게임 팀 플래너 → 코드 불러오기에 붙여넣기"
-      className={`rounded-md border border-line px-2.5 py-1 text-xs text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text ${className}`}
+      className={`whitespace-nowrap rounded-md border border-line px-2.5 py-1 text-xs text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text ${className}`}
     >
       {done ? "✓ 복사됨" : "팀 코드 복사"}
     </button>

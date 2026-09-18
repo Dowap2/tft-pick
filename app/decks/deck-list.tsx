@@ -83,7 +83,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                     {carry && <>캐리 <span className={`font-medium ${COST_TEXT[carry.cost]}`}>{carry.name}</span></>}
                   </div>
                   <TraitRow unitIds={deck.coreUnits.map((u) => u.unitId)} className="mt-1" />
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="scrollbar-none -mx-1 mt-2 flex gap-1.5 overflow-x-auto px-1 sm:mx-0 sm:flex-wrap sm:px-0">
                     {deck.coreUnits.map((cu) => {
                       const u = unitById(cu.unitId);
                       return (

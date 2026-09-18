@@ -17,10 +17,10 @@ export function Header() {
   const path = usePathname();
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg/95">
-      <nav className="mx-auto flex w-full max-w-3xl items-center gap-0.5 overflow-x-auto px-4">
-        <Link href="/" className="mr-4 flex items-center gap-2">
+      <nav className="scrollbar-none fade-r mx-auto flex w-full max-w-3xl items-center gap-0.5 overflow-x-auto px-3 sm:px-4">
+        <Link href="/" className="mr-2 flex shrink-0 items-center gap-2 sm:mr-4">
           <img src="/logo-128.png" alt="" className="size-7" />
-          <span className="num text-base uppercase tracking-wider text-text">TFT Pick</span>
+          <span className="num hidden text-base uppercase tracking-wider text-text sm:inline">TFT Pick</span>
         </Link>
         {MENU.map((m) => {
           const active = m.match(path);

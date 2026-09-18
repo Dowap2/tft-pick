@@ -47,5 +47,11 @@ body {
 /* 패널: 옅은 테두리만. 그림자·광택 없음 */
 .panel { border: 1px solid var(--color-line); }
 
+/* 모바일: 가로 스크롤 줄에서 스크롤바 숨김 + 오른쪽 페이드 */
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.fade-r { mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
+@media (min-width: 640px) { .fade-r { mask-image: none; } }
+
 /* 숫자·영문 라벨 */
 .num { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.01em; }

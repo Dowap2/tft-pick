@@ -170,7 +170,7 @@ export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNo
       {/* 필수 유닛 */}
       <section className="mb-6">
         <h2 className="mb-3 text-lg font-semibold">필수 유닛 <span className="text-xs font-normal text-muted/70">클릭하면 보유 토글</span></h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {deck.coreUnits.map((cu) => {
             const meta = unitById(cu.unitId);
             const has = userUnitIds.has(cu.unitId);

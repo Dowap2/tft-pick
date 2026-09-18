@@ -157,7 +157,7 @@ export function RecommendClient() {
                 </div>
               </div>
 
-              <div className="mb-3 flex flex-wrap gap-1.5">
+              <div className="scrollbar-none -mx-1 mb-3 flex gap-1.5 overflow-x-auto px-1 sm:mx-0 sm:flex-wrap sm:px-0">
                 {deck.coreUnits.map((cu) => (
                   <div key={cu.unitId} className="flex flex-col items-center">
                     <UnitIcon id={cu.unitId} size="md" className={`${cu.unitId === score.carryId ? "bg-accent!" : ""} ${owned.has(cu.unitId) ? "" : "opacity-45"}`} />
@@ -177,7 +177,7 @@ export function RecommendClient() {
                 <div className="mb-3 space-y-1.5 rounded bg-surface-2/60 px-2 py-2 text-xs">
                   {next && (
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="mr-1 w-24 text-muted">다음 목표 <span className="num text-text">{next.level}렙</span></span>
+                      <span className="mr-1 w-full text-muted sm:w-24">다음 목표 <span className="num text-text">{next.level}렙</span></span>
                       {next.buy.map((uid) => (
                         <span key={uid} className="inline-flex items-center gap-1">
                           <UnitIcon id={uid} className="h-6" />
@@ -188,13 +188,13 @@ export function RecommendClient() {
                   )}
                   {act.needComponents.length > 0 && (
                     <div className="flex flex-wrap items-center gap-1">
-                      <span className="mr-1 w-24 text-muted">집을 재료</span>
+                      <span className="mr-1 w-full text-muted sm:w-24">집을 재료</span>
                       {act.needComponents.map((c, i) => <ItemIcon key={i} id={c} className="size-6!" />)}
                     </div>
                   )}
                   {act.sellUnits.length > 0 && (
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="mr-1 w-24 text-muted">팔아도 됨</span>
+                      <span className="mr-1 w-full text-muted sm:w-24">팔아도 됨</span>
                       {act.sellUnits.map((uid) => (
                         <span key={uid} className="inline-flex items-center gap-1 opacity-70">
                           <UnitIcon id={uid} className="h-6" />
