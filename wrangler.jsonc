@@ -13,6 +13,10 @@
     "not_found_handling": "404-page"
   },
   "observability": { "enabled": true },
-  // 빌드 시 인라인되는 NEXT_PUBLIC_* 외에 Worker 런타임에서도 필요 → 대시보드 Variables 또는 여기 vars 로.
-  "vars": {}
+  // Worker 런타임 변수. wrangler deploy 가 대시보드 값을 덮어쓰므로 여기가 원본.
+  // anon 키·URL 은 공개값(클라이언트 번들에도 들어감). 비밀(service_role 등)은 절대 여기 두지 말고 `wrangler secret put`.
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://lrcqmzhnyaykrqzxhiyg.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyY3FtemhueWF5a3JxenhoaXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1OTg1MTEsImV4cCI6MjEwNTE3NDUxMX0.iWgVI1NacIz3A_p6dF-56Sn1D2BUVqcr5MyaqDA3ywc"
+  }
 }
