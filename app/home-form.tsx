@@ -121,9 +121,9 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
       <section className="mb-6">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="mr-1 text-xs text-muted">지금 스테이지</span>
-          <button onClick={() => setStage("")} className={`num rounded-md px-2 py-1 text-xs transition-colors duration-150 ${!stage ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>전체</button>
+          <button onClick={() => setStage("")} className={`num rounded-md px-2.5 py-1.5 text-xs transition-colors duration-150 ${!stage ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>전체</button>
           {STAGES.map((s) => (
-            <button key={s} onClick={() => setStage(s)} className={`num rounded-md px-2 py-1 text-xs transition-colors duration-150 ${stage === s ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>{s}</button>
+            <button key={s} onClick={() => setStage(s)} className={`num rounded-md px-2.5 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>{s}</button>
           ))}
           <span className="ml-1 text-[10px] text-muted/60">고르면 그 시점 레벨 조합으로만 계산</span>
         </div>
@@ -295,7 +295,7 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
             <button
               key={c}
               onClick={() => setCostTab(c)}
-              className={`rounded px-2.5 py-1 text-xs font-semibold transition ${
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
                 costTab === c ? "bg-accent text-white" : `bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:bg-surface-2`
               }`}
             >
@@ -307,16 +307,18 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="유닛 검색 (예: 아리)"
+          inputMode="search"
+          enterKeyHint="search"
           className="mb-3 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
         />
-        <div className="grid max-h-72 grid-cols-2 gap-1.5 overflow-y-auto rounded-lg border border-line p-2 sm:grid-cols-3">
+        <div className="grid max-h-[55vh] grid-cols-2 gap-1.5 overflow-y-auto overscroll-contain rounded-lg border border-line p-2 sm:max-h-72 sm:grid-cols-3">
           {filteredUnits.map((u) => {
             const picked = units.some((x) => x.unitId === u.id);
             return (
               <button
                 key={u.id}
                 onClick={() => toggleUnit(u.id)}
-                className={`flex items-center gap-2 rounded px-2 py-1.5 text-left text-sm transition ${
+                className={`flex min-h-11 items-center gap-2 rounded px-2 py-1.5 text-left text-sm transition ${
                   picked
                     ? "bg-accent-2/50"
                     : "bg-surface hover:bg-surface-2"

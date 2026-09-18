@@ -151,12 +151,12 @@ export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNo
           <div className="ml-auto flex gap-0.5">
             {lvKeys.map((k) => (
               <button key={k} type="button" onClick={() => setLv(k)}
-                className={`num rounded px-2 py-0.5 text-xs transition-colors duration-150 ${lv === k ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+                className={`num min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${lv === k ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
                 {k}
               </button>
             ))}
             <button type="button" onClick={() => setLv(null)}
-              className={`rounded px-2 py-0.5 text-xs transition-colors duration-150 ${!lv ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+              className={`min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${!lv ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
               최종
             </button>
           </div>

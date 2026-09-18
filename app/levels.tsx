@@ -21,7 +21,7 @@ export function LevelComps({ deck, ownedIds, onToggle }: Props) {
           </div>
           <div className="flex flex-wrap gap-1">
             {comp.units.map((uid) => {
-              const icon = <UnitIcon id={uid} size="sm" className={`h-9! ${!ownedIds || ownedIds.has(uid) ? "" : "opacity-45"}`} />;
+              const icon = <UnitIcon id={uid} size="sm" className={`h-10! sm:h-9! ${!ownedIds || ownedIds.has(uid) ? "" : "opacity-45"}`} />;
               return onToggle ? (
                 <button key={uid} type="button" onClick={() => onToggle(uid)} title={unitById(uid)?.name} aria-pressed={ownedIds?.has(uid)}>{icon}</button>
               ) : (

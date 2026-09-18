@@ -114,6 +114,28 @@ for (const c of clusters) {
   });
   for (const m of c.members) pdRows.push({ match_id: m.match_id, puuid: m.puuid, deck_id: id, distance: Number((1 - jaccard(m.set, c.rep)).toFixed(3)) });
 }
+// ---- 3.5) 초반(4~6렙) 조합 보강 ----
+// Match-V5 엔 최종 보드만 있어 4~6렙을 알 수 없다. metatft 스냅샷(lib/gen/decks.json, early_options)에서
+// 최종 조합이 가장 비슷한 덱(자카드 ≥ 0.4)의 4·5·6렙 조합을 빌려온다. 우리 데이터에 같은 레벨이 있으면 우리 것 우선.
+// ponytail: 인게임 수집이 생기면 이 블록 삭제.
+try {
+  const meta = J("lib/gen/decks.json");
+  const jac = (a, b) => { const A = new Set(a), B = new Set(b); let i = 0; for (const x of A) if (B.has(x)) i++; return i / (A.size + B.size - i); };
+  let borrowed = 0;
+  for (const d of decks) {
+    const mine = d.deckUnits.filter((u) => u.core).map((u) => u.id);
+    const best = meta.map((m) => ({ m, s: jac(mine, m.coreUnits.map((u) => u.unitId)) })).sort((a, b) => b.s - a.s)[0];
+    if (!best || best.s < 0.4) continue;
+    for (const L of ["4", "5", "6"]) {
+      const lv = best.m.levels?.[L];
+      if (!lv || d.levels[L]) continue;
+      const units = lv.units.filter((u) => unitById.has(u));
+      if (units.length >= 3) { d.levels[L] = { units, avg: lv.avg, count: lv.count, borrowed: best.m.name }; borrowed++; }
+    }
+  }
+  console.log(`초반 조합 보강: metatft 에서 ${borrowed}개 레벨 차용`);
+} catch (e) { console.warn("초반 조합 보강 건너뜀:", e.message); }
+
 for (const d of decks) console.log(`  ${String(d.n).padStart(4)}판  avg ${d.avgPlace.toFixed(2)}  ${d.levelling.padEnd(7)} ${d.name.padEnd(14)} 코어[${d.coreIds.map((u) => unitById.get(u).name).join(", ")}]  유닛 ${d.deckUnits.length}  lv[${Object.keys(d.levels).join("/")}]`);
 if (DRY) process.exit(0);
 
