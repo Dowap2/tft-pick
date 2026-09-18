@@ -24,12 +24,19 @@ const SIZE = { sm: "size-8", md: "size-12", lg: "size-16" };
 const HEX_H = { sm: "h-8", md: "h-12", lg: "h-16" };
 
 // 육각형 초상화. 테두리는 바깥 span 배경(코스트색)이 p-0.5 만큼 보이는 방식. 크기는 높이(h-*)로만 지정.
-// 강조하려면 className에 "bg-accent!" 처럼 !로 덮어쓰기 (ring은 clip-path에 잘림).
-export function UnitIcon({ id, size = "md", className = "" }: { id: string; size?: keyof typeof SIZE; className?: string }) {
+// 테두리 색은 코스트 전용 — 캐리 강조는 테두리를 덮지 않고(인디고가 3코 파랑과 헷갈림) 위에 "C" 배지를 얹는다.
+export function UnitIcon({ id, size = "md", className = "", carry = false }: { id: string; size?: keyof typeof SIZE; className?: string; carry?: boolean }) {
   const u = unitById(id);
-  return (
-    <span className={`hex inline-block shrink-0 p-0.5 ${HEX_H[size]} ${COST_BG[u?.cost ?? 1]} ${className}`}>
+  const hex = (
+    <span className={`hex inline-block shrink-0 p-0.5 ${HEX_H[size]} ${COST_BG[u?.cost ?? 1]} ${carry ? "" : className}`}>
       <img src={u?.img} alt={u?.name ?? id} title={u?.name} className="hex h-full w-full object-cover" />
+    </span>
+  );
+  if (!carry) return hex;
+  return (
+    <span className={`relative inline-block shrink-0 ${className}`} title={`${u?.name ?? id} · 캐리`}>
+      {hex}
+      <span className="num absolute -right-1 -top-1 rounded-sm bg-accent px-1 text-[9px] leading-3 text-white shadow">C</span>
     </span>
   );
 }

@@ -52,12 +52,10 @@ export function PivotTree({ decks, ownedIds }: { decks: Deck[]; ownedIds: Set<st
                     <td key={lv} className={`px-2 py-1.5 align-top ${lv === splitLv ? "bg-accent/5" : ""}`}>
                       <div className="flex gap-0.5">
                         {units.map((u) => (
-                          <UnitIcon
-                            key={u}
-                            id={u}
-                            size="sm"
-                            className={`h-7! ${common.has(u) ? "" : "bg-accent!"} ${ownedIds.has(u) ? "" : "opacity-40"}`}
-                          />
+                          <span key={u} className={`flex flex-col items-center ${ownedIds.has(u) ? "" : "opacity-40"}`}>
+                            <UnitIcon id={u} size="sm" className="h-7!" />
+                            <span className={`mt-0.5 h-0.5 w-4 rounded ${common.has(u) ? "bg-transparent" : "bg-accent"}`} />
+                          </span>
                         ))}
                       </div>
                     </td>
@@ -68,7 +66,7 @@ export function PivotTree({ decks, ownedIds }: { decks: Deck[]; ownedIds: Set<st
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[10px] text-muted/70">테두리 인디고 = 그 덱에만 있는 유닛 · 흐림 = 미보유. 공통 유닛만 사두면 어느 쪽으로든 갈 수 있음.</p>
+      <p className="mt-2 text-[10px] text-muted/70">밑줄 인디고 = 그 덱에만 있는 유닛 · 흐림 = 미보유. 공통 유닛만 사두면 어느 쪽으로든 갈 수 있음.</p>
     </section>
   );
 }

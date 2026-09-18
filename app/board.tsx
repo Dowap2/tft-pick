@@ -27,7 +27,7 @@ export function Board({ deck, carryId, ownedIds, onToggle }: Props) {
             const items = itemsByUnit.get(u.unitId) ?? [];
             const cell = (
               <div className={`relative flex w-[42px] flex-col items-center ${owned ? "" : "opacity-50"}`}>
-                <UnitIcon id={u.unitId} className={`h-12! ${isCarry ? "bg-accent!" : ""}`} />
+                <UnitIcon id={u.unitId} className="h-12!" carry={isCarry} />
                 <span className="absolute top-8 text-[10px] leading-none text-warn drop-shadow-[0_0_2px_#000]">
                   {"★".repeat(u.star)}
                 </span>
@@ -53,7 +53,7 @@ export function Board({ deck, carryId, ownedIds, onToggle }: Props) {
       ))}
       <div className="mt-1 flex justify-between text-[10px] text-muted/70">
         <span>↑ 최전방</span>
-        <span className="opacity-60">흐림 = 미보유{onToggle && " · 클릭하면 보유 토글"} · 인디고 = 캐리</span>
+        <span className="opacity-60">흐림 = 미보유{onToggle && " · 클릭하면 보유 토글"} · C = 캐리</span>
       </div>
     </div>
   );

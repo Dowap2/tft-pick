@@ -88,7 +88,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                       const u = unitById(cu.unitId);
                       return (
                         <div key={cu.unitId} className="flex w-11 flex-col items-center">
-                          <UnitIcon id={cu.unitId} size="md" className={`h-11! ${cu.unitId === deck.carryId ? "bg-accent!" : ""}`} />
+                          <UnitIcon id={cu.unitId} size="md" className="h-11!" carry={cu.unitId === deck.carryId} />
                           <span className="mt-0.5 w-12 truncate text-center text-[10px] leading-3 text-muted">{u?.name}</span>
                           <span className={`text-[9px] leading-3 ${cu.star === 3 ? "num text-[11px] text-warn" : "text-warn/80"}`}>{"★".repeat(cu.star)}</span>
                         </div>

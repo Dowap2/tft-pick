@@ -160,7 +160,7 @@ export function RecommendClient() {
               <div className="scrollbar-none -mx-1 mb-3 flex gap-1.5 overflow-x-auto px-1 sm:mx-0 sm:flex-wrap sm:px-0">
                 {deck.coreUnits.map((cu) => (
                   <div key={cu.unitId} className="flex flex-col items-center">
-                    <UnitIcon id={cu.unitId} size="md" className={`${cu.unitId === score.carryId ? "bg-accent!" : ""} ${owned.has(cu.unitId) ? "" : "opacity-45"}`} />
+                    <UnitIcon id={cu.unitId} size="md" className={owned.has(cu.unitId) ? "" : "opacity-45"} carry={cu.unitId === score.carryId} />
                     <span className="text-[10px] leading-3 text-warn">{"★".repeat(cu.star)}</span>
                   </div>
                 ))}
