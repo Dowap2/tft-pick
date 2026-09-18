@@ -8,12 +8,12 @@
     "start": "next start",
     "sync": "node scripts/sync.mjs",
     "sync:meta": "node scripts/sync-meta.mjs",
-    "build:cf": "opennextjs-cloudflare build",
-    "preview:cf": "opennextjs-cloudflare preview",
-    "deploy:cf": "opennextjs-cloudflare deploy"
+    "dev:api": "wrangler dev --port 8787",
+    "build:cf": "next build",
+    "preview:cf": "wrangler dev",
+    "deploy:cf": "wrangler deploy"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.20.6",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.109.0",
     "next": "16.3.5",

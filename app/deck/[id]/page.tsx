@@ -6,8 +6,8 @@ import { getDecks } from "@/lib/decks";
 import { DeckAugments, DeckCounters, DeckProComps, DeckTrends } from "@/app/deck-extras";
 import { DeckInteractive } from "./deck-interactive";
 
-// 빌드 타임에 덱별 정적 페이지 생성. 빌드 후 생긴 덱 id 는 요청 시 렌더(dynamicParams).
-export const dynamicParams = true;
+// 빌드 타임에 덱별 정적 페이지 생성 (output: export → 요청 시 렌더 없음. 새 덱은 재배포 때 반영)
+export const dynamicParams = false;
 export async function generateStaticParams() {
   return (await getDecks()).map((d) => ({ id: d.id }));
 }

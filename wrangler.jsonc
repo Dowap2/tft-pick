@@ -1,13 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // OpenNext 는 Cloudflare "Workers"(정적 에셋 포함) 를 대상으로 함. Pages 프로젝트가 아니라 Workers 프로젝트로 연결할 것.
+  // 정적 사이트(out/) + /api/* 만 Worker. 페이지·에셋은 Worker 호출 없이 Static Assets 가 직접 서빙.
   "name": "panlab",
-  "main": ".open-next/worker.js",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-09-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "directory": "out",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
   },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // 빌드 시 인라인되는 NEXT_PUBLIC_* 외에 Worker 런타임에서도 필요 → 대시보드 Variables 또는 여기 vars 로.
+  "vars": {}
 }

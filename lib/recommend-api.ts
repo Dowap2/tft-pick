@@ -1,7 +1,5 @@
-// POST /api/recommend — 입력(재료·완성템·유닛·스테이지·로비) → 추천 덱 (UI 렌더에 필요한 것까지 계산해서 반환)
-// 클라이언트 페이지(/recommend, /deck/[id])가 이걸 호출. 정적 페이지들은 Worker 를 건드리지 않음.
-// Node(Netlify)·Workers(OpenNext) 공용: fetch 외 Node API 없음, 환경변수는 요청 시 읽음, runtime='edge' 불필요.
-import { NextResponse } from "next/server";
+// /api/recommend 핸들러 — 프레임워크 무관(표준 Request/Response). worker/index.ts(Cloudflare) 가 호출.
+// 입력(재료·완성템·유닛·스테이지·로비) → 추천 덱 + UI 렌더에 필요한 부가정보.
 import { getDecksMeta } from "@/lib/decks";
 import { componentById, itemById, unitById, type Deck } from "@/lib/data";
 import { inferDecks, nextActions, nextStep, recommend, scoreDeck, STAGES, transitionLabel, type UserInput } from "@/lib/score";
@@ -42,9 +40,12 @@ const slim = (d: Deck) => ({
   threeStarTargets: d.threeStarTargets, carryId: d.carryId, coreUnits: d.coreUnits, coreItems: d.coreItems, altItems: d.altItems, levels: d.levels, counters: d.counters,
 });
 
-export async function POST(req: Request) {
+const json = (data: unknown, init: ResponseInit = {}) =>
+  new Response(JSON.stringify(data), { ...init, headers: { "content-type": "application/json; charset=utf-8", ...(init.headers ?? {}) } });
+
+export async function handleRecommendPost(req: Request): Promise<Response> {
   let body: unknown;
-  try { body = await req.json(); } catch { return NextResponse.json({ error: "invalid json" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return json({ error: "invalid json" }, { status: 400 }); }
   const { input, opts, deckIds } = parse(body);
   const { decks, source, patch } = await getDecksMeta();
   const owned = new Set(input.units.map((u) => u.unitId));
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
     : recommend(input, decks, opts);
   const rivalDecks = input.rivals?.length ? inferDecks(input.rivals, decks).map((d) => d.name) : [];
 
-  return NextResponse.json(
+  return json(
     {
       patch, source, stage: input.stage ?? null, coreGate: deckIds.length ? "none" : opts.coreGate, candidates: decks.length, rivalDecks,
       input: { ...input, componentNames: input.components.map((c) => componentById(c)?.name) },
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
   );
 }
 
-export async function GET() {
+export async function handleRecommendGet(): Promise<Response> {
   const { decks, source, patch } = await getDecksMeta();
-  return NextResponse.json({ patch, source, decks: decks.map((d) => ({ id: d.id, name: d.name, tier: d.tierLabel, carry: d.carryId })) });
+  return json({ patch, source, decks: decks.map((d) => ({ id: d.id, name: d.name, tier: d.tierLabel, carry: d.carryId })) });
 }

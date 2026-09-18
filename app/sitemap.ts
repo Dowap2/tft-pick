@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+export const dynamic = "force-static";
 import { getDecks } from "@/lib/decks";
 import meta from "@/lib/gen/meta.json";
 import { SITE_URL } from "./layout";

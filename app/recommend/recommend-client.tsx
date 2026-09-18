@@ -10,6 +10,7 @@ import { toStars, type Reason, type UserInput } from "@/lib/score";
 import { COST_TEXT, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { PivotTree } from "@/app/pivot";
 import { SyncInput } from "@/app/sync-input";
+import { API_BASE } from "@/lib/api-base";
 
 const MEDALS = ["🥇", "🥈", "🥉", "4", "5"];
 
@@ -31,7 +32,7 @@ export function RecommendClient() {
     const parsed = parseUserInput(Object.fromEntries(sp.entries()));
     setInput(parsed);
     setData(null); setError(null);
-    fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed) })
+    fetch(`${API_BASE}/api/recommend`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed) })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${r.status}`))))
       .then(setData)
       .catch((e) => setError(e.message));

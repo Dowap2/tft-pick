@@ -12,6 +12,7 @@ import { CopyTeamCode } from "@/app/team-code";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { Board } from "@/app/board";
 import { LevelComps } from "@/app/levels";
+import { API_BASE } from "@/lib/api-base";
 
 const STORAGE_KEY = "tft-pick:input";
 const EMPTY: UserInput = { components: [], completed: [], units: [], rivals: [] };
@@ -29,7 +30,7 @@ export function DeckInteractive({ deck, extras }: { deck: Deck; extras?: ReactNo
   }, []);
   useEffect(() => {
     const ctl = new AbortController();
-    fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...input, deckIds: [deck.id] }), signal: ctl.signal })
+    fetch(`${API_BASE}/api/recommend`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...input, deckIds: [deck.id] }), signal: ctl.signal })
       .then((r) => r.json())
       .then((d) => { const r = d.results?.[0]; if (r) { setScore(r.score); setTrans(r.transition); } })
       .catch(() => {});
