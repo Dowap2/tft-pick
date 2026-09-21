@@ -45,8 +45,9 @@ export default async function AboutPage() {
         <strong>어느 구간에서든 공통으로 먹히는 덱</strong>이기 때문입니다.
       </P>
       <P>
-        자격은 <strong>30판 이상, 평균 4.75등 이내</strong>. 그중 승률과 평균 등수가 모두 상위 10%면 <strong>OP</strong>,
+        자격은 <strong>30판 이상, 평균 4.75등 이내</strong>. 그중 승률과 평균 등수가 모두 상위 10%면서 <strong>100판 이상</strong>이면 <strong>OP</strong>,
         그 다음 (승률 순위 + 등수 순위) 상위 5개가 <strong>S</strong>, 나머지를 <strong>A</strong> 30% · <strong>B</strong> 40% · <strong>C</strong> 30%로 나눕니다.
+        OP에만 표본 하한을 따로 두는 건, 30판짜리 덱이 수백 판 검증된 덱 위에 올라오는 걸 막기 위해서입니다. <strong>OP가 없는 날도 정상입니다.</strong>
         카드에 표시되는 게임 수·평균 등수·승률은 티어를 계산한 것과 같은 표본입니다.
       </P>
 
