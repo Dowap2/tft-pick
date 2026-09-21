@@ -46,6 +46,10 @@ jobs:
         if: always() && env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
         run: node scripts/cluster-decks.mjs
 
+      - name: 티어 기준 검사 (docs/티어기준.md §5 §6)
+        if: always() && env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        run: node scripts/check-tiers.mjs     # 문서와 DB 가 어긋나면 잡을 빨갛게 만든다
+
       - name: Skipped
         if: env.RIOT_API_KEY == '' || env.SUPABASE_SERVICE_ROLE_KEY == ''
         run: echo "RIOT_API_KEY / SUPABASE_SERVICE_ROLE_KEY 시크릿이 없어 수집 건너뜀"
