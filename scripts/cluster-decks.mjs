@@ -6,7 +6,7 @@
 //  1. 보드 → 유닛 집합(우리 id). 유닛 6개 미만 보드 제외.
 //  2. 등수 좋은 보드부터 순회, 기존 클러스터 대표(등장률 ≥ 50% 유닛)와 자카드 ≥ SIM 이면 합류, 아니면 새 클러스터. 2패스로 안정화.
 //  3. 표본 < MIN 클러스터 버림. 대표 유닛·성·아이템·캐리·레벨별 조합 산출.
-//  4. 이름 = 최고 단계 특성 + 캐리. id = 슬러그.
+//  4. 이름 = 최고 단계 특성 + 캐리(아이템 최다 유닛). id = 슬러그.
 // ponytail: k-means 대신 그리디 자카드. 수천 판까진 충분, 수만 판 넘어가면 시그니처 해시 기반으로.
 import { readFileSync } from "node:fs";
 import { rpc, rpcAll, select, upsert, currentPatch, riotItemId } from "./db.mjs";
@@ -100,17 +100,18 @@ for (const c of clusters) {
   for (const m of c.members) for (const u of m.set) freq.set(u, (freq.get(u) ?? 0) + 1);
   const deckUnits = [...freq].filter(([, k]) => k / n >= 0.3).map(([id, k]) => ({ id, rate: k / n, core: k / n >= 0.5 }));
   // 유닛별 성 최빈값 (4~5코는 2 캡, 캐리는 아래서 보정), 아이템 빈도
-  const starMode = new Map(), itemFreq = new Map(), offense = new Map();
+  const starMode = new Map(), itemFreq = new Map(), itemLoad = new Map();
   for (const du of deckUnits) {
     const inst = c.members.flatMap((m) => m.us.filter((u) => u.id === du.id));
     starMode.set(du.id, mode(inst.map((u) => u.star)) ?? 2);
-    // 캐리 지표: 인스턴스당 평균 공격템 개수 (탱커는 방어템 3개라 제외됨)
-    offense.set(du.id, inst.reduce((s, u) => s + u.items.filter((i) => !isDefensive(i)).length, 0) / inst.length);
+    // 캐리 지표: 인스턴스당 평균 아이템 개수 (공격/방어 구분 없음 — docs/티어기준.md §4.7)
+    // 방어템을 빼고 세면 가고일·워모그를 끼고 캐리하는 유닛(말파이트 등)을 영영 못 잡는다.
+    itemLoad.set(du.id, inst.reduce((s, u) => s + u.items.length, 0) / inst.length);
     const f = new Map(); for (const u of inst) for (const it of u.items) f.set(it, (f.get(it) ?? 0) + 1);
     itemFreq.set(du.id, [...f].map(([it, k]) => ({ it, rate: k / inst.length })).sort((a, b) => b.rate - a.rate));
   }
-  // 캐리 = 공격템을 가장 많이 드는 유닛 (동률 고코스트)
-  const carry = [...deckUnits].sort((a, b) => (offense.get(b.id) - offense.get(a.id)) || (unitById.get(b.id).cost - unitById.get(a.id).cost))[0].id;
+  // 캐리 = 아이템을 가장 많이 받는 유닛 (동률이면 고코스트)
+  const carry = [...deckUnits].sort((a, b) => (itemLoad.get(b.id) - itemLoad.get(a.id)) || (unitById.get(b.id).cost - unitById.get(a.id).cost))[0].id;
   // 코어 = 캐리 + 등장률 상위 2 (캐리 제외)
   const coreIds = [carry, ...deckUnits.filter((u) => u.id !== carry).sort((a, b) => b.rate - a.rate).slice(0, 2).map((u) => u.id)];
   // 특성 (구성원 traits 최빈 상위) → 이름
