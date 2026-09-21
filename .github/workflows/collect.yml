@@ -1,5 +1,5 @@
 # 상시 매치 수집. 기준 문서: docs/티어기준.md §1 §8
-#   3시간마다 잡 1개 → 그 안에서 2분마다 1사이클(시드 8명 목록 + 신규 매치 20판) → 잡 끝에 클러스터링 + 통계 리프레시
+#   3시간마다 잡 1개 → 그 안에서 2분마다 1사이클(시드 12명 목록 + 신규 매치 60판) → 잡 끝에 클러스터링 + 통계 버킷 누적
 #   공개 저장소라 Actions 분은 무제한. 잡 6시간 제한 안쪽(170분)으로 돌고 다음 스케줄이 이어받는다.
 name: collect-matches
 on:
@@ -12,7 +12,7 @@ on:
         default: "170"
       max_matches:
         description: "사이클(2분)당 최대 매치 수"
-        default: "20"
+        default: "60"
 
 concurrency:
   group: collect-matches      # 앞 잡이 안 끝났으면 기다림 (중복 수집 방지)
@@ -40,7 +40,7 @@ jobs:
           node scripts/collect-matches.mjs \
             --loop 120 \
             --duration-min ${{ github.event.inputs.duration_min || '170' }} \
-            --max-matches ${{ github.event.inputs.max_matches || '20' }}
+            --max-matches ${{ github.event.inputs.max_matches || '60' }}
 
       - name: Cluster decks + refresh stats
         if: always() && env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''

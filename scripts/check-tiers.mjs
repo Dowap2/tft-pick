@@ -6,7 +6,8 @@
 import { rpc, select, currentPatch } from "./db.mjs";
 
 const patch = await currentPatch();
-const stats = await select("deck_stats", `select=deck_id,games,avg_place,win_rate&patch_id=eq.${patch.id}`);
+// 자격 판정은 decks_bundle 기준 — 살아있는 덱만 담기고 §5 임계값이 이미 걸려 있다
+const stats = (await select("decks_bundle", `select=id,games,avg_place,win_rate&patch_id=eq.${patch.id}`)).map((r) => ({ ...r, deck_id: r.id }));
 const tiers = await rpc("calculate_deck_tiers", { target_patch_id: patch.id });
 const tierOf = new Map(tiers.map((t) => [t.deck_id, t.tier_label]));
 const by = (t) => tiers.filter((x) => x.tier_label === t).map((x) => x.deck_id);
@@ -18,7 +19,7 @@ const check = (ok, msg) => { console.log(`  ${ok ? "✓" : "✗"} ${msg}`); if (
 const qualified = stats.filter((s) => s.games >= 30 && Number(s.avg_place) < 4.75);
 const qIds = new Set(qualified.map((s) => s.deck_id));
 
-console.log(`패치 ${patch.version} · 덱 ${stats.length}개 중 자격 ${qualified.length}개, 티어 부여 ${tiers.length}개\n`);
+console.log(`패치 ${patch.version} · 자격 ${qualified.length}개, 티어 부여 ${tiers.length}개\n`);
 
 console.log("§5 자격");
 check(tiers.length === qualified.length, `자격 덱 수(${qualified.length}) == 티어 부여 수(${tiers.length})`);

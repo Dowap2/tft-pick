@@ -5,8 +5,8 @@
 //   --tiers challenger,grandmaster,master,diamond,emerald   시드 티어 (기본값 그대로)
 //   --per-tier 300           다이아/에메랄드 티어당 시드 상한 (챌/그마/마스터는 리그 전원)
 //   --per-player 20          플레이어당 최근 매치 수 (최대 200)
-//   --max-matches 20         사이클당 적재할 최대 매치 수
-//   --seeds-per-cycle 8      사이클당 매치목록을 조회할 시드 수
+//   --max-matches 60         사이클당 적재할 최대 매치 수 (시드 12 + 매치 60 = 요청 72 < 100/2min)
+//   --seeds-per-cycle 12     사이클당 매치목록을 조회할 시드 수
 //   --loop 120               초 단위 반복 (기본 1회만 실행). 2분 = 100req/2min 창에 딱 맞음
 //   --duration-min 170       --loop 일 때 총 지속 시간 (GitHub Actions 잡 6시간 제한 안쪽)
 //   --reseed-min 60          시드 목록 갱신 주기
@@ -20,8 +20,8 @@ const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.start
 const TIERS = String(args.tiers ?? "challenger,grandmaster,master,diamond,emerald").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
 const PER_TIER = Number(args["per-tier"] ?? 300);
 const PER_PLAYER = Math.min(200, Number(args["per-player"] ?? 20));
-const MAX_MATCHES = Number(args["max-matches"] ?? 20);
-const SEEDS_PER_CYCLE = Number(args["seeds-per-cycle"] ?? 8);
+const MAX_MATCHES = Number(args["max-matches"] ?? 60);
+const SEEDS_PER_CYCLE = Number(args["seeds-per-cycle"] ?? 12);
 const LOOP_SEC = args.loop == null ? 0 : Number(args.loop === true ? 120 : args.loop);
 const DURATION_MS = Number(args["duration-min"] ?? 170) * 60_000;
 const RESEED_MS = Number(args["reseed-min"] ?? 60) * 60_000;

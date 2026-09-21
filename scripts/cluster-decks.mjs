@@ -194,5 +194,5 @@ await upsert("deck_levels", decks.flatMap((d) => Object.entries(d.levels).map(([
   deck_id: d.id, patch_id: pid, level: Number(L), unit_ids: v.units, avg_place: Number(v.avg.toFixed(2)), games: v.count,
 }))), "deck_id,patch_id,level");
 const n = await rpc("ingest_participant_decks", { p_patch_id: pid, rows: pdRows });
-await rpc("refresh_deck_stats");
-console.log(`\n적재: decks ${decks.length}, participant_decks ${n}, deck_stats 리프레시 완료`);
+const rolled = await rpc("roll_up_stats", { p_patch_id: pid });   // 덱별·시간별 집계 누적 (docs/티어기준.md §3)
+console.log(`\n적재: decks ${decks.length}, participant_decks ${n}, 통계 버킷 ${rolled}행 갱신`);
