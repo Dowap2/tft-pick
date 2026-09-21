@@ -1,5 +1,6 @@
 // raw 보드(1~4등) → 덱 클러스터 → decks / deck_units / deck_items / deck_levels / participant_decks → deck_stats 리프레시
-// 실행: node --env-file=.env.local scripts/cluster-decks.mjs [--min-members 15] [--sim 0.5] [--dry-run]
+// 실행: node --env-file=.env.local scripts/cluster-decks.mjs [--min-members 15] [--sim 0.5] [--max-boards 120000] [--dry-run]
+// 기준 문서: docs/티어기준.md §4 §7
 //
 // 방식 (단순·결정적):
 //  1. 보드 → 유닛 집합(우리 id). 유닛 6개 미만 보드 제외.
@@ -12,6 +13,7 @@ import { rpc, rpcAll, select, upsert, currentPatch, riotItemId } from "./db.mjs"
 
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.startsWith("--") ? [a.slice(2), all[i + 1]?.startsWith("--") || all[i + 1] == null ? true : all[i + 1]] : []).filter(Boolean));
 const MIN = Number(args["min-members"] ?? 15);
+const MAX_BOARDS = Number(args["max-boards"] ?? 120_000);   // docs/티어기준.md §7. 보드는 24시간만 보존되므로 보통 이 아래
 const SIM = Number(args.sim ?? 0.5);
 const DRY = !!args["dry-run"];
 
@@ -28,7 +30,7 @@ const itemIds = new Set(items.map((i) => i.id));
 const isDefensive = (id) => /warmogs|bramble|gargoyle|dragonsclaw|redbuff|frozenheart|redemption|spectralgauntlet|adaptivehelm|crownguard|nightharvester|steraks|titansresolve|guardianangel|quicksilver/.test(id);
 
 // ---- 1) 보드 로드 ----
-const raw = await rpcAll("raw_boards", { p_patch_id: pid }, "match_id.asc,puuid.asc");
+const raw = await rpcAll("raw_boards", { p_patch_id: pid }, "match_id.desc,puuid.asc", 1000, MAX_BOARDS);   // 최신 매치부터
 const boards = raw.map((b) => {
   const us = (b.units ?? []).map((u) => ({ id: unitByApi.get(u.character_id)?.id, star: Math.min(3, u.tier ?? 1), items: (u.items ?? []).map(riotItemId).filter((i) => i && itemIds.has(i)) })).filter((u) => u.id);
   return { ...b, us, set: new Set(us.map((u) => u.id)), traitLv: new Map((b.traits ?? []).map((t) => [t.name, t.tier_current])) };

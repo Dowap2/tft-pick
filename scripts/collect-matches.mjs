@@ -1,19 +1,30 @@
 // Riot TFT Match-V5 수집기 → raw.matches / raw.participants (Supabase RPC ingest_match)
+// 기준 문서: docs/티어기준.md §1 §2 §7 — 값이 문서와 다르면 문서가 옳다.
 //
 // 실행:  node --env-file=.env.local scripts/collect-matches.mjs [옵션]
-//   --tiers challenger,grandmaster,master   시드 플레이어 티어 (기본 challenger,grandmaster)
-//   --per-player 20                          플레이어당 최근 매치 수 (최대 200)
-//   --max-matches 500                        이번 실행에서 적재할 최대 매치 수
-//   --queue 1100                             1100 = 랭크만 (기본). 0 = 전부
-//   --dry-run                                DB에 안 쓰고 카운트만
+//   --tiers challenger,grandmaster,master,diamond,emerald   시드 티어 (기본값 그대로)
+//   --per-tier 300           다이아/에메랄드 티어당 시드 상한 (챌/그마/마스터는 리그 전원)
+//   --per-player 20          플레이어당 최근 매치 수 (최대 200)
+//   --max-matches 20         사이클당 적재할 최대 매치 수
+//   --seeds-per-cycle 8      사이클당 매치목록을 조회할 시드 수
+//   --loop 120               초 단위 반복 (기본 1회만 실행). 2분 = 100req/2min 창에 딱 맞음
+//   --duration-min 170       --loop 일 때 총 지속 시간 (GitHub Actions 잡 6시간 제한 안쪽)
+//   --reseed-min 60          시드 목록 갱신 주기
+//   --queue 1100             1100 = 랭크만 (기본). 0 = 전부
+//   --dry-run                DB에 안 쓰고 카운트만
 //
 // 필요 env: RIOT_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
-// 레이트 리밋(개발 키): 20 req/s, 100 req/2min → 아래 limiter 가 자동으로 맞춤. 429 는 Retry-After 대기.
+// 레이트 리밋: 20 req/s, 100 req/2min → 아래 limiter 가 자동으로 맞춤. 429 는 Retry-After 대기.
 
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.startsWith("--") ? [a.slice(2), all[i + 1]?.startsWith("--") || all[i + 1] == null ? true : all[i + 1]] : []).filter(Boolean));
-const TIERS = String(args.tiers ?? "challenger,grandmaster").split(",");
+const TIERS = String(args.tiers ?? "challenger,grandmaster,master,diamond,emerald").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+const PER_TIER = Number(args["per-tier"] ?? 300);
 const PER_PLAYER = Math.min(200, Number(args["per-player"] ?? 20));
-const MAX_MATCHES = Number(args["max-matches"] ?? 500);
+const MAX_MATCHES = Number(args["max-matches"] ?? 20);
+const SEEDS_PER_CYCLE = Number(args["seeds-per-cycle"] ?? 8);
+const LOOP_SEC = args.loop == null ? 0 : Number(args.loop === true ? 120 : args.loop);
+const DURATION_MS = Number(args["duration-min"] ?? 170) * 60_000;
+const RESEED_MS = Number(args["reseed-min"] ?? 60) * 60_000;
 const QUEUE = Number(args.queue ?? 1100);
 const DRY = !!args["dry-run"];
 
@@ -24,6 +35,8 @@ function die(msg) { console.error("✗", msg); process.exit(1); }
 
 const PLATFORM = "https://kr.api.riotgames.com";     // 리그·소환사 (플랫폼 라우팅)
 const REGION = "https://asia.api.riotgames.com";     // 매치 (지역 라우팅)
+const APEX = new Set(["challenger", "grandmaster", "master"]);   // 문서 §2: 티어 산정의 근거가 되는 그룹
+const DIVISIONS = ["I", "II", "III", "IV"];
 
 // ---- 레이트 리미터: 20/1s, 100/120s 두 창을 동시에 만족 ----
 const windows = [{ limit: 20, ms: 1000, hits: [] }, { limit: 100, ms: 120_000, hits: [] }];
@@ -81,60 +94,107 @@ if (!DRY) {
   console.log(`패치: set ${patch.set_number} / ${patch.version} (id ${patch.id})`);
 }
 
-// ---- 2) 시드 플레이어 (챌린저/그마/마스터 리그 엔트리에 puuid 포함) ----
-const seeds = new Map(); // puuid → tier
-for (const tier of TIERS) {
-  const league = await riot(`${PLATFORM}/tft/league/v1/${tier}`);
-  for (const e of league?.entries ?? []) if (e.puuid) seeds.set(e.puuid, tier.toUpperCase());
-  console.log(`${tier}: ${league?.entries?.length ?? 0}명`);
+// ---- 2) 시드 플레이어 ----
+// 챌/그마/마스터: 리그 엔드포인트 1회로 전원. 다이아/에메랄드: entries/{TIER}/{DIVISION}?page= 페이지네이션 (티어당 PER_TIER 명까지).
+async function loadSeeds() {
+  const seeds = [];
+  for (const tier of TIERS) {
+    const group = APEX.has(tier) ? "apex" : "high";
+    const before = seeds.length;
+    if (APEX.has(tier)) {
+      const league = await riot(`${PLATFORM}/tft/league/v1/${tier}`);
+      for (const e of league?.entries ?? []) if (e.puuid) seeds.push({ puuid: e.puuid, tier: tier.toUpperCase(), group });
+    } else {
+      const T = tier.toUpperCase();
+      for (const div of DIVISIONS) {
+        for (let page = 1; page <= 20 && seeds.length - before < PER_TIER; page++) {
+          const rows = await riot(`${PLATFORM}/tft/league/v1/entries/${T}/${div}?page=${page}`);
+          if (!rows?.length) break;
+          for (const e of rows) if (e.puuid) seeds.push({ puuid: e.puuid, tier: `${T} ${div}`, group });
+        }
+        if (seeds.length - before >= PER_TIER) break;
+      }
+    }
+    console.log(`${tier}: ${seeds.length - before}명 (${group})`);
+  }
+  for (let i = seeds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [seeds[i], seeds[j]] = [seeds[j], seeds[i]]; }   // 매 사이클 같은 사람만 보지 않게
+  return seeds;
 }
-console.log(`시드 플레이어 ${seeds.size}명, 플레이어당 ${PER_PLAYER}판, 최대 ${MAX_MATCHES}판${DRY ? " (dry-run)" : ""}`);
+let seeds = await loadSeeds();
+let seedTier = new Map(seeds.map((s) => [s.puuid, s.tier]));   // 참가자 행에 남기는 시드 티어 (나머지 7명은 null)
+if (!seeds.length) die("시드 0명 — 리그 응답에 puuid 가 없다. Riot 이 엔트리 스키마를 또 바꿨는지 확인");
+const byGroup = seeds.reduce((m, s) => ({ ...m, [s.group]: (m[s.group] ?? 0) + 1 }), {});
+console.log(`시드 ${seeds.length}명 (${Object.entries(byGroup).map(([g, n]) => `${g} ${n}`).join(", ")}) · 사이클당 시드 ${SEEDS_PER_CYCLE}명 / 매치 ${MAX_MATCHES}판${LOOP_SEC ? ` · ${LOOP_SEC}초 주기 ${(DURATION_MS / 60000).toFixed(0)}분` : ""}${DRY ? " (dry-run)" : ""}`);
 
-// ---- 3) 매치 id 수집 → 중복 제거 → DB에 이미 있는 것 제외 ----
-const ids = new Set();
-for (const puuid of seeds.keys()) {
-  const list = await riot(`${REGION}/tft/match/v1/matches/by-puuid/${puuid}/ids?count=${PER_PLAYER}`);
-  for (const id of list ?? []) ids.add(id);
-  if (ids.size >= MAX_MATCHES * 3) break;   // 넉넉히 모았으면 중단 (중복·기존 제외 감안)
-}
-let todo = [...ids];
-if (!DRY) {
-  const existing = new Set();
-  for (let i = 0; i < todo.length; i += 500) for (const id of await rpc("existing_match_ids", { ids: todo.slice(i, i + 500) })) existing.add(id);
-  todo = todo.filter((id) => !existing.has(id));
-  console.log(`매치 id ${ids.size}개 중 신규 ${todo.length}개`);
-}
-todo = todo.slice(0, MAX_MATCHES);
-
-// ---- 4) 매치 상세 → 적재 ----
-let stored = 0, skipped = 0;
+// ---- 3) 한 사이클: 시드 몇 명의 최근 매치 → 신규만 상세 조회 → 적재 ----
+const seen = new Set();     // 이 프로세스에서 이미 본 매치 id (DB 왕복 절약)
+let cursor = 0, stored = 0, skipped = 0, cycles = 0;
 const t0 = Date.now();
-for (const [i, id] of todo.entries()) {
-  const m = await riot(`${REGION}/tft/match/v1/matches/${id}`);
-  const info = m?.info;
-  if (!info) { skipped++; continue; }
-  if (QUEUE && (info.queue_id ?? info.queueId) !== QUEUE) { skipped++; continue; }
-  if (patch && info.tft_set_number !== patch.set_number) { skipped++; continue; }
 
-  // 보드는 1~8등 전부 저장 (5~8등이 있어야 덱별 평균등수·Top4·승률이 의미 있음)
-  const participants = info.participants.map((p) => ({
-    puuid: p.puuid, placement: p.placement, level: p.level, last_round: p.last_round ?? null,
-    tier: seeds.get(p.puuid) ?? null,
-    units: p.units.map((u) => ({ character_id: u.character_id, tier: u.tier, items: u.itemNames ?? [] })),
-    traits: p.traits.filter((t) => t.tier_current > 0).map((t) => ({ name: t.name, num_units: t.num_units, tier_current: t.tier_current })),
-    augments: p.augments ?? [],
-  }));
-  const row = {
-    match_id: id, patch_id: patch?.id ?? 0,
-    game_version: `${info.tft_set_core_name ?? "set"}/${info.game_version ?? ""}`.slice(0, 80),
-    queue_id: info.queue_id ?? info.queueId ?? 0,
-    played_at: new Date(info.game_datetime).toISOString(),
-  };
-  if (DRY) { stored++; }
-  else if (await rpc("ingest_match", { m: row, ps: participants })) stored++;
-  else skipped++;
-  if ((i + 1) % 50 === 0) console.log(`  ${i + 1}/${todo.length}  적재 ${stored}  요청 ${reqCount}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+async function cycle() {
+  const owner = new Map();  // match_id → rank_group (apex 가 high 를 이김, 문서 §2)
+  for (let i = 0; i < SEEDS_PER_CYCLE; i++) {
+    const s = seeds[cursor++ % seeds.length];
+    const list = await riot(`${REGION}/tft/match/v1/matches/by-puuid/${s.puuid}/ids?count=${PER_PLAYER}`);
+    for (const id of list ?? []) {
+      if (seen.has(id)) continue;
+      if (owner.get(id) !== "apex") owner.set(id, s.group);
+    }
+  }
+  let todo = [...owner.keys()];
+  if (!DRY && todo.length) {
+    const existing = new Set();
+    for (let i = 0; i < todo.length; i += 500) for (const id of await rpc("existing_match_ids", { ids: todo.slice(i, i + 500) })) existing.add(id);
+    for (const id of existing) seen.add(id);
+    todo = todo.filter((id) => !existing.has(id));
+  }
+  todo = todo.slice(0, MAX_MATCHES);
+
+  let n = 0;
+  for (const id of todo) {
+    seen.add(id);
+    const m = await riot(`${REGION}/tft/match/v1/matches/${id}`);
+    const info = m?.info;
+    if (!info) { skipped++; continue; }
+    if (QUEUE && (info.queue_id ?? info.queueId) !== QUEUE) { skipped++; continue; }
+    if (patch && info.tft_set_number !== patch.set_number) { skipped++; continue; }
+
+    // 보드는 1~8등 전부 저장 (5~8등이 있어야 덱별 평균등수·Top4·승률이 의미 있음)
+    const participants = info.participants.map((p) => ({
+      puuid: p.puuid, placement: p.placement, level: p.level, last_round: p.last_round ?? null,
+      tier: seedTier.get(p.puuid) ?? null,
+      units: p.units.map((u) => ({ character_id: u.character_id, tier: u.tier, items: u.itemNames ?? [] })),
+      traits: p.traits.filter((t) => t.tier_current > 0).map((t) => ({ name: t.name, num_units: t.num_units, tier_current: t.tier_current })),
+      augments: p.augments ?? [],
+    }));
+    const row = {
+      match_id: id, patch_id: patch?.id ?? 0,
+      game_version: `${info.tft_set_core_name ?? "set"}/${info.game_version ?? ""}`.slice(0, 80),
+      queue_id: info.queue_id ?? info.queueId ?? 0,
+      played_at: new Date(info.game_datetime).toISOString(),
+      rank_group: owner.get(id) ?? "high",
+    };
+    if (DRY) { stored++; n++; }
+    else if (await rpc("ingest_match", { m: row, ps: participants })) { stored++; n++; }
+    else skipped++;
+  }
+  // ponytail: seen 은 프로세스 메모리에만. 3시간 잡이면 수만 건 수준이라 충분, 더 길게 돌릴 거면 LRU 로.
+  if (seen.size > 200_000) seen.clear();
+  return n;
 }
 
-console.log(`\n완료: 적재 ${stored}, 건너뜀 ${skipped}, Riot 요청 ${reqCount}회, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+// ---- 4) 1회 또는 반복 ----
+const endAt = Date.now() + DURATION_MS;
+let lastSeed = Date.now();
+for (;;) {
+  const cs = Date.now();
+  const n = await cycle();
+  cycles++;
+  console.log(`[${new Date().toISOString().slice(11, 19)}] 사이클 ${cycles}: +${n}판 (누적 적재 ${stored}, 건너뜀 ${skipped}, 요청 ${reqCount})`);
+  if (!LOOP_SEC || Date.now() >= endAt) break;
+  if (Date.now() - lastSeed >= RESEED_MS) { seeds = await loadSeeds(); seedTier = new Map(seeds.map((s) => [s.puuid, s.tier])); lastSeed = Date.now(); }
+  await sleep(Math.max(0, LOOP_SEC * 1000 - (Date.now() - cs)));
+}
+
+console.log(`\n완료: 사이클 ${cycles}, 적재 ${stored}, 건너뜀 ${skipped}, Riot 요청 ${reqCount}회, ${((Date.now() - t0) / 1000 / 60).toFixed(1)}분`);
 if (!DRY) { const [s] = await rpc("raw_stats"); console.log(`raw 누적: 매치 ${s.matches}, 참가자 ${s.participants}, 최신 ${s.latest}`); }

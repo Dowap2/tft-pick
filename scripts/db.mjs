@@ -9,14 +9,15 @@ export async function rpc(fn, params = {}, query = "") {
   const t = await res.text();
   return t ? JSON.parse(t) : null;
 }
-/** setof 를 반환하는 rpc 전부 읽기 (PostgREST max-rows 1000 → limit/offset 순회. Range 헤더는 RPC에서 무시됨) */
-export async function rpcAll(fn, params = {}, order = "", page = 1000) {
+/** setof 를 반환하는 rpc 전부 읽기 (PostgREST max-rows 1000 → limit/offset 순회. Range 헤더는 RPC에서 무시됨). max 행에서 중단 */
+export async function rpcAll(fn, params = {}, order = "", page = 1000, max = Infinity) {
   const out = [];
-  for (let offset = 0; ; offset += page) {
+  for (let offset = 0; out.length < max; offset += page) {
     const rows = await rpc(fn, params, `limit=${page}&offset=${offset}${order ? `&order=${order}` : ""}`);
     out.push(...rows);
-    if (rows.length < page) return out;
+    if (rows.length < page) break;
   }
+  return out;
 }
 export async function select(table, query = "") {
   const res = await fetch(`${URL_}/rest/v1/${table}?${query}`, { headers: H });

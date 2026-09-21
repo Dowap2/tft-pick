@@ -1,0 +1,51 @@
+# 상시 매치 수집. 기준 문서: docs/티어기준.md §1 §8
+#   3시간마다 잡 1개 → 그 안에서 2분마다 1사이클(시드 8명 목록 + 신규 매치 20판) → 잡 끝에 클러스터링 + 통계 리프레시
+#   공개 저장소라 Actions 분은 무제한. 잡 6시간 제한 안쪽(170분)으로 돌고 다음 스케줄이 이어받는다.
+name: collect-matches
+on:
+  schedule:
+    - cron: "5 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      duration_min:
+        description: "수집 지속 시간(분)"
+        default: "170"
+      max_matches:
+        description: "사이클(2분)당 최대 매치 수"
+        default: "20"
+
+concurrency:
+  group: collect-matches      # 앞 잡이 안 끝났으면 기다림 (중복 수집 방지)
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 195
+    env:
+      RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Supabase URL from wrangler.jsonc
+        run: node -e "const s=require('fs').readFileSync('wrangler.jsonc','utf8').replace(/^\s*\/\/.*$/gm,'');console.log('NEXT_PUBLIC_SUPABASE_URL='+JSON.parse(s).vars.NEXT_PUBLIC_SUPABASE_URL)" >> "$GITHUB_ENV"
+
+      - name: Collect (2분 주기 루프)
+        if: env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        continue-on-error: true     # 중간에 죽어도 그때까지 모은 건 아래서 정제
+        run: |
+          node scripts/collect-matches.mjs \
+            --loop 120 \
+            --duration-min ${{ github.event.inputs.duration_min || '170' }} \
+            --max-matches ${{ github.event.inputs.max_matches || '20' }}
+
+      - name: Cluster decks + refresh stats
+        if: always() && env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
+        run: node scripts/cluster-decks.mjs
+
+      - name: Skipped
+        if: env.RIOT_API_KEY == '' || env.SUPABASE_SERVICE_ROLE_KEY == ''
+        run: echo "RIOT_API_KEY / SUPABASE_SERVICE_ROLE_KEY 시크릿이 없어 수집 건너뜀"
