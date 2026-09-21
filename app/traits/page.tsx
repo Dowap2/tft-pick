@@ -4,11 +4,12 @@ import { getDecks } from "@/lib/decks";
 
 export const dynamic = "force-static";
 import { TierBadge, UnitIcon } from "@/app/icons";
+import { Breadcrumbs, KW } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: "TFT 시너지(특성) 목록 - 활성 인원과 보유 챔피언",
-  description: `롤토체스 Set ${meta.set} 시너지 전체. 활성 단계, 보유 챔피언, 이 시너지를 쓰는 메타 덱.`,
+  title: `롤체 시너지 목록 시즌 ${meta.set} — 활성 인원·보유 기물·덱`,
+  description: `롤토체스(롤체) 시즌 ${meta.set} 시너지(특성) 전체. 활성 단계, 기물 목록, 그 시너지를 쓰는 메타 덱까지.`,
   alternates: { canonical: "/traits" },
 };
 
@@ -25,8 +26,9 @@ export default async function TraitsPage() {
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
+      <Breadcrumbs items={[{ name: "시너지", href: "/traits" }]} />
       <header className="mb-5">
-        <h1 className="text-2xl font-bold sm:text-3xl">시너지</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">롤체 시너지 목록 <span className="num text-base text-muted">{KW.season}</span></h1>
         <p className="mt-1 text-sm text-muted">{rows.length}개 · 보유 챔피언 수 순. 숫자는 활성 인원 단계.</p>
       </header>
       <div className="panel divide-y divide-line rounded-xl bg-surface">
@@ -34,7 +36,7 @@ export default async function TraitsPage() {
           <article key={t.name} className="px-3 py-3">
             <div className="flex flex-wrap items-center gap-3">
               <span className="flex size-8 items-center justify-center rounded bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-5 brightness-0 invert" /></span>
-              <h2 className="text-sm font-semibold">{t.name}</h2>
+              <h2 className="text-sm font-semibold"><Link href={`/traits/${t.id.toLowerCase()}`} className="hover:text-accent">{t.name}</Link></h2>
               <span className="num text-xs text-muted">{t.breakpoints.join(" / ")}</span>
               <div className="ml-auto flex flex-wrap justify-end gap-1 text-[11px]">
                 {t.decks.slice(0, 3).map((d) => (

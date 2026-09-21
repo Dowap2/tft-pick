@@ -5,6 +5,7 @@ import Script from "next/script";
 import { Header } from "./header";
 import { SideAd } from "./ads";
 import { ADSENSE_CLIENT } from "@/lib/ads";
+import { SiteJsonLd } from "./seo";
 
 export const SITE_URL = "https://panlab.lol";
 
@@ -12,13 +13,17 @@ export const viewport: Viewport = { themeColor: "#0b0d12", width: "device-width"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "TFT PICK — 롤토체스 덱 추천", template: "%s | TFT PICK" },
-  description: `롤토체스(TFT) 시즌 ${meta.set} 메타 덱 추천. 지금 가진 아이템과 유닛을 입력하면 갈 수 있는 덱, 레벨별 조합, 아이템, 배치를 알려줍니다.`,
-  keywords: ["롤토체스", "TFT", "전략적 팀 전투", "덱 추천", "메타 덱", `시즌 ${meta.set}`, "배치", "조합"],
+  title: { default: `롤체 덱 추천 시즌 ${meta.set} — 내 아이템·기물로 갈 덱 찾기 | TFT PICK`, template: `%s | 롤체 시즌 ${meta.set} TFT PICK` },
+  description: `롤토체스(롤체, TFT) 시즌 ${meta.set} 덱 추천. 지금 가진 아이템과 기물을 입력하면 갈 수 있는 메타 덱과 레벨별 조합, 추천 아이템, 배치를 바로 알려줍니다. 한국 서버 챌린저 데이터 기반 덱 티어 리스트.`,
+  keywords: ["롤체", "롤토체스", "TFT", "전략적 팀 전투", "롤체 덱 추천", "롤체 덱", "롤체 메타", `롤체 시즌 ${meta.set}`, "롤체 티어", "롤체 아이템 조합표", "롤체 시너지", "롤체 리롤 덱"],
   openGraph: { type: "website", locale: "ko_KR", siteName: "TFT PICK" },
   robots: { index: true, follow: true },
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "TFT PICK" },
-  verification: { google: "OvNLHJXOThBroS7JJu1uc0Cb9xILGz1-RHIDC6Enz3c" },
+  verification: {
+    google: "OvNLHJXOThBroS7JJu1uc0Cb9xILGz1-RHIDC6Enz3c",
+    // 네이버 서치어드바이저 HTML 태그 값 → wrangler.jsonc vars 또는 .env 의 NEXT_PUBLIC_NAVER_VERIFICATION
+    ...(process.env.NEXT_PUBLIC_NAVER_VERIFICATION ? { other: { "naver-site-verification": process.env.NEXT_PUBLIC_NAVER_VERIFICATION } } : {}),
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -33,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
       </head>
       <body className="min-h-full flex flex-col bg-bg font-sans text-text">
+        <SiteJsonLd />
         <Header />
         <div className="flex w-full justify-center gap-6">
           <SideAd side="left" />

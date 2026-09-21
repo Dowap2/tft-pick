@@ -4,11 +4,12 @@ import { getDecks } from "@/lib/decks";
 
 export const dynamic = "force-static";
 import { ItemIcon, UnitIcon } from "@/app/icons";
+import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: "TFT 아이템 조합표 - 완성 아이템 레시피와 추천 챔피언",
-  description: `롤토체스 Set ${meta.set} 아이템 조합표. 재료 2개 조합 결과와 메타 덱에서 그 아이템을 쓰는 챔피언을 확인하세요.`,
+  title: `롤체 아이템 조합표 시즌 ${meta.set} — 재료 조합식과 추천 챔피언`,
+  description: `롤토체스(롤체) 시즌 ${meta.set} 아이템 조합표. 재료 2개를 교차한 완성 아이템 전체와, 메타 덱에서 그 아이템을 누구에게 주는지 정리.`,
   alternates: { canonical: "/items" },
 };
 
@@ -25,8 +26,10 @@ export default async function ItemsPage() {
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
+      <Breadcrumbs items={[{ name: "아이템", href: "/items" }]} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "ItemList", name: `${KW.b} ${KW.season} 아이템`, itemListElement: ITEMS.map((i, k) => ({ "@type": "ListItem", position: k + 1, name: i.name, url: `${SITE}/items/${i.id}` })) }} />
       <header className="mb-5">
-        <h1 className="text-2xl font-bold sm:text-3xl">아이템 조합표</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">롤체 아이템 조합표 <span className="num text-base text-muted">{KW.season}</span></h1>
         <p className="mt-1 text-sm text-muted">재료 2개를 교차한 칸이 완성 아이템. 아이콘에 마우스를 올리면 이름이 뜹니다.</p>
       </header>
 
@@ -46,7 +49,7 @@ export default async function ItemsPage() {
                   const it = find(r, c);
                   return (
                     <td key={c} className="p-1.5">
-                      {it ? <a href={`#${it.id}`}><ItemIcon id={it.id} className="mx-auto size-8!" /></a> : <span className="mx-auto block size-8 rounded bg-surface-2/40" />}
+                      {it ? <Link href={`/items/${it.id}`}><ItemIcon id={it.id} className="mx-auto size-8!" /></Link> : <span className="mx-auto block size-8 rounded bg-surface-2/40" />}
                     </td>
                   );
                 })}
@@ -64,7 +67,7 @@ export default async function ItemsPage() {
             <article key={it.id} id={it.id} className="flex flex-wrap items-center gap-3 px-3 py-2 scroll-mt-16">
               <ItemIcon id={it.id} size="md" />
               <div className="min-w-36">
-                <h3 className="text-sm font-semibold">{it.name}</h3>
+                <h3 className="text-sm font-semibold"><Link href={`/items/${it.id}`} className="hover:text-accent">{it.name}</Link></h3>
                 <div className="mt-0.5 flex items-center gap-1 text-[10px] text-muted">
                   <ItemIcon id={it.recipe[0]} className="size-4!" /> + <ItemIcon id={it.recipe[1]} className="size-4!" />
                 </div>

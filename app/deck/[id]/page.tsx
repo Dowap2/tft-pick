@@ -6,6 +6,7 @@ import { getDecks } from "@/lib/decks";
 import { DeckAugments, DeckCounters, DeckProComps, DeckTrends } from "@/app/deck-extras";
 import { DeckInteractive } from "./deck-interactive";
 import { describeDeck } from "@/lib/describe";
+import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 
 // 빌드 타임에 덱별 정적 페이지 생성 (output: export → 요청 시 렌더 없음. 새 덱은 재배포 때 반영)
 export const dynamicParams = false;
@@ -22,10 +23,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const carry = unitById(deck.carryId ?? "")?.name;
   const description = `${describeDeck(deck)[0]} 최종 조합: ${units}. ${deck.tierLabel}티어 · 평균 ${deck.avgPlacement.toFixed(2)}등${carry ? ` · 메인 캐리 ${carry}` : ""}.`;
   return {
-    title: `${deck.name} 덱 조합·아이템·배치`,
+    title: `롤체 ${deck.name} 덱 — 조합·추천 아이템·레벨별 배치 (${deck.tierLabel}티어)`,
     description,
     alternates: { canonical: `/deck/${deck.id}` },
-    openGraph: { title: `${deck.name} 덱 | TFT PICK`, description },
+    openGraph: { title: `${deck.name} 덱 | 롤체 ${KW.season} 덱 추천`, description, type: "article" },
   };
 }
 
@@ -49,6 +50,14 @@ export default async function DeckDetailPage({ params }: { params: Params }) {
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
+      <Breadcrumbs items={[{ name: "덱 티어 리스트", href: "/decks" }, { name: deck.name, href: `/deck/${deck.id}` }]} />
+      <JsonLd data={{
+        "@context": "https://schema.org", "@type": "Article",
+        headline: `${KW.b} ${KW.season} ${deck.name} 덱 조합·아이템·배치`, description: describeDeck(deck)[0], inLanguage: "ko",
+        url: `${SITE}/deck/${deck.id}`, image: `${SITE}/img/units/${deck.carryId ?? deck.coreUnits[0]?.unitId}.webp`,
+        dateModified: new Date().toISOString().slice(0, 10), author: { "@type": "Organization", name: "TFT PICK", url: SITE },
+        about: deck.coreUnits.map((u) => ({ "@type": "VideoGameCharacter", name: unitById(u.unitId)?.name })),
+      }} />
       <DeckInteractive deck={slim} extras={extras} guide={describeDeck(deck)} />
       <div className="mt-8">
         <Link href="/" className="inline-block rounded-lg border border-line px-4 py-2 text-sm hover:bg-surface-2">

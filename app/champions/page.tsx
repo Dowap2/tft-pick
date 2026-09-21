@@ -4,11 +4,12 @@ import { getDecks } from "@/lib/decks";
 
 export const dynamic = "force-static";
 import { COST_TEXT, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
+import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: "TFT 챔피언 목록 - 코스트·시너지·추천 아이템",
-  description: `롤토체스 Set ${meta.set} 전체 챔피언. 코스트별 시너지, 메타 덱에서 쓰는 추천 아이템, 등장 덱을 확인하세요.`,
+  title: `롤체 챔피언(기물) 목록 시즌 ${meta.set} — 코스트·시너지·추천 아이템`,
+  description: `롤토체스(롤체) 시즌 ${meta.set} 전체 기물 ${"65"}명을 코스트별로. 각 기물의 시너지, 메타 덱 추천 아이템, 캐리로 쓰는 덱과 같이 쓰는 기물까지 정리.`,
   alternates: { canonical: "/champions" },
 };
 
@@ -17,8 +18,10 @@ export default async function ChampionsPage() {
   const byCost = [1, 2, 3, 4, 5].map((c) => ({ cost: c, units: UNITS.filter((u) => u.cost === c) }));
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
+      <Breadcrumbs items={[{ name: "챔피언", href: "/champions" }]} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "ItemList", name: `${KW.b} ${KW.season} 챔피언`, itemListElement: UNITS.map((u, i) => ({ "@type": "ListItem", position: i + 1, name: u.name, url: `${SITE}/champions/${u.id}` })) }} />
       <header className="mb-5">
-        <h1 className="text-2xl font-bold sm:text-3xl">챔피언</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">롤체 챔피언 목록 <span className="num text-base text-muted">{KW.season}</span></h1>
         <p className="mt-1 text-sm text-muted">{UNITS.length}명 · 코스트순. 추천 아이템과 등장 덱은 현재 S/A 메타 덱 기준.</p>
       </header>
       <nav className="mb-5 flex gap-1 text-xs">
@@ -36,7 +39,7 @@ export default async function ChampionsPage() {
                 <article key={u.id} id={u.id} className="flex flex-wrap items-center gap-3 px-3 py-2.5">
                   <UnitIcon id={u.id} size="md" />
                   <div className="min-w-32">
-                    <h3 className="text-sm font-semibold">{u.name}</h3>
+                    <h3 className="text-sm font-semibold"><Link href={`/champions/${u.id}`} className="hover:text-accent">{u.name}</Link></h3>
                     <div className="mt-1 flex flex-wrap gap-1.5 text-[10px] text-muted">
                       {u.traits.map((t) => (
                         <span key={t} className="flex items-center gap-0.5">
