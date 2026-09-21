@@ -108,26 +108,6 @@ export function nextActions(deck: Deck, input: UserInput): { needComponents: Com
   return { needComponents, sellUnits };
 }
 
-/** 1-1 회전목마 재료 우선순위: 덱 픽률 × 캐리템 레시피 등장 횟수 (S/A 덱 기준) */
-export function carouselPriority(all: Deck[]): Array<{ component: ComponentId; score: number; decks: Deck[] }> {
-  const acc = new Map<ComponentId, { score: number; decks: Set<Deck> }>();
-  for (const deck of all) {
-    const carryId = getCarry(deck);
-    const w = (deck.pickRate ?? 0.01) * (deck.tier <= 2 ? 1.3 : 1);
-    for (const ci of deck.coreItems) {
-      if (ci.unitId !== carryId) continue;
-      for (const c of itemById(ci.itemId)?.recipe ?? []) {
-        const e = acc.get(c) ?? { score: 0, decks: new Set<Deck>() };
-        e.score += w; e.decks.add(deck); acc.set(c, e);
-      }
-    }
-  }
-  const max = Math.max(...[...acc.values()].map((e) => e.score), 1e-9);
-  return [...acc]
-    .map(([component, e]) => ({ component, score: e.score / max, decks: [...e.decks].sort((a, b) => a.avgPlacement - b.avgPlacement) }))
-    .sort((a, b) => b.score - a.score);
-}
-
 /** 상대 보드 유닛으로 상대가 가는 덱 추정: 핵심 유닛 2개 이상 겹치는 덱, 겹침 많은 순 상위 2 */
 export function inferDecks(unitIds: UnitId[], all: Deck[]): Deck[] {
   const set = new Set(unitIds);

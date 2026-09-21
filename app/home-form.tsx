@@ -10,14 +10,13 @@ import { STAGES } from "@/lib/score";
 const HISTORY_KEY = "tft-pick:history"; // 이번 판 기록 (라운드별 입력 스냅샷)
 type HistoryEntry = { at: number; stage: string; query: string; summary: string };
 
-export type CarouselItem = { component: ComponentId; score: number; deckNames: string[] };
 import { COST_TEXT, ItemIcon, UnitIcon } from "@/app/icons";
 
 const STORAGE_KEY = "tft-pick:input"; // app/sync-input.tsx 와 동일 키
 
 type PickedUnit = { unitId: UnitId; star: 1 | 2 | 3 };
 
-export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
+export function HomeForm() {
   const router = useRouter();
   const [components, setComponents] = useState<ComponentId[]>([]);
   const [completed, setCompleted] = useState<string[]>([]); // 완성 아이템 (분해 불가라 재료로 풀지 않음)
@@ -145,38 +144,6 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
             </ol>
           </div>
         )}
-      </section>
-
-      {/* 1-1 회전목마 가이드 */}
-      <section className="panel mb-8 rounded-lg bg-surface p-4">
-        <div className="mb-2 flex items-baseline justify-between">
-          <h2 className="text-sm font-semibold">
-            <span className="num mr-1 text-accent">1-1</span>회전목마 추천 재료
-          </h2>
-          <span className="text-[10px] text-muted/70">S/A 덱 캐리템 레시피 × 픽률</span>
-        </div>
-        <ol className="grid gap-1.5 sm:grid-cols-5">
-          {carousel.map((c, i) => (
-            <li key={c.component}>
-              <button
-                onClick={() => addComponent(c.component)}
-                disabled={slotsUsed >= MAX_COMPONENTS}
-                className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors duration-150 hover:bg-surface-2 disabled:opacity-40 sm:flex-col sm:items-stretch"
-                title={`${c.deckNames.join(", ")} · 클릭하면 재료에 추가`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="num w-4 text-xs text-muted">{i + 1}</span>
-                  <ItemIcon id={c.component} className="size-7!" />
-                  <span className="text-xs">{COMPONENTS.find((x) => x.id === c.component)?.name}</span>
-                </div>
-                <div className="ml-auto flex-1 sm:ml-0 sm:mt-1">
-                  <div className="h-1 w-full overflow-hidden rounded bg-surface-2"><div className="h-full bg-accent" style={{ width: `${Math.round(c.score * 100)}%` }} /></div>
-                  <div className="mt-0.5 truncate text-[10px] text-muted/70">{c.deckNames.slice(0, 2).join(" · ")}</div>
-                </div>
-              </button>
-            </li>
-          ))}
-        </ol>
       </section>
 
       {/* 챔피언(좌) + 아이템(우) — 둘을 한 화면에 */}
