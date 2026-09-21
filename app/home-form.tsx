@@ -120,17 +120,16 @@ export function HomeForm() {
       <section className="mb-6">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="mr-1 text-xs text-muted">지금 스테이지</span>
-          <button onClick={() => setStage("")} className={`num rounded-md px-2.5 py-1.5 text-xs transition-colors duration-150 ${!stage ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>전체</button>
+          <button onClick={() => setStage("")} className={`num rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${!stage ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>전체</button>
           {STAGES.map((s) => (
-            <button key={s} onClick={() => setStage(s)} className={`num rounded-md px-2.5 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>{s}</button>
+            <button key={s} onClick={() => setStage(s)} className={`num rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>{s}</button>
           ))}
-          <span className="ml-1 text-[10px] text-muted/60">고르면 그 시점 레벨 조합으로만 계산</span>
         </div>
         {history.length > 0 && (
           <div className="mt-3 rounded-lg border border-line p-3">
             <div className="mb-1.5 flex items-center justify-between text-xs">
               <span className="font-semibold">이번 판 기록</span>
-              <button onClick={() => { setHistory([]); try { localStorage.removeItem(HISTORY_KEY); } catch {} }} className="text-muted hover:text-text">새 판 시작</button>
+              <button onClick={() => { setHistory([]); try { localStorage.removeItem(HISTORY_KEY); } catch {} }} className="rounded-md border border-line px-2 py-1 text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text">새 판 시작</button>
             </div>
             <ol className="space-y-0.5 text-xs">
               {history.map((h) => (
@@ -153,9 +152,7 @@ export function HomeForm() {
         <section>
           <div className="mb-3 flex items-baseline justify-between">
             <h2 className="text-base font-semibold">챔피언</h2>
-            <span className="text-xs text-muted/80">
-              {units.length > 0 ? `${units.length}개 선택` : "테두리 색 = 코스트"}
-            </span>
+            <span className="text-xs text-muted/80">{units.length}개 선택</span>
           </div>
 
           {units.length > 0 && (
@@ -183,8 +180,8 @@ export function HomeForm() {
               <button
                 key={c}
                 onClick={() => setCostTab(c)}
-                className={`rounded px-2.5 py-1.5 text-xs font-semibold transition ${
-                  costTab === c ? "bg-accent text-white" : `bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:bg-surface-2`
+                className={`rounded-md border px-3 py-1.5 text-xs font-semibold transition ${
+                  costTab === c ? "border-accent bg-accent text-white" : `border-line bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:border-accent/60`
                 }`}
               >
                 {c ? `${c}코` : "전체"}
@@ -209,8 +206,8 @@ export function HomeForm() {
                   onClick={() => toggleUnit(u.id)}
                   aria-pressed={picked}
                   title={`${u.name} · ${u.cost}코`}
-                  className={`flex flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 transition ${
-                    picked ? "bg-accent-2/50 ring-1 ring-accent" : "hover:bg-surface-2"
+                  className={`flex flex-col items-center gap-1 rounded-lg border px-0.5 py-1.5 transition ${
+                    picked ? "border-accent bg-accent-2/50" : "border-line bg-surface hover:border-accent/60 hover:bg-surface-2"
                   }`}
                 >
                   <UnitIcon id={u.id} size="md" />
@@ -269,7 +266,11 @@ export function HomeForm() {
             ))}
           </div>
 
-          <button onClick={() => setShowItems(!showItems)} className="mt-3 text-sm text-muted hover:text-text">
+          <button
+            onClick={() => setShowItems(!showItems)}
+            aria-expanded={showItems}
+            className="mt-3 w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-sm text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text"
+          >
             {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
           </button>
           {showItems && (
@@ -280,7 +281,7 @@ export function HomeForm() {
                   onClick={() => addItem(it.id)}
                   disabled={slotsUsed + 2 > MAX_COMPONENTS}
                   title={it.name}
-                  className="rounded transition hover:bg-surface-2 disabled:opacity-40"
+                  className="rounded-lg border border-line bg-surface p-1 transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40"
                 >
                   <ItemIcon id={it.id} size="md" className="mx-auto" />
                 </button>
@@ -292,7 +293,11 @@ export function HomeForm() {
 
       {/* 로비 스카우팅 (선택) */}
       <section className="mb-10">
-        <button onClick={() => setShowRivals(!showRivals)} className="text-sm text-muted hover:text-text">
+        <button
+          onClick={() => setShowRivals(!showRivals)}
+          aria-expanded={showRivals}
+          className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-sm text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text"
+        >
           {showRivals ? "▾" : "▸"} 로비 스카우팅 <span className="text-muted/60">(선택 · 상대 보드에서 본 유닛 → 경합·상성 반영)</span>
           {rivals.length > 0 && <span className="num ml-2 text-accent">{rivals.length}</span>}
         </button>
@@ -316,7 +321,7 @@ export function HomeForm() {
             {rivalQuery.trim() && (
               <div className="flex flex-wrap gap-1">
                 {UNITS.filter((u) => u.name.includes(rivalQuery.trim()) && !rivals.includes(u.id)).slice(0, 12).map((u) => (
-                  <button key={u.id} onClick={() => { setRivals([...rivals, u.id]); setRivalQuery(""); }} className="flex items-center gap-1 rounded-md bg-surface px-2 py-1 text-xs hover:bg-surface-2">
+                  <button key={u.id} onClick={() => { setRivals([...rivals, u.id]); setRivalQuery(""); }} className="flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-1 text-xs transition-colors duration-150 hover:border-accent/60 hover:bg-surface-2">
                     <UnitIcon id={u.id} className="h-5" /> {u.name} <span className={COST_TEXT[u.cost]}>{u.cost}</span>
                   </button>
                 ))}
