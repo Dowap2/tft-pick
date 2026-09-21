@@ -4,7 +4,7 @@
 name: collect-matches
 on:
   schedule:
-    - cron: "5 */3 * * *"
+    - cron: "23 */3 * * *"   # 정각 근처(:00~:10)는 Actions 스케줄러 혼잡 구간이라 건너뛰기 쉽다
   workflow_dispatch:
     inputs:
       duration_min:
