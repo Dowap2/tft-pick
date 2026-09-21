@@ -106,7 +106,7 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
   const canSubmit = components.length > 0 || completed.length > 0 || units.length > 0;
 
   return (
-    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
+    <main className="w-full max-w-5xl px-4 py-8 sm:py-12">
       <header className="mb-8 flex items-center gap-4">
         <img src="/logo.png" alt="TFT PICK" className="size-16 shrink-0" />
         <div>
@@ -179,159 +179,149 @@ export function HomeForm({ carousel }: { carousel: CarouselItem[] }) {
         </ol>
       </section>
 
-      {/* 아이템 선택 */}
-      <section className="mb-8">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-base font-semibold">아이템</h2>
-          <span className="text-sm text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
-        </div>
+      {/* 챔피언(좌) + 아이템(우) — 둘을 한 화면에 */}
+      <div className="mb-10 grid gap-6 md:grid-cols-2">
 
-        {(components.length > 0 || completed.length > 0) && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {completed.map((id, i) => (
+        {/* ── 왼쪽: 챔피언 ── */}
+        <section>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-base font-semibold">챔피언</h2>
+            <span className="text-xs text-muted/80">
+              {units.length > 0 ? `${units.length}개 선택` : "테두리 색 = 코스트"}
+            </span>
+          </div>
+
+          {units.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {units.map((u) => {
+                const meta = UNITS.find((x) => x.id === u.unitId);
+                return (
+                  <div key={u.unitId} className="flex items-center gap-1.5 rounded-md bg-accent-2/70 py-1 pl-1 pr-2 text-sm">
+                    <UnitIcon id={u.unitId} className="h-7" />
+                    <span className="max-w-20 truncate">{meta?.name}</span>
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3].map((st) => (
+                        <button key={st} onClick={() => setStar(u.unitId, st as 1 | 2 | 3)} aria-label={`${meta?.name} ${st}성`} className={st <= u.star ? "text-text" : "text-text/30"}>★</button>
+                      ))}
+                    </div>
+                    <button onClick={() => toggleUnit(u.unitId)} aria-label={`${meta?.name} 제거`} className="ml-0.5 opacity-80 hover:opacity-100">✕</button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mb-2 flex flex-wrap gap-1">
+            {([0, 1, 2, 3, 4, 5] as const).map((c) => (
               <button
-                key={`c${i}`}
-                onClick={() => setCompleted(completed.filter((_, j) => j !== i))}
-                className="flex items-center gap-1.5 rounded-md bg-accent-2/70 py-1 pl-1 pr-3 text-sm hover:bg-accent-2/60"
-                title="완성 아이템 (분해 불가)"
+                key={c}
+                onClick={() => setCostTab(c)}
+                className={`rounded px-2.5 py-1.5 text-xs font-semibold transition ${
+                  costTab === c ? "bg-accent text-white" : `bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:bg-surface-2`
+                }`}
               >
-                <ItemIcon id={id} className="size-6" /> {ITEMS.find((x) => x.id === id)?.name} ✕
+                {c ? `${c}코` : "전체"}
               </button>
             ))}
-            {components.map((id, i) => {
-              const c = COMPONENTS.find((x) => x.id === id);
+          </div>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="챔피언 검색 (예: 아리)"
+            inputMode="search"
+            enterKeyHint="search"
+            className="mb-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
+          />
+          {/* 초상화 + 이름만. 코스트는 UnitIcon 의 육각 테두리 색으로 (COST_BG) */}
+          <div className="grid max-h-[55vh] grid-cols-4 gap-1 overflow-y-auto overscroll-contain rounded-lg border border-line p-2 sm:max-h-[26rem] sm:grid-cols-5">
+            {filteredUnits.map((u) => {
+              const picked = units.some((x) => x.unitId === u.id);
               return (
                 <button
-                  key={i}
-                  onClick={() => removeComponent(i)}
-                  className="flex items-center gap-1.5 rounded-md bg-pos/25 py-1 pl-1 pr-3 text-sm hover:bg-pos/35"
+                  key={u.id}
+                  onClick={() => toggleUnit(u.id)}
+                  aria-pressed={picked}
+                  title={`${u.name} · ${u.cost}코`}
+                  className={`flex flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 transition ${
+                    picked ? "bg-accent-2/50 ring-1 ring-accent" : "hover:bg-surface-2"
+                  }`}
                 >
-                  <ItemIcon id={id} className="size-6" /> {c?.name} ✕
+                  <UnitIcon id={u.id} size="md" />
+                  <span className="w-full truncate text-center text-[11px] leading-tight">{u.name}</span>
                 </button>
               );
             })}
+            {filteredUnits.length === 0 && (
+              <p className="col-span-full py-6 text-center text-xs text-muted">검색 결과 없음</p>
+            )}
           </div>
-        )}
+        </section>
 
-        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-          {COMPONENTS.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => addComponent(c.id)}
-              disabled={slotsUsed >= MAX_COMPONENTS}
-              className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-1 py-1.5 text-[10px] transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40 sm:px-2 sm:py-2 sm:text-xs"
-            >
-              <ItemIcon id={c.id} size="md" />
-              {c.name}
-            </button>
-          ))}
-        </div>
+        {/* ── 오른쪽: 아이템 ── */}
+        <section>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-base font-semibold">아이템</h2>
+            <span className="text-xs text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
+          </div>
 
-        <button
-          onClick={() => setShowItems(!showItems)}
-          className="mt-3 text-sm text-muted hover:text-text"
-        >
-          {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
-        </button>
-        {showItems && (
-          <div className="mt-2 grid grid-cols-6 gap-1.5 rounded-lg border border-line p-2 sm:grid-cols-9">
-            {ITEMS.map((it) => (
+          {(components.length > 0 || completed.length > 0) && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {completed.map((id, i) => (
+                <button
+                  key={`c${i}`}
+                  onClick={() => setCompleted(completed.filter((_, j) => j !== i))}
+                  className="flex items-center gap-1.5 rounded-md bg-accent-2/70 py-1 pl-1 pr-2 text-sm hover:bg-accent-2/60"
+                  title="완성 아이템 (분해 불가)"
+                >
+                  <ItemIcon id={id} className="size-6" /> {ITEMS.find((x) => x.id === id)?.name} ✕
+                </button>
+              ))}
+              {components.map((id, i) => (
+                <button
+                  key={i}
+                  onClick={() => removeComponent(i)}
+                  className="flex items-center gap-1.5 rounded-md bg-pos/25 py-1 pl-1 pr-2 text-sm hover:bg-pos/35"
+                >
+                  <ItemIcon id={id} className="size-6" /> {COMPONENTS.find((x) => x.id === id)?.name} ✕
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+            {COMPONENTS.map((c) => (
               <button
-                key={it.id}
-                onClick={() => addItem(it.id)}
-                disabled={slotsUsed + 2 > MAX_COMPONENTS}
-                title={it.name}
-                className="rounded transition hover:bg-surface-2 disabled:opacity-40"
+                key={c.id}
+                onClick={() => addComponent(c.id)}
+                disabled={slotsUsed >= MAX_COMPONENTS}
+                className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-1 py-1.5 text-[10px] transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40 sm:py-2 sm:text-xs"
               >
-                <ItemIcon id={it.id} size="md" className="mx-auto" />
+                <ItemIcon id={c.id} size="md" />
+                {c.name}
               </button>
             ))}
           </div>
-        )}
-      </section>
 
-      {/* 유닛 선택 */}
-      <section className="mb-10">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-base font-semibold">보유 유닛</h2>
-          <span className="text-sm text-muted/80">{units.length}개 선택</span>
-        </div>
-
-        {units.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {units.map((u) => {
-              const meta = UNITS.find((x) => x.id === u.unitId);
-              return (
-                <div
-                  key={u.unitId}
-                  className="flex items-center gap-2 rounded-md bg-accent-2/70 py-1 pl-1 pr-3 text-sm"
+          <button onClick={() => setShowItems(!showItems)} className="mt-3 text-sm text-muted hover:text-text">
+            {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
+          </button>
+          {showItems && (
+            <div className="mt-2 grid max-h-64 grid-cols-6 gap-1.5 overflow-y-auto overscroll-contain rounded-lg border border-line p-2 sm:grid-cols-7">
+              {ITEMS.map((it) => (
+                <button
+                  key={it.id}
+                  onClick={() => addItem(it.id)}
+                  disabled={slotsUsed + 2 > MAX_COMPONENTS}
+                  title={it.name}
+                  className="rounded transition hover:bg-surface-2 disabled:opacity-40"
                 >
-                  <UnitIcon id={u.unitId} className="h-7" />
-                  <span>{meta?.name}</span>
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3].map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => setStar(u.unitId, s as 1 | 2 | 3)}
-                        className={
-                          s <= u.star ? "text-text" : "text-text/30"
-                        }
-                      >
-                        ★
-                      </button>
-                    ))}
-                  </div>
-                  <button onClick={() => toggleUnit(u.unitId)} className="ml-1 opacity-80 hover:opacity-100">
-                    ✕
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <div className="mb-2 flex gap-1">
-          {([0, 1, 2, 3, 4, 5] as const).map((c) => (
-            <button
-              key={c}
-              onClick={() => setCostTab(c)}
-              className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
-                costTab === c ? "bg-accent text-white" : `bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:bg-surface-2`
-              }`}
-            >
-              {c ? `${c}코` : "전체"}
-            </button>
-          ))}
-        </div>
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="유닛 검색 (예: 아리)"
-          inputMode="search"
-          enterKeyHint="search"
-          className="mb-3 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
-        />
-        <div className="grid max-h-[55vh] grid-cols-2 gap-1.5 overflow-y-auto overscroll-contain rounded-lg border border-line p-2 sm:max-h-72 sm:grid-cols-3">
-          {filteredUnits.map((u) => {
-            const picked = units.some((x) => x.unitId === u.id);
-            return (
-              <button
-                key={u.id}
-                onClick={() => toggleUnit(u.id)}
-                className={`flex min-h-11 items-center gap-2 rounded px-2 py-1.5 text-left text-sm transition ${
-                  picked
-                    ? "bg-accent-2/50"
-                    : "bg-surface hover:bg-surface-2"
-                }`}
-              >
-                <UnitIcon id={u.id} size="sm" />
-                <span className="flex-1">{u.name}</span>
-                <span className={`text-xs ${COST_TEXT[u.cost]}`}>{u.cost}코</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
+                  <ItemIcon id={it.id} size="md" className="mx-auto" />
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
       {/* 로비 스카우팅 (선택) */}
       <section className="mb-10">
