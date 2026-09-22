@@ -66,8 +66,8 @@ async function riot(url, attempt = 0) {
     await sleep(ra * 1000 + 200);
     return riot(url, attempt + 1);
   }
-  if ((res.status >= 500 || res.status === 403) && attempt < 3) { await sleep(1000 * (attempt + 1)); return riot(url, attempt + 1); }
-  if (res.status === 403) die("403 — API 키 만료/무효 (개발 키는 24시간). developer.riotgames.com 에서 재발급");
+  if (res.status >= 500 && attempt < 3) { await sleep(1000 * (attempt + 1)); return riot(url, attempt + 1); }
+  if (res.status === 401 || res.status === 403) die(`${res.status} — API 키 만료/무효 (개발 키는 24시간). developer.riotgames.com 에서 재발급 후 .env.local 과 GitHub Secrets 둘 다 교체`);
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.json();

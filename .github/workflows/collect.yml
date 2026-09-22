@@ -35,7 +35,8 @@ jobs:
 
       - name: Collect (2분 주기 루프)
         if: env.RIOT_API_KEY != '' && env.SUPABASE_SERVICE_ROLE_KEY != ''
-        continue-on-error: true     # 중간에 죽어도 그때까지 모은 건 아래서 정제
+        # continue-on-error 를 쓰지 않는다: 키 만료로 수집이 0판이어도 초록불로 끝나 눈치를 못 챘다.
+        # 아래 스텝들은 if: always() 라 수집이 실패해도 그때까지 모은 건 정제된다.
         run: |
           node scripts/collect-matches.mjs \
             --loop 120 \
