@@ -5,6 +5,8 @@ import { COMPONENTS, ITEMS, itemById, unitById, componentById, type Deck } from 
 import { getDecks } from "@/lib/decks";
 import { ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
+import { josa, withJosa } from "@/lib/josa";
+import { describeItem } from "@/lib/describe";
 
 export const dynamicParams = false;
 export async function generateStaticParams() { return ITEMS.map((i) => ({ id: i.id })); }
@@ -22,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const top = users(it.id, decks).slice(0, 3).map(([u]) => unitById(u)?.name).filter(Boolean).join(", ");
   const recipe = it.recipe.map((c) => componentById(c as never)?.name).join(" + ");
   const title = `${KW.a} ${it.name} 조합식·추천 챔피언`;
-  const description = `${KW.b} ${KW.season} ${it.name} 조합식: ${recipe}. 메타 덱에서 ${it.name}을(를) 드는 기물 ${top || "수집 중"}. 어떤 덱에서 누구에게 주는지 한눈에.`;
+  const description = `${KW.b} ${KW.season} ${it.name} 조합식: ${recipe}. 메타 덱에서 ${withJosa(it.name, "을를")} 드는 기물 ${top || "수집 중"}. 어떤 덱에서 누구에게 주는지 한눈에.`;
   return { title, description, alternates: { canonical: `/items/${it.id}` }, openGraph: { title, description, images: [`/img/items/${it.id}.webp`] } };
 }
 
@@ -48,11 +50,12 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
       </header>
 
       <p className="mb-6 text-sm leading-6 text-text/90">
-        {KW.b} {KW.season} <strong>{it.name}</strong>은(는) {componentById(a as never)?.name}과(와) {componentById(b as never)?.name}을(를) 합쳐 만듭니다.
-        {rows.length > 0
-          ? <> 현재 상위 티어 덱에서는 주로 <strong>{rows.slice(0, 3).map(([u]) => unitById(u)?.name).join(", ")}</strong>에게 줍니다. 총 {new Set(rows.flatMap(([, e]) => e.decks.map((d) => d.id))).size}개 덱의 1순위 빌드에 포함됩니다.</>
-          : <> 현재 상위 티어 덱의 1순위 빌드에는 잘 쓰이지 않습니다.</>}
+        {KW.b} {KW.season} <strong>{it.name}</strong>{josa(it.name, "은는")} {withJosa(componentById(a as never)?.name ?? "", "과와")} {withJosa(componentById(b as never)?.name ?? "", "을를")} 합쳐 만듭니다.
+        {rows.length > 0 && <> 현재 상위 티어 덱에서는 주로 <strong>{rows.slice(0, 3).map(([u]) => unitById(u)?.name).join(", ")}</strong>에게 줍니다.</>}
       </p>
+      {describeItem(it, rows, siblings).map((t, i) => (
+        <p key={i} className="mb-3 text-sm leading-6 text-text/90">{t}</p>
+      ))}
 
       <section className="mb-6">
         <h2 className="mb-2 text-lg font-semibold">이 아이템을 드는 기물</h2>

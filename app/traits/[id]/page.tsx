@@ -5,6 +5,8 @@ import { TRAITS, UNITS, activeTraits, traitImgByApi } from "@/lib/data";
 import { getDecks } from "@/lib/decks";
 import { COST_TEXT, DeckTags, TierBadge, UnitIcon } from "@/app/icons";
 import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
+import { withJosa } from "@/lib/josa";
+import { describeTrait } from "@/lib/describe";
 
 export const dynamicParams = false;
 const all = () => Object.values(TRAITS).filter((t) => UNITS.some((u) => u.traits.includes(t.name)));
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!t) return { title: "시너지" };
   const units = UNITS.filter((u) => u.traits.includes(t.name)).sort((a, b) => a.cost - b.cost);
   const title = `${KW.a} ${t.name} 시너지 — 기물 ${units.length}명, 활성 ${t.breakpoints.join("/")}`;
-  const description = `${KW.b} ${KW.season} ${t.name} 시너지 정리: ${t.breakpoints.join("/")}명 활성, 보유 기물 ${units.map((u) => u.name).join(", ")}. ${t.name}을(를) 쓰는 메타 덱과 조합.`;
+  const description = `${KW.b} ${KW.season} ${t.name} 시너지 정리: ${t.breakpoints.join("/")}명 활성, 보유 기물 ${units.map((u) => u.name).join(", ")}. ${withJosa(t.name, "을를")} 쓰는 메타 덱과 조합.`;
   return { title, description, alternates: { canonical: `/traits/${t.id.toLowerCase()}` }, openGraph: { title, description } };
 }
 
@@ -40,8 +42,11 @@ export default async function TraitPage({ params }: { params: Promise<{ id: stri
       <p className="mb-6 text-sm leading-6 text-text/90">
         {KW.b} {KW.season} <strong>{t.name}</strong> 시너지는 {t.breakpoints[0]}명부터 활성되며 {t.breakpoints.slice(1).map((b) => `${b}명`).join(", ")}에서 단계가 오릅니다.
         기물은 {units.map((u) => `${u.name}(${u.cost}코)`).join(", ")}입니다.
-        {decks.length > 0 ? <> 현재 상위 티어 덱 {decks.length}개가 이 시너지를 활성화하며, 대표 덱은 <Link href={`/deck/${decks[0].d.id}`} className="text-accent hover:underline">{decks[0].d.name}</Link>({decks[0].a!.count}{t.name}, 평균 {decks[0].d.avgPlacement.toFixed(2)}등)입니다.</> : <> 현재 상위 티어 덱에서는 주력 시너지로 쓰이지 않습니다.</>}
+        {decks.length > 0 && <> 대표 덱은 <Link href={`/deck/${decks[0].d.id}`} className="text-accent hover:underline">{decks[0].d.name}</Link>({decks[0].a!.count}{t.name}, 평균 {decks[0].d.avgPlacement.toFixed(2)}등)입니다.</>}
       </p>
+      {describeTrait(t, decks.map((x) => ({ d: x.d, count: x.a!.count }))).map((txt, i) => (
+        <p key={i} className="mb-3 text-sm leading-6 text-text/90">{txt}</p>
+      ))}
 
       <section className="mb-6">
         <h2 className="mb-2 text-lg font-semibold">{t.name} 기물</h2>
@@ -58,7 +63,7 @@ export default async function TraitPage({ params }: { params: Promise<{ id: stri
       </section>
 
       <section className="mb-6">
-        <h2 className="mb-2 text-lg font-semibold">{t.name}을(를) 쓰는 덱</h2>
+        <h2 className="mb-2 text-lg font-semibold">{withJosa(t.name, "을를")} 쓰는 덱</h2>
         {decks.length ? (
           <div className="panel divide-y divide-line rounded-xl bg-surface">
             {decks.map(({ d, a }) => (

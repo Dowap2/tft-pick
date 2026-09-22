@@ -5,6 +5,8 @@ import { UNITS, ITEMS, unitById, itemById, traitByName, traitImgByApi, unitUsage
 import { getDecks } from "@/lib/decks";
 import { COST_TEXT, DeckTags, ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
+import { josa, withJosa } from "@/lib/josa";
+import { describeUnit } from "@/lib/describe";
 
 export const dynamicParams = false;
 export async function generateStaticParams() { return UNITS.map((u) => ({ id: u.id })); }
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const use = unitUsage(u.id, decks);
   const items = use.items.slice(0, 3).map((i) => itemById(i)?.name).filter(Boolean).join(", ");
   const title = `${KW.a} ${u.name} 추천 아이템·시너지·덱 (${COST_NAME[u.cost]})`;
-  const description = `${KW.b} ${KW.season} ${u.name}: ${COST_NAME[u.cost]}, 시너지 ${u.traits.join("·")}. 추천 아이템 ${items || "데이터 수집 중"}. ${u.name}이(가) 들어가는 메타 덱 ${use.decks.length}개와 캐리로 쓰는 덱, 같이 쓰는 기물까지.`;
+  const description = `${KW.b} ${KW.season} ${u.name}: ${COST_NAME[u.cost]}, 시너지 ${u.traits.join("·")}. 추천 아이템 ${items || "데이터 수집 중"}. ${withJosa(u.name, "이가")} 들어가는 메타 덱 ${use.decks.length}개와 캐리로 쓰는 덱, 같이 쓰는 기물까지.`;
   return { title, description, alternates: { canonical: `/champions/${u.id}` }, openGraph: { title, description, images: [`/img/units/${u.id}.webp`] } };
 }
 
@@ -35,7 +37,6 @@ export default async function ChampionPage({ params }: { params: Promise<{ id: s
   const decks = await getDecks();
   const use = unitUsage(u.id, decks);
   const mates = partners(u.id, decks);
-  const bestAvg = use.decks[0]?.avgPlacement;
 
   return (
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
@@ -54,9 +55,11 @@ export default async function ChampionPage({ params }: { params: Promise<{ id: s
       </header>
 
       <p className="mb-6 text-sm leading-6 text-text/90">
-        {KW.b} {KW.season} <strong>{u.name}</strong>은(는) {COST_NAME[u.cost]} 기물로 {u.traits.join(", ")} 시너지를 가집니다.
-        현재 메타에서는 {use.decks.length > 0 ? <>{use.decks.length}개 덱의 최종 조합에 들어가며{use.carryOf.length > 0 && <>, 그중 {use.carryOf.length}개 덱에서 메인 캐리</>}입니다. 가장 성적이 좋은 덱은 <Link href={`/deck/${use.decks[0].id}`} className="text-accent hover:underline">{use.decks[0].name}</Link>(평균 {bestAvg?.toFixed(2)}등)입니다.</> : <>상위 티어 덱의 최종 조합에는 잘 쓰이지 않습니다.</>}
+        {KW.b} {KW.season} <strong>{u.name}</strong>{josa(u.name, "은는")} {COST_NAME[u.cost]} 기물로 {u.traits.join(", ")} 시너지를 가집니다.
       </p>
+      {describeUnit(u, use, mates).map((t, i) => (
+        <p key={i} className="mb-3 text-sm leading-6 text-text/90">{t}</p>
+      ))}
 
       <section className="mb-6">
         <h2 className="mb-2 text-lg font-semibold">추천 아이템</h2>
@@ -86,7 +89,7 @@ export default async function ChampionPage({ params }: { params: Promise<{ id: s
       )}
 
       <section className="mb-6">
-        <h2 className="mb-2 text-lg font-semibold">{u.name}이(가) 들어가는 덱</h2>
+        <h2 className="mb-2 text-lg font-semibold">{withJosa(u.name, "이가")} 들어가는 덱</h2>
         {use.decks.length ? (
           <div className="panel divide-y divide-line rounded-xl bg-surface">
             {use.decks.map((d) => (

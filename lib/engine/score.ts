@@ -5,6 +5,7 @@
 //        → (+3성 보너스) × 3성 미활용 × 로비 경합
 // 라운드(stage)는 레벨 창 폭·결과 수·수렴도(온도)로 반영: 초반엔 넓게, 후반엔 좁게.
 
+import { withJosa } from "../josa";
 export type Star = 1 | 2 | 3;
 export type UserUnit = { unitId: string; star: Star };
 export type RecommendInput = {
@@ -257,7 +258,7 @@ export function scoreDeck(input: RecommendInput, deck: EngineDeck, ctx: EngineCt
   for (const u of input.units) {
     if (effectiveStar(u.unitId, u.star, ctx) !== 3 || u.unitId === carryId) continue;
     if (deck.units.some((d) => d.unitId === u.unitId)) { bonus += THREE_STAR_BONUS; reasons.push({ kind: "good", text: `3성 ${nm(ctx, u.unitId)} 활용하는 덱` }); }
-    else { mult *= THREE_STAR_UNUSED_MULT; reasons.push({ kind: "warn", text: `3성 ${nm(ctx, u.unitId)}을(를) 쓰지 않는 덱 (총점 반감)` }); }
+    else { mult *= THREE_STAR_UNUSED_MULT; reasons.push({ kind: "warn", text: `3성 ${withJosa(nm(ctx, u.unitId), "을를")} 쓰지 않는 덱 (총점 반감)` }); }
   }
 
   // ---- 6) 로비 경합 + 상성 ----
