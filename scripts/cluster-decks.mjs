@@ -91,18 +91,17 @@ console.log(`클러스터 ${clusters.length}개 (표본 ≥ ${MIN}) · 중반(�
 
 // ---- 3) 클러스터 → 덱 ----
 const mode = (xs) => [...xs.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0];
-const decks = [];
-const pdRows = [];
-for (const c of clusters) {
-  const n = c.members.length;
-  // 유닛 등장률
+
+// 구성원 보드 집합 → 덱의 모든 파생값. 병합 전/후 같은 코드로 계산하려고 함수로 뺐다.
+function describe(members) {
+  const n = members.length;
   const freq = new Map();
-  for (const m of c.members) for (const u of m.set) freq.set(u, (freq.get(u) ?? 0) + 1);
+  for (const m of members) for (const u of m.set) freq.set(u, (freq.get(u) ?? 0) + 1);
   const deckUnits = [...freq].filter(([, k]) => k / n >= 0.3).map(([id, k]) => ({ id, rate: k / n, core: k / n >= 0.5 }));
   // 유닛별 성 최빈값 (4~5코는 2 캡, 캐리는 아래서 보정), 아이템 빈도
   const starMode = new Map(), itemFreq = new Map(), itemLoad = new Map();
   for (const du of deckUnits) {
-    const inst = c.members.flatMap((m) => m.us.filter((u) => u.id === du.id));
+    const inst = members.flatMap((m) => m.us.filter((u) => u.id === du.id));
     starMode.set(du.id, mode(inst.map((u) => u.star)) ?? 2);
     // 캐리 지표: 인스턴스당 평균 아이템 개수 (공격/방어 구분 없음 — docs/티어기준.md §4.7)
     // 방어템을 빼고 세면 가고일·워모그를 끼고 캐리하는 유닛(말파이트 등)을 영영 못 잡는다.
@@ -116,33 +115,65 @@ for (const c of clusters) {
   const coreIds = [carry, ...deckUnits.filter((u) => u.id !== carry).sort((a, b) => b.rate - a.rate).slice(0, 2).map((u) => u.id)];
   // 특성 (구성원 traits 최빈 상위) → 이름
   const tf = new Map();
-  for (const m of c.members) for (const [t, lv] of m.traitLv) {
+  for (const m of members) for (const [t, lv] of m.traitLv) {
     const bp = traitById.get(t)?.breakpoints ?? [];
     if (bp.length >= 2 && lv >= 2) tf.set(t, (tf.get(t) ?? 0) + lv);   // 단일 유닛 고유 특성 제외, 단계 가중
   }
   const topTrait = [...tf].sort((a, b) => b[1] - a[1])[0]?.[0];
-  const carryName = unitById.get(carry).name;
-  const name = `${topTrait ? traitById.get(topTrait).name + " " : ""}${carryName}`;
-  let id = `${(topTrait ?? "deck").toLowerCase().replace(/^da_18_|^da_|18$/g, "")}-${carry}`;
-  if (decks.some((d) => d.id === id)) id = `${id}-${decks.filter((d) => d.id.startsWith(id)).length + 1}`;   // 같은 특성+캐리 변형 덱
-  // 레벨링 태그
-  const lvMode = mode(c.members.map((m) => m.level));
+  const lvMode = mode(members.map((m) => m.level));
   const levelling = lvMode >= 9 ? "Fast 9" : lvMode <= 7 ? `lvl ${lvMode}` : "Fast 8";
   // 레벨별 조합 (최종 레벨 L인 구성원 보드의 ≥50% 유닛) — Match-V5엔 라운드 스냅샷이 없어 7렙 이상만 근사
   const levels = {};
   for (const L of [5, 6, 7, 8, 9, 10]) {
-    const ms = c.members.filter((m) => m.level === L);
+    const ms = members.filter((m) => m.level === L);
     if (ms.length < 5) continue;
     const us = centroid(ms);
     if (us.size >= 5) levels[L] = { units: [...us], avg: ms.reduce((s, m) => s + m.placement, 0) / ms.length, count: ms.length };
   }
-  const avgPlace = c.members.reduce((s, m) => s + m.placement, 0) / n;
-  const byLevel = Object.fromEntries([5, 6, 7, 8, 9, 10].map((L) => [L, c.members.filter((m) => m.level === L).length]));
+  return {
+    n, freq, deckUnits, starMode, itemFreq, carry, coreIds, tf, topTrait, levelling, levels,
+    avgPlace: members.reduce((s, m) => s + m.placement, 0) / n,
+    byLevel: Object.fromEntries([5, 6, 7, 8, 9, 10].map((L) => [L, members.filter((m) => m.level === L).length])),
+  };
+}
+
+// 같은 (최고특성 + 캐리 + 레벨링) 클러스터는 한 덱으로 병합 — docs/티어기준.md §4.8
+// 이 셋이 같으면 이름이 같아진다. 같은 이름이 OP와 A에 동시에 뜨는 걸 막고, 표본도 합친다.
+// 자카드 병합(0.7)에 못 미쳐 갈라진 변형들(실측 0.45~0.64)이 여기서 합쳐진다.
+const described = clusters.map((c) => ({ members: c.members, d: describe(c.members) }));
+const groups = new Map();
+for (const x of described) {
+  const key = `${x.d.topTrait ?? "-"}|${x.d.carry}|${x.d.levelling}`;
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key).push(x);
+}
+let mergedAway = 0;
+const finals = [...groups.values()].map((g) => {
+  if (g.length === 1) return { members: g[0].members, d: g[0].d };
+  mergedAway += g.length - 1;
+  const members = g.flatMap((x) => x.members);
+  return { members, d: describe(members) };
+}).map((f) => ({ ...f, rep: centroid(f.members) }))
+  .sort((a, b) => b.members.length - a.members.length);
+console.log(`덱 ${finals.length}개 (같은 특성+캐리+레벨링 ${mergedAway}개 클러스터 병합)`);
+
+const decks = [];
+const pdRows = [];
+for (const f of finals) {
+  const { d } = f;
+  const carryName = unitById.get(d.carry).name;
+  let name = `${d.topTrait ? traitById.get(d.topTrait).name + " " : ""}${carryName}`;
+  let id = `${(d.topTrait ?? "deck").toLowerCase().replace(/^da_18_|^da_|18$/g, "")}-${d.carry}`;
+  if (decks.some((x) => x.id === id)) {   // 특성+캐리는 같고 레벨링만 다른 덱 → 이름에도 레벨링을 붙여 구분
+    id = `${id}-${d.levelling.replace(/\s+/g, "").toLowerCase()}`;
+    name = `${name} (${/^lvl/i.test(d.levelling) ? d.levelling.replace(/lvl\s*/i, "") + "렙 리롤" : d.levelling})`;
+  }
   decks.push({
-    id, name, carry, coreIds, levelling, n, avgPlace, deckUnits, starMode, itemFreq, levels, byLevel,
-    signature: { traits: Object.fromEntries([...tf].slice(0, 8)), units: Object.fromEntries([...freq].map(([u, k]) => [u, Number((k / n).toFixed(2))])) },
+    id, name, carry: d.carry, coreIds: d.coreIds, levelling: d.levelling, n: d.n, avgPlace: d.avgPlace,
+    deckUnits: d.deckUnits, starMode: d.starMode, itemFreq: d.itemFreq, levels: d.levels, byLevel: d.byLevel,
+    signature: { traits: Object.fromEntries([...d.tf].slice(0, 8)), units: Object.fromEntries([...d.freq].map(([u, k]) => [u, Number((k / d.n).toFixed(2))])) },
   });
-  for (const m of c.members) pdRows.push({ match_id: m.match_id, puuid: m.puuid, deck_id: id, distance: Number((1 - jaccard(m.set, c.rep)).toFixed(3)) });
+  for (const m of f.members) pdRows.push({ match_id: m.match_id, puuid: m.puuid, deck_id: id, distance: Number((1 - jaccard(m.set, f.rep)).toFixed(3)) });
 }
 // ---- 3.5) 초반(4~6렙) 조합 보강 ----
 // Match-V5 엔 최종 보드만 있어 4~6렙을 알 수 없다. metatft 스냅샷(lib/gen/decks.json, early_options)에서
