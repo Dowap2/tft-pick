@@ -14,7 +14,7 @@ export const viewport: Viewport = { themeColor: "#0b0d12", width: "device-width"
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `롤체 덱 추천 시즌 ${meta.set} — 내 아이템·기물로 갈 덱 찾기 | TFT PICK`, template: `%s | 롤체 시즌 ${meta.set} TFT PICK` },
-  description: `롤토체스(롤체, TFT) 시즌 ${meta.set} 덱 추천. 지금 가진 아이템과 기물을 입력하면 갈 수 있는 메타 덱과 레벨별 조합, 추천 아이템, 배치를 바로 알려줍니다. 한국 서버 챌린저 데이터 기반 덱 티어 리스트.`,
+  description: `롤토체스(롤체, TFT) 시즌 ${meta.set} 덱 추천. 지금 가진 아이템과 기물을 입력하면 갈 수 있는 메타 덱과 레벨별 조합, 추천 아이템, 배치를 바로 알려줍니다. 한국 서버 챌린저~에메랄드 랭크 게임 데이터 기반 덱 티어 리스트.`,
   keywords: ["롤체", "롤토체스", "TFT", "전략적 팀 전투", "롤체 덱 추천", "롤체 덱", "롤체 메타", `롤체 시즌 ${meta.set}`, "롤체 티어", "롤체 아이템 조합표", "롤체 시너지", "롤체 리롤 덱"],
   openGraph: { type: "website", locale: "ko_KR", siteName: "TFT PICK" },
   robots: { index: true, follow: true },
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SideAd side="right" />
         </div>
         <footer className="mt-auto border-t border-line px-4 py-5 text-center text-[11px] text-muted/70">
-          <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 데이터 Riot API(KR 챌린저·그마) · 이미지 CommunityDragon · <a href="/about" className="underline hover:text-text">방법론</a>
+          <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 데이터 Riot API(KR 챌린저~에메랄드) · 이미지 CommunityDragon · <a href="/about" className="underline hover:text-text">방법론</a>
         </footer>
         {ADSENSE_CLIENT && (
           <Script
