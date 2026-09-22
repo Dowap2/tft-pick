@@ -9,6 +9,7 @@
     "sync": "node scripts/sync.mjs && node scripts/build-images.mjs",
     "sync:meta": "node scripts/sync-meta.mjs",
     "check:tiers": "node --env-file=.env.local scripts/check-tiers.mjs",
+    "report:tiers": "node --env-file=.env.local scripts/tier-report.mjs",
     "dev:api": "wrangler dev --port 8787",
     "build:cf": "next build",
     "preview:cf": "wrangler dev",

@@ -23,7 +23,8 @@ console.log(`패치 ${patch.version} · 자격 ${qualified.length}개, 티어 �
 
 console.log("§5 자격");
 check(tiers.length === qualified.length, `자격 덱 수(${qualified.length}) == 티어 부여 수(${tiers.length})`);
-check(tiers.every((t) => qIds.has(t.deck_id)), "자격 미달 덱에 티어가 붙지 않았다");
+const ghosts = tiers.filter((t) => !qIds.has(t.deck_id)).map((t) => t.deck_id);
+check(ghosts.length === 0, `자격 미달·사라진 덱에 티어가 붙지 않았다${ghosts.length ? ` — ${ghosts.length}개: ${ghosts.slice(0, 5).join(", ")}${ghosts.length > 5 ? " …" : ""}` : ""}`);
 check(qualified.every((s) => tierOf.has(s.deck_id)), "자격 덱이 티어 없이 누락되지 않았다");
 check(new Set(tiers.map((t) => t.deck_id)).size === tiers.length, "한 덱에 티어가 둘 이상 붙지 않았다");
 
@@ -62,7 +63,7 @@ if (rest.length >= 10) {
 
 console.log("\n티어별 분포");
 for (const t of ["OP", "S", "A", "B", "C"]) {
-  const v = by(t).map((d) => statOf.get(d)).sort((a, b) => Number(a.avg_place) - Number(b.avg_place));
+  const v = by(t).map((d) => statOf.get(d)).filter(Boolean).sort((a, b) => Number(a.avg_place) - Number(b.avg_place));
   if (v.length) console.log(`  ${t.padEnd(3)} ${String(v.length).padStart(3)}개  평균 ${Number(v[0].avg_place).toFixed(2)} ~ ${Number(v[v.length - 1].avg_place).toFixed(2)}  표본 ${Math.min(...v.map((x) => x.games))}~${Math.max(...v.map((x) => x.games))}판`);
 }
 
