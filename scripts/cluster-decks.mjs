@@ -13,7 +13,8 @@ import { rpc, rpcAll, select, upsert, currentPatch, riotItemId } from "./db.mjs"
 
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.startsWith("--") ? [a.slice(2), all[i + 1]?.startsWith("--") || all[i + 1] == null ? true : all[i + 1]] : []).filter(Boolean));
 const MIN = Number(args["min-members"] ?? 15);
-const MAX_BOARDS = Number(args["max-boards"] ?? 120_000);   // docs/티어기준.md §7. 보드는 24시간만 보존되므로 보통 이 아래
+const MAX_BOARDS = Number(args["max-boards"] ?? 120_000);   // docs/티어기준.md §7
+const MIN_BOARDS = Number(args["min-boards"] ?? 3_000);     // 이보다 적으면 덱을 다시 만들지 않는다 (아래 설명)
 const SIM = Number(args.sim ?? 0.5);
 const DRY = !!args["dry-run"];
 
@@ -39,6 +40,14 @@ const boards = raw.map((b) => {
 const isEarly = (b) => b.level <= 7;
 const CONTAIN = 0.7;   // 초반 보드 유닛의 70% 이상이 덱 대표 유닛에 포함되면 합류
 console.log(`패치 ${patch.version}: 보드 ${raw.length}개 → 유효 ${boards.length}개`);
+// 수집이 멈추면(키 만료·잡 실패·스케줄 스킵) 보드 풀이 말라붙는다. 그 상태로 재클러스터링하면
+// 덱 정의가 통째로 무너지고, 덱 id 가 바뀌면서 버킷에 쌓아둔 7일치 표본까지 끊긴다.
+// 표본이 바닥이면 아무것도 건드리지 않고 나가는 게 옳다 — 기존 덱과 통계는 그대로 살아있다.
+if (!DRY && boards.length < MIN_BOARDS) {
+  console.error(`✗ 보드 ${boards.length}개 < 하한 ${MIN_BOARDS}개 — 덱을 다시 만들지 않고 종료합니다.`);
+  console.error(`  수집이 멈춰 있는지 확인하세요 (Riot 키 만료 / 워크플로 실패). 의도한 것이면 --min-boards 0`);
+  process.exit(1);
+}
 
 // ---- 2) 그리디 자카드 클러스터링 (2패스) ----
 const jaccard = (a, b) => { let i = 0; for (const x of a) if (b.has(x)) i++; return i / (a.size + b.size - i); };
