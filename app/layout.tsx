@@ -8,6 +8,9 @@ import { ADSENSE_CLIENT } from "@/lib/ads";
 import { SiteJsonLd } from "./seo";
 
 export const SITE_URL = "https://panlab.lol";
+// Cloudflare Web Analytics (무료·쿠키리스 → 동의 배너 불필요).
+// 토큰은 빌드 타임에 주입된다 (wrangler.jsonc vars / GitHub 환경변수). 없으면 아무것도 넣지 않는다.
+const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON ?? "";
 
 export const viewport: Viewport = { themeColor: "#0b0d12", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
@@ -48,6 +51,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="mt-auto border-t border-line px-4 py-5 text-center text-[11px] text-muted/70">
           <span className="num">SET {meta.set}</span> · 패치 {meta.patch} · 데이터 Riot API(KR 챌린저~에메랄드) · 이미지 CommunityDragon · <a href="/about" className="underline hover:text-text">방법론</a>
         </footer>
+        {CF_BEACON && (
+          <Script
+            defer
+            strategy="afterInteractive"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token":"${CF_BEACON}"}`}
+          />
+        )}
         {ADSENSE_CLIENT && (
           <Script
             async

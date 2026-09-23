@@ -17,6 +17,9 @@
   // anon 키·URL 은 공개값(클라이언트 번들에도 들어감). 비밀(service_role 등)은 절대 여기 두지 말고 `wrangler secret put`.
   "vars": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://lrcqmzhnyaykrqzxhiyg.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyY3FtemhueWF5a3JxenhoaXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1OTg1MTEsImV4cCI6MjEwNTE3NDUxMX0.iWgVI1NacIz3A_p6dF-56Sn1D2BUVqcr5MyaqDA3ywc"
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyY3FtemhueWF5a3JxenhoaXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1OTg1MTEsImV4cCI6MjEwNTE3NDUxMX0.iWgVI1NacIz3A_p6dF-56Sn1D2BUVqcr5MyaqDA3ywc",
+    // Cloudflare Web Analytics 토큰. 대시보드 Web Analytics 에서 사이트 추가 후 받은 값을 넣는다.
+    // 비워두면 비콘을 아예 렌더하지 않는다 (대시보드 자동 주입을 쓸 경우 비워둬도 된다).
+    "NEXT_PUBLIC_CF_BEACON": ""
   }
 }
