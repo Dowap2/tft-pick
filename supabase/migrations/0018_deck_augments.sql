@@ -17,7 +17,10 @@ revoke all on function public.raw_boards(int) from public, anon, authenticated;
 grant execute on function public.raw_boards(int) to service_role;
 
 -- decks_bundle 에 증강 노출 (0017 과 동일, augments 서브쿼리만 추가)
-create or replace view decks_bundle as
+-- create or replace 로는 컬럼을 끼워넣을 수 없다 ("cannot change name of view column").
+-- 의존하는 객체가 없는 말단 뷰라 지우고 다시 만든다.
+drop view if exists decks_bundle;
+create view decks_bundle as
 select
   d.patch_id, d.id, coalesce(d.display_name, d.name) as name, d.playstyle, d.carry_unit_id,
   d.core_unit_ids, d.levelling, d.difficulty,
