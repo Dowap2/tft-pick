@@ -30,11 +30,13 @@ export function SideAd({ side }: { side: "left" | "right" }) {
             data-ad-slot={slot}
             data-ad-format="vertical"
           />
-        ) : (
+        ) : process.env.NODE_ENV !== "production" ? (
+          // 슬롯 미설정 플레이스홀더는 개발에서만. 프로덕션에 "AD left" 빈 박스가 나가면
+          // 방문자에겐 만들다 만 사이트로 보인다.
           <div className="flex h-[600px] w-40 items-center justify-center rounded border border-dashed border-line text-[10px] text-muted/40">
             AD {side}
           </div>
-        )}
+        ) : null}
       </div>
     </aside>
   );
