@@ -255,5 +255,6 @@ if (augRows.length) await upsert("deck_augments", augRows, "deck_id,patch_id,aug
 console.log(`증강: ${augRows.length}행 (덱당 최대 12개, 덱 내 ${AUG_MIN}판 이상)`);
 
 const n = await rpc("ingest_participant_decks", { p_patch_id: pid, rows: pdRows });
+const counters = await rpc("compute_deck_counters", { p_patch_id: pid, p_min_games: Number(args["counter-min"] ?? 30) });
 const rolled = await rpc("roll_up_stats", { p_patch_id: pid });   // 덱별·시간별 집계 누적 (docs/티어기준.md §3)
-console.log(`\n적재: decks ${decks.length}, participant_decks ${n}, 통계 버킷 ${rolled}행 갱신`);
+console.log(`\n적재: decks ${decks.length}, participant_decks ${n}, 상성 ${counters}행, 통계 버킷 ${rolled}행 갱신`);
