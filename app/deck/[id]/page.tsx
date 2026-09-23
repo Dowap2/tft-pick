@@ -26,7 +26,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: `롤체 ${deck.name} 덱 — 조합·추천 아이템·레벨별 배치 (${deck.tierLabel}티어)`,
     description,
     alternates: { canonical: `/deck/${deck.id}` },
-    openGraph: { title: `${deck.name} 덱 | 롤체 ${KW.season} 덱 추천`, description, type: "article" },
+    // opengraph-image.tsx 가 만든 덱별 이미지를 명시적으로 건다.
+    // generateMetadata 에서 openGraph 를 직접 주면 파일 컨벤션 이미지가 상속되지 않고 루트 것이 쓰인다.
+    openGraph: { title: `${deck.name} 덱 | 롤체 ${KW.season} 덱 추천`, description, type: "article", images: [{ url: `/deck/${deck.id}/opengraph-image`, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title: `${deck.name} 덱`, description, images: [`/deck/${deck.id}/opengraph-image`] },
   };
 }
 

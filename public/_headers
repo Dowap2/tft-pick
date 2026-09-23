@@ -1,0 +1,6 @@
+# 덱별 OG 이미지는 확장자 없는 경로(/deck/<id>/opengraph-image)로 나간다.
+# Cloudflare 정적 자산은 확장자로 Content-Type 을 정하므로 명시하지 않으면
+# application/octet-stream 으로 나가고, 카톡·트위터가 이미지를 거부한다.
+/deck/:id/opengraph-image
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400
