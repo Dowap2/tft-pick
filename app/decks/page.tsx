@@ -7,7 +7,7 @@ import { describeDeck } from "@/lib/describe";
 import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 
 export const metadata = {
-  title: `롤체 덱 티어 리스트 시즌 ${meta.set} — 최신 메타 덱 순위·조합·아이템`,
+  title: "롤체 덱 티어 리스트",
   description: `롤토체스(롤체) 시즌 ${meta.set} 덱 티어 리스트. 한국 챌린저 데이터로 매일 갱신되는 OP/S/A 덱, 평균 등수·Top4·1등 비율, 레벨별 조합과 추천 아이템, 팀 코드.`,
   alternates: { canonical: "/decks" },
 };

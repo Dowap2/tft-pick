@@ -8,7 +8,7 @@ import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: `롤체 아이템 조합표 시즌 ${meta.set} — 재료 조합식과 추천 챔피언`,
+  title: "롤체 아이템 조합표",
   description: `롤토체스(롤체) 시즌 ${meta.set} 아이템 조합표. 재료 2개를 교차한 완성 아이템 전체와, 메타 덱에서 그 아이템을 누구에게 주는지 정리.`,
   alternates: { canonical: "/items" },
 };

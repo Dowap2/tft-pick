@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const t = find((await params).id);
   if (!t) return { title: "시너지" };
   const units = UNITS.filter((u) => u.traits.includes(t.name)).sort((a, b) => a.cost - b.cost);
-  const title = `${KW.a} ${t.name} 시너지 — 기물 ${units.length}명, 활성 ${t.breakpoints.join("/")}`;
+  const title = `${KW.a} ${t.name} 시너지 — 활성 ${t.breakpoints.join("/")}`;
   const description = `${KW.b} ${KW.season} ${t.name} 시너지 정리: ${t.breakpoints.join("/")}명 활성, 보유 기물 ${units.map((u) => u.name).join(", ")}. ${withJosa(t.name, "을를")} 쓰는 메타 덱과 조합.`;
   return { title, description, alternates: { canonical: `/traits/${t.id.toLowerCase()}` }, openGraph: { title, description } };
 }

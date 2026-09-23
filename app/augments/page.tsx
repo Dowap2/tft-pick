@@ -5,7 +5,7 @@ import { TierBadge } from "@/app/icons";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: `롤체 증강 티어 리스트 시즌 ${meta.set}`,
+  title: "롤체 증강 티어 리스트",
   description: `롤토체스 Set ${meta.set} 증강 티어. S/A/B/C 등급과 효과 설명.`,
   alternates: { canonical: "/augments" },
 };

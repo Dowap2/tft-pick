@@ -8,7 +8,7 @@ import { Breadcrumbs, KW } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: `롤체 시너지 목록 시즌 ${meta.set} — 활성 인원·보유 기물·덱`,
+  title: "롤체 시너지 목록",
   description: `롤토체스(롤체) 시즌 ${meta.set} 시너지(특성) 전체. 활성 단계, 기물 목록, 그 시너지를 쓰는 메타 덱까지.`,
   alternates: { canonical: "/traits" },
 };

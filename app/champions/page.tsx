@@ -8,7 +8,7 @@ import { Breadcrumbs, JsonLd, KW, SITE } from "@/app/seo";
 import meta from "@/lib/gen/meta.json";
 
 export const metadata = {
-  title: `롤체 챔피언(기물) 목록 시즌 ${meta.set} — 코스트·시너지·추천 아이템`,
+  title: "롤체 챔피언 목록",
   description: `롤토체스(롤체) 시즌 ${meta.set} 전체 기물 ${"65"}명을 코스트별로. 각 기물의 시너지, 메타 덱 추천 아이템, 캐리로 쓰는 덱과 같이 쓰는 기물까지 정리.`,
   alternates: { canonical: "/champions" },
 };

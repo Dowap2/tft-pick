@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const carry = unitById(deck.carryId ?? "")?.name;
   const description = `${describeDeck(deck)[0]} 최종 조합: ${units}. ${deck.tierLabel}티어 · 평균 ${deck.avgPlacement.toFixed(2)}등${carry ? ` · 메인 캐리 ${carry}` : ""}.`;
   return {
-    title: `롤체 ${deck.name} 덱 — 조합·추천 아이템·레벨별 배치 (${deck.tierLabel}티어)`,
+    title: `롤체 ${deck.name} 덱 조합 (${deck.tierLabel}티어)`,
     description,
     alternates: { canonical: `/deck/${deck.id}` },
     // opengraph-image.tsx 가 만든 덱별 이미지를 명시적으로 건다.

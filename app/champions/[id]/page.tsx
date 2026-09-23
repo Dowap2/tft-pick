@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const decks = await getDecks();
   const use = unitUsage(u.id, decks);
   const items = use.items.slice(0, 3).map((i) => itemById(i)?.name).filter(Boolean).join(", ");
-  const title = `${KW.a} ${u.name} 추천 아이템·시너지·덱 (${COST_NAME[u.cost]})`;
+  const title = `${KW.a} ${u.name} 아이템·시너지 (${u.cost}코)`;
   const description = `${KW.b} ${KW.season} ${u.name}: ${COST_NAME[u.cost]}, 시너지 ${u.traits.join("·")}. 추천 아이템 ${items || "데이터 수집 중"}. ${withJosa(u.name, "이가")} 들어가는 메타 덱 ${use.decks.length}개와 캐리로 쓰는 덱, 같이 쓰는 기물까지.`;
   return { title, description, alternates: { canonical: `/champions/${u.id}` }, openGraph: { title, description, images: [`/img/units/${u.id}.webp`] } };
 }
