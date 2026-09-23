@@ -66,7 +66,7 @@ export default async function AboutPage() {
       <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-text/90">
         <li>Riot API에는 라운드별 보드가 없습니다. <strong>4~7렙 조합은 자체 표본이 5판 미만이면 MetaTFT의 초반 통계를 빌려 씁니다.</strong> 자체 표본이 쌓이면 자동으로 교체됩니다.</li>
         <li>배치도의 위치는 실측이 아니라 특성 기반 자동 배치입니다.</li>
-        <li>증강 데이터는 현재 세트 API에 포함되지 않아 증강 티어는 MetaTFT 큐레이션을 씁니다.</li>
+        <li>덱별 추천 증강은 우리 데이터로 집계합니다(덱 안에서 20판 이상, 그 덱 평균 등수 대비 차이 기준). 표본이 부족한 덱은 MetaTFT 큐레이션으로 대체합니다.</li>
         <li>티어는 구간 평균입니다. 챌린저와 에메랄드에서 성적이 갈리는 덱도 하나의 티어로 묶입니다.</li>
         <li>표본이 빠르게 쌓이고 3시간마다 다시 계산하므로 티어와 순위는 하루에도 바뀔 수 있습니다.</li>
       </ul>

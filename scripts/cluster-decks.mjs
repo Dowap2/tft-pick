@@ -34,7 +34,7 @@ const isDefensive = (id) => /warmogs|bramble|gargoyle|dragonsclaw|redbuff|frozen
 const raw = await rpcAll("raw_boards", { p_patch_id: pid }, "match_id.desc,puuid.asc", 1000, MAX_BOARDS);   // 최신 매치부터
 const boards = raw.map((b) => {
   const us = (b.units ?? []).map((u) => ({ id: unitByApi.get(u.character_id)?.id, star: Math.min(3, u.tier ?? 1), items: (u.items ?? []).map(riotItemId).filter((i) => i && itemIds.has(i)) })).filter((u) => u.id);
-  return { ...b, us, set: new Set(us.map((u) => u.id)), traitLv: new Map((b.traits ?? []).map((t) => [t.name, t.tier_current])) };
+  return { ...b, us, set: new Set(us.map((u) => u.id)), traitLv: new Map((b.traits ?? []).map((t) => [t.name, t.tier_current])), augs: b.augments ?? [] };
 }).filter((b) => b.set.size >= 5).sort((a, b) => a.placement - b.placement);
 // 중반 탈락자(최종 레벨 ≤ 7)의 보드 = 그 덱의 6~7렙 중간 단계 표본. 클러스터를 만들진 않고, 최종 보드로 만든 덱에 "포함 비율"로 붙는다.
 const isEarly = (b) => b.level <= 7;
@@ -139,8 +139,14 @@ function describe(members) {
     const us = centroid(ms);
     if (us.size >= 5) levels[L] = { units: [...us], avg: ms.reduce((s, m) => s + m.placement, 0) / ms.length, count: ms.length };
   }
+  // 증강: 이 덱을 굴린 보드에서 증강별 (판수, 등수합). 기준은 docs/티어기준.md §4.9
+  const augStat = new Map();
+  for (const m of members) for (const a of m.augs) {
+    const e = augStat.get(a) ?? { games: 0, sum: 0 };
+    e.games++; e.sum += m.placement; augStat.set(a, e);
+  }
   return {
-    n, freq, deckUnits, starMode, itemFreq, carry, coreIds, tf, topTrait, levelling, levels,
+    n, freq, deckUnits, starMode, itemFreq, carry, coreIds, tf, topTrait, levelling, levels, augStat,
     avgPlace: members.reduce((s, m) => s + m.placement, 0) / n,
     byLevel: Object.fromEntries([5, 6, 7, 8, 9, 10].map((L) => [L, members.filter((m) => m.level === L).length])),
   };
@@ -179,7 +185,7 @@ for (const f of finals) {
   }
   decks.push({
     id, name, carry: d.carry, coreIds: d.coreIds, levelling: d.levelling, n: d.n, avgPlace: d.avgPlace,
-    deckUnits: d.deckUnits, starMode: d.starMode, itemFreq: d.itemFreq, levels: d.levels, byLevel: d.byLevel,
+    deckUnits: d.deckUnits, starMode: d.starMode, itemFreq: d.itemFreq, levels: d.levels, byLevel: d.byLevel, augStat: d.augStat,
     signature: { traits: Object.fromEntries([...d.tf].slice(0, 8)), units: Object.fromEntries([...d.freq].map(([u, k]) => [u, Number((k / d.n).toFixed(2))])) },
   });
   for (const m of f.members) pdRows.push({ match_id: m.match_id, puuid: m.puuid, deck_id: id, distance: Number((1 - jaccard(m.set, f.rep)).toFixed(3)) });
@@ -233,6 +239,21 @@ await upsert("deck_items", decks.flatMap((d) => d.deckUnits.flatMap((u) => {
 await upsert("deck_levels", decks.flatMap((d) => Object.entries(d.levels).map(([L, v]) => ({
   deck_id: d.id, patch_id: pid, level: Number(L), unit_ids: v.units, avg_place: Number(v.avg.toFixed(2)), games: v.count,
 }))), "deck_id,patch_id,level");
+// 증강 (docs/티어기준.md §4.9): 덱 내 20판 이상 + 덱 평균 대비 등수 차이로 S/A/B
+const AUG_MIN = Number(args["aug-min"] ?? 20);
+const augRows = decks.flatMap((d) => [...d.augStat]
+  .filter(([, e]) => e.games >= AUG_MIN)
+  .map(([id, e]) => ({ id, games: e.games, avg: e.sum / e.games, delta: e.sum / e.games - d.avgPlace }))
+  .sort((a, b) => a.delta - b.delta)
+  .slice(0, 12)
+  .map((a) => ({
+    deck_id: d.id, patch_id: pid, augment_id: a.id,
+    tier: a.delta <= -0.30 ? "S" : a.delta <= -0.10 ? "A" : "B",
+    avg_place: Number(a.avg.toFixed(2)), games: a.games,
+  })));
+if (augRows.length) await upsert("deck_augments", augRows, "deck_id,patch_id,augment_id");
+console.log(`증강: ${augRows.length}행 (덱당 최대 12개, 덱 내 ${AUG_MIN}판 이상)`);
+
 const n = await rpc("ingest_participant_decks", { p_patch_id: pid, rows: pdRows });
 const rolled = await rpc("roll_up_stats", { p_patch_id: pid });   // 덱별·시간별 집계 누적 (docs/티어기준.md §3)
 console.log(`\n적재: decks ${decks.length}, participant_decks ${n}, 통계 버킷 ${rolled}행 갱신`);

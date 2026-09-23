@@ -7,20 +7,22 @@ import { ItemIcon, TierBadge, UnitIcon } from "@/app/icons";
 export function DeckAugments({ deck }: { deck: Deck }) {
   const list = (deck.augments ?? []).filter((a) => AUGMENTS[a.id]);
   if (list.length === 0) return null;
+  const self = list.some((a) => a.avg != null);   // 자체 집계인지 metatft 폴백인지
   const group = (tier: string) => list.filter((a) => a.tier === tier);
   const Grid = ({ items }: { items: typeof list }) => (
     <ul className="grid grid-cols-2 gap-1 sm:grid-cols-3">
       {items.map((a) => (
         <li key={a.id} title={AUGMENTS[a.id].desc} className="flex items-center gap-2 rounded-md bg-surface-2/50 px-2 py-1">
           <img src={AUGMENTS[a.id].img} alt="" className="size-6 shrink-0 rounded" />
-          <span className="truncate text-xs">{AUGMENTS[a.id].name}</span>
+          <span className="flex-1 truncate text-xs">{AUGMENTS[a.id].name}</span>
+          {a.avg != null && <span className="num shrink-0 text-[10px] text-muted" title={`${a.games}판`}>{a.avg.toFixed(2)}등</span>}
         </li>
       ))}
     </ul>
   );
   return (
     <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">추천 증강 <span className="text-xs font-normal text-muted/70">이 덱과 잘 맞는 순 (metatft)</span></h2>
+      <h2 className="mb-3 text-lg font-semibold">추천 증강 <span className="text-xs font-normal text-muted/70">{self ? "이 덱에서 실제로 성적이 좋았던 순" : "이 덱과 잘 맞는 순 (metatft)"}</span></h2>
       <div className="panel space-y-3 rounded-lg bg-surface p-3">
         <div>
           <div className="mb-1.5 flex items-center gap-2 text-xs"><TierBadge tier="S" /> <span className="num text-muted">{group("S").length}</span></div>

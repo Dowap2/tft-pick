@@ -46,6 +46,7 @@ function toDeck(d: Row, tier: string | undefined): Deck {
     coreUnits: units.map((u): DeckUnit => ({ unitId: u.unitId, star: u.star, pos: u.pos ?? undefined })),
     coreItems: items.filter((i) => i.priority === 1).map((i) => ({ unitId: i.unitId, itemId: i.itemId })),
     altItems: alt, levels: d.levels ?? undefined, counters: d.counters ?? undefined,
+    augments: d.augments ?? undefined,
     playstyle: d.playstyle ?? undefined,
   };
 }
