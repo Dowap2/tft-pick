@@ -15,8 +15,8 @@ const by = (t) => tiers.filter((x) => x.tier_label === t).map((x) => x.deck_id);
 const fail = [];
 const check = (ok, msg) => { console.log(`  ${ok ? "✓" : "✗"} ${msg}`); if (!ok) fail.push(msg); };
 
-// §5 자격: games >= 30 그리고 avg_place < 4.75
-const qualified = stats.filter((s) => s.games >= 30 && Number(s.avg_place) < 4.75);
+// §5 자격: games >= 100 그리고 avg_place < 4.75
+const qualified = stats.filter((s) => s.games >= 100 && Number(s.avg_place) < 4.75);
 const qIds = new Set(qualified.map((s) => s.deck_id));
 
 console.log(`패치 ${patch.version} · 자격 ${qualified.length}개, 티어 부여 ${tiers.length}개\n`);
