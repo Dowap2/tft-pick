@@ -58,6 +58,12 @@ export type Deck = {
   winRate?: number;          // 1등 비율 (0~1)
   top4Rate?: number;         // Top4 비율 (0~1)
   pickRate?: number;         // 전체 보드 중 이 덱 비율 (0~1)
+  // 랭크 구간별 성적. docs/티어기준.md §2 — 티어 계산에는 쓰지 않고(두 구간을 섞어서 낸다)
+  // "챌에선 1등인데 에메에선 5등" 을 가려내기 위해 남겨둔 값이다.
+  gamesApex?: number;        // 챌린저·그랜드마스터·마스터
+  avgPlaceApex?: number;
+  gamesHigh?: number;        // 다이아몬드·에메랄드
+  avgPlaceHigh?: number;
   levelling?: string;        // "Fast 8" | "Fast 9" | "Standard" | "lvl 7" (리롤)
   difficulty?: "쉬움" | "보통" | "어려움";
   threeStarTargets?: UnitId[];   // 이 덱에서 3성을 노리는 유닛

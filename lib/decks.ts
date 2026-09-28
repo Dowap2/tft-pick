@@ -40,6 +40,8 @@ function toDeck(d: Row, tier: string | undefined): Deck {
     id: d.id, name: d.name, tierLabel, tier: TIER_NUM[tierLabel] ?? 4,
     avgPlacement: Number(d.avg_place), games: d.games ?? undefined,
     winRate: d.win_rate == null ? undefined : Number(d.win_rate), top4Rate: d.top4_rate == null ? undefined : Number(d.top4_rate), pickRate: d.pick_rate == null ? undefined : Number(d.pick_rate),
+    gamesApex: d.games_apex ?? undefined, avgPlaceApex: d.avg_place_apex == null ? undefined : Number(d.avg_place_apex),
+    gamesHigh: d.games_high ?? undefined, avgPlaceHigh: d.avg_place_high == null ? undefined : Number(d.avg_place_high),
     levelling: d.levelling ?? undefined, difficulty: d.difficulty ?? undefined,
     threeStarTargets: units.filter((u) => u.star === 3).map((u) => u.unitId),
     carryId: d.carry_unit_id,
