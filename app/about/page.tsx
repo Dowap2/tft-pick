@@ -24,7 +24,7 @@ export default async function AboutPage() {
 
       <H>데이터 출처</H>
       <P>
-        덱과 통계는 <strong>Riot Games 공식 API(TFT Match-V5)</strong>로 받은 한국 서버 랭크 게임에서 직접 만듭니다.
+        덱과 통계는 <strong>Riot Games 공식 API(TFT-MATCH-V1 · TFT-LEAGUE-V1)</strong>로 받은 한국 서버 랭크 게임에서 직접 만듭니다.
         시드 플레이어는 <strong>챌린저·그랜드마스터·마스터</strong>와 <strong>다이아몬드·에메랄드</strong>, 2분마다 새 게임을 받아 하루 종일 쌓습니다.
         현재 세트 {meta.set}(패치 {patch === "json" ? meta.patch : patch}), 덱에 배정된 보드 <span className="num">{games.toLocaleString()}</span>개 기준입니다.
         유닛·아이템·시너지 데이터와 이미지는 CommunityDragon(라이엇 클라이언트 원본)에서 가져옵니다.

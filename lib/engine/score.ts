@@ -180,7 +180,10 @@ export function scoreDeck(input: RecommendInput, deck: EngineDeck, ctx: EngineCt
   for (const c of comps) {
     const hit = c.units.filter((u) => starOf.has(u));
     const weighted = hit.reduce((s, u) => s + STAR_MULT[starOf.get(u)!], 0);
-    const ratio = Math.min(weighted / c.units.length, 1.25) * c.w;
+    // 분모는 "지금 낼 수 있는 유닛 수". 창이 [L, L+1] 이고 4~6렙 데이터가 없는 덱은
+    // 상위 조합으로 대체되므로, 조합 크기로 나누면 초반 보드가 구조적으로 반토막 난다.
+    const denom = p.L ? Math.min(c.units.length, p.L) : c.units.length;
+    const ratio = Math.min(weighted / denom, 1.25) * c.w;
     if (ratio > best.ratio) best = { label: c.label, ratio, hit, total: c.units.length, units: c.units };
   }
   const unitPart = Math.min(best.ratio, 1.25) * EARLY_UNIT_MAX;
@@ -209,22 +212,34 @@ export function scoreDeck(input: RecommendInput, deck: EngineDeck, ctx: EngineCt
 
   // ---- 2) 아이템 방향 (0~25) — 캐리 1순위 빌드의 재료 멀티셋, 역할 가중. 완성템은 정확 일치만 ----
   const carryItems = deck.items.filter((i) => i.unitId === carryId && i.priority === 1);
-  const need: Record<string, number> = {};
-  let needTotal = 0;
-  for (const it of carryItems) for (const c of ctx.itemRecipe(it.itemId) ?? []) { need[c] = (need[c] ?? 0) + ROLE_W[it.role]; needTotal += ROLE_W[it.role]; }
+  // 칸(slot) = 캐리 1순위 아이템의 재료 한 자리. 칸 하나의 값 = 그 아이템의 역할 가중.
+  // 완성템 보유 = 두 칸을 한 번에 채운 것(2w), 재료 1개 = 한 칸(w).
+  // 재료 2개와 완성템 1개가 같은 점수여야 한다 — 초반엔 재료로 들고 있는 게 정상이고,
+  // 어느 쪽이든 "이 캐리 빌드로 가고 있다"는 방향은 동일하다.
+  const slots = carryItems.flatMap((it) => (ctx.itemRecipe(it.itemId) ?? []).map((c) => ({ c, w: ROLE_W[it.role] })));
+  const needTotal = slots.reduce((s, x) => s + x.w, 0);
   const donePool = countBy(input.completed);
   const ownedDone: string[] = [];
   const buildable: string[] = [];
   let matched = 0;
+  let open = slots;
   for (const it of carryItems) {
     if ((donePool[it.itemId] ?? 0) > 0) {
       donePool[it.itemId] -= 1; ownedDone.push(it.itemId); buildable.push(it.itemId);
       matched += 2 * ROLE_W[it.role];
-      for (const c of ctx.itemRecipe(it.itemId) ?? []) need[c] = (need[c] ?? 0) - ROLE_W[it.role];
+      for (const c of ctx.itemRecipe(it.itemId) ?? []) {
+        const i = open.findIndex((s) => s.c === c && s.w === ROLE_W[it.role]);
+        if (i >= 0) open = open.filter((_, j) => j !== i);
+      }
     }
   }
   const pool = countBy(input.components);
-  for (const c of input.components) if ((need[c] ?? 0) > 0) { need[c] -= 1; matched += 1; }
+  // 남은 칸을 가중 높은 순으로 채운다 (캐리 코어 먼저). 칸 단위로 소비하므로
+  // 덱이 1개만 쓰는 재료를 2개 들고 있어도 두 번 세지 않는다.
+  const matchPool = countBy(input.components);
+  for (const s of [...open].sort((a, b) => b.w - a.w)) {
+    if ((matchPool[s.c] ?? 0) > 0) { matchPool[s.c] -= 1; matched += s.w; }
+  }
   for (const it of carryItems) if (!ownedDone.includes(it.itemId) && tryBuild(it.itemId, pool, ctx)) buildable.push(it.itemId);
   let itemScore = needTotal ? Math.min(matched / needTotal, 1) * ITEM_MAX : 0;
   if (p.L && p.L >= 7 && input.completed.length && ownedDone.length === 0) itemScore *= 0.9;   // 후반에 완성템이 하나도 안 맞으면 굳은 것
