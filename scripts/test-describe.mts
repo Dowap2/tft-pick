@@ -37,6 +37,15 @@ const say = (decks: Deck[], carryOf: Deck[] = []) => describeUnit(U, { decks, it
   ok(t.includes("평균 0.6명"), `8인 환산이 0.6명이 아니다 (0.08×8=0.64):\n${t}`);
 }
 
+// 3-1) 반올림해서 0.0 이 되는 값은 문장에 넣지 않는다 (D 티어의 저픽률 덱)
+{
+  const t = say([deck({ id: "a", games: 120, pickRate: 0.002 })]);   // 0.2% → 8인 환산 0.016명
+  ok(!t.includes("0.0명"), `"평균 0.0명" 문장이 나왔다:\n${t}`);
+  ok(t.includes("약 0.2%"), `픽률 0.2% 는 그대로 나와야 한다:\n${t}`);
+  const none = say([deck({ id: "b", games: 120, pickRate: 0.0001 })]);   // 0.01% → 문단 자체를 만들지 않는다
+  ok(!none.includes("차지합니다"), `0.0% 로 반올림되는데 점유율 문단이 나왔다:\n${none}`);
+}
+
 // 4) 구간 차이: 표본 100판 미만이거나 차이 0.10등 미만이면 문단을 만들지 않는다
 {
   const near = deck({ id: "a", games: 500, gamesApex: 400, avgPlaceApex: 4.40, gamesHigh: 100, avgPlaceHigh: 4.45 });

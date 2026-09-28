@@ -102,8 +102,14 @@ export function describeUnit(u: { id: string; name: string; cost: number; traits
 
   // 등장 비율. 보드 하나는 덱 하나에만 배정되므로 픽률을 그냥 더해도 된다.
   const pick = use.decks.reduce((s, d) => s + (d.pickRate ?? 0), 0);
-  if (pick > 0) {
-    out.push(`이 덱들은 수집된 전체 보드의 약 ${(pick * 100).toFixed(1)}%를 차지합니다. 8인 로비라면 평균 ${(pick * 8).toFixed(1)}명이 ${withJosa(u.name, "을를")} 최종 조합에 넣고 있다는 뜻입니다.`);
+  // 반올림해서 0.0 이 되는 값은 문장으로 쓰지 않는다. D 티어가 생기면서 픽률 0.2% 짜리 덱이
+  // 목록에 올라왔고, "8인 로비라면 평균 0.0명" 같은 문장이 나왔다.
+  const perLobby = pick * 8;
+  if (pick * 100 >= 0.05) {
+    out.push(
+      `이 덱들은 수집된 전체 보드의 약 ${(pick * 100).toFixed(1)}%를 차지합니다.` +
+      (perLobby >= 0.05 ? ` 8인 로비라면 평균 ${perLobby.toFixed(1)}명이 ${withJosa(u.name, "을를")} 최종 조합에 넣고 있다는 뜻입니다.` : ""),
+    );
   }
 
   // 랭크 구간별 차이 (docs/티어기준.md §2). 양쪽 표본이 자격 하한(100판)을 넘고
