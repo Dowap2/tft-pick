@@ -28,6 +28,7 @@ export function HomeForm() {
   const [rivalQuery, setRivalQuery] = useState("");
   const [showRivals, setShowRivals] = useState(false);
   const [stage, setStage] = useState<string>("");
+  const [tab, setTab] = useState<"units" | "items">("units");   // 모바일 탭. md 이상은 2단이라 무시된다
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   // 마지막 입력 복원/저장 (라운드마다 다시 입력하지 않도록)
@@ -143,12 +144,27 @@ export function HomeForm() {
         )}
       </section>
 
-      {/* 챔피언(좌) + 아이템(우) — 둘을 한 화면에 */}
+      {/* 모바일: 챔피언/아이템 탭. md 이상은 2단으로 둘 다 보이므로 탭을 숨긴다.
+          숨는 쪽의 선택 개수를 탭 라벨에 얹어야 "아이템 탭에서 챔피언 선택이 안 보임" 이 되지 않는다. */}
+      <div className="mb-2 flex gap-1 md:hidden">
+        {([["units", `챔피언 ${units.length}`], ["items", `아이템 ${slotsUsed}/${MAX_COMPONENTS}`]] as const).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setTab(k)}
+            aria-pressed={tab === k}
+            className={`flex-1 rounded-lg border py-2 text-sm font-semibold transition-colors duration-150 ${tab === k ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted"}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* 챔피언(좌) + 아이템(우) — md 이상은 한 화면에 둘 다 */}
       <div className="mb-6 grid gap-4 md:grid-cols-2 md:gap-5">
 
         {/* ── 왼쪽: 챔피언 ── */}
-        <section>
-          <div className="mb-2 flex items-baseline justify-between">
+        <section className={tab === "units" ? "" : "hidden md:block"}>
+          <div className="mb-2 hidden items-baseline justify-between md:flex">
             <h2 className="text-base font-semibold">챔피언</h2>
             <span className="text-xs text-muted/80">{units.length}개 선택</span>
           </div>
@@ -220,8 +236,8 @@ export function HomeForm() {
         </section>
 
         {/* ── 오른쪽: 아이템 ── */}
-        <section>
-          <div className="mb-2 flex items-baseline justify-between">
+        <section className={tab === "items" ? "" : "hidden md:block"}>
+          <div className="mb-2 hidden items-baseline justify-between md:flex">
             <h2 className="text-base font-semibold">아이템</h2>
             <span className="text-xs text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
           </div>
