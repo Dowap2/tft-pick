@@ -10,7 +10,7 @@ export async function loadDecksJson(): Promise<Deck[]> {
   return (await import("./decks-json")).DECKS_JSON;
 }
 
-const TIER_NUM: Record<string, Deck["tier"]> = { OP: 1, S: 2, A: 3, B: 4, C: 5 };
+const TIER_NUM: Record<string, Deck["tier"]> = { OP: 1, S: 2, A: 3, B: 4, C: 5, D: 6 };
 const TTL_MS = 60 * 60 * 1000;
 type Cached = { at: number; decks: Deck[]; engineDecks: EngineDeck[]; source: "db" | "json"; patch: string };
 let cache: Cached | null = null;

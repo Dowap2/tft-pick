@@ -50,7 +50,7 @@ export function describeDeck(deck: Deck): string[] {
 // ─────────────────────────────────────────────────────────────
 
 const place = (d: Deck) => `평균 ${d.avgPlacement.toFixed(2)}등`;
-const TIERS = ["OP", "S", "A", "B", "C"] as const;
+const TIERS = ["OP", "S", "A", "B", "C", "D"] as const;
 /** 판수 가중 평균 등수. 100판 덱과 4,000판 덱을 같은 무게로 세면 안 된다. */
 const wAvgPlace = (ds: Deck[]) => {
   const w = ds.reduce((s, d) => s + (d.games ?? 1), 0);

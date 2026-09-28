@@ -7,7 +7,7 @@ import { CopyTeamCode } from "@/app/team-code";
 import { COST_TEXT, DeckStats, DeckTags, ItemIcon, TierBadge, TraitRow, UnitIcon } from "@/app/icons";
 import { LevelComps } from "@/app/levels";
 
-const TIERS = ["전체", "OP", "S", "A", "B", "C"] as const;
+const TIERS = ["전체", "OP", "S", "A", "B", "C", "D"] as const;
 const SORTS = { avg: "평균 등수", games: "게임 수" } as const;
 
 export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<string, string> }) {

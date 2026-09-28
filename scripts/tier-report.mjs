@@ -18,7 +18,7 @@ const buckets = await select("deck_stat_buckets", `select=hour,games,deck_id&pat
 
 const unitName = new Map(units.map((u) => [u.id, u.name]));
 const tierOf = new Map(tiers.map((t) => [t.deck_id, t.tier_label]));
-const ORDER = ["OP", "S", "A", "B", "C"];
+const ORDER = ["OP", "S", "A", "B", "C", "D"];
 const rows = decks.filter((d) => tierOf.has(d.id))
   .sort((a, b) => ORDER.indexOf(tierOf.get(a.id)) - ORDER.indexOf(tierOf.get(b.id)) || Number(a.avg_place) - Number(b.avg_place));
 

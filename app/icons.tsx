@@ -11,6 +11,8 @@ export const COST_TEXT: Record<number, string> = {
 };
 export const TIER_COLOR: Record<string, string> = {
   OP: "bg-neg/90 text-white", S: "bg-accent text-white", A: "bg-accent-2/90 text-white", B: "bg-surface-2 text-text border border-line", C: "bg-surface-2 text-muted border border-line",
+  // D = 기대 평균(4.5등) 이하. C 와 눈으로 구분돼야 하지만 경고색을 가득 칠하진 않는다 — 금지가 아니라 "이건 아래쪽" 이다.
+  D: "bg-surface-2 text-neg/85 border border-neg/35",
 };
 
 const SIZE = { sm: "size-8", md: "size-12", lg: "size-16" };

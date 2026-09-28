@@ -36,8 +36,10 @@ const itemId = (api) => {
   if (!itemIds.has(id)) { unmappedItems.add(api); return null; }
   return id;
 };
-const tierOf = (avg) => (avg < 4.0 ? "OP" : avg < 4.25 ? "S" : avg < 4.5 ? "A" : avg < 4.75 ? "B" : "C");
-const TIER_NUM = { OP: 1, S: 2, A: 3, B: 4, C: 5 };
+// DB 경로(calculate_deck_tiers)는 상대 순위지만 폴백은 절대 구간이다. 그래도 4.75등 경계는
+// 같아야 한다 — DB 가 D 라 부르는 덱을 폴백이 C 라 부르면 사이트가 자기모순이 된다 (§6.3).
+const tierOf = (avg) => (avg < 4.0 ? "OP" : avg < 4.25 ? "S" : avg < 4.45 ? "A" : avg < 4.6 ? "B" : avg < 4.75 ? "C" : "D");
+const TIER_NUM = { OP: 1, S: 2, A: 3, B: 4, C: 5, D: 6 };
 // metatft cell_1..28: 1~7 최후방, 22~28 최전방 → 우리 row 0=최전방
 const cellToPos = (cell) => { const n = Number(cell.slice(5)) - 1; return [3 - Math.floor(n / 7), n % 7]; };
 

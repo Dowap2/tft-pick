@@ -15,17 +15,19 @@ const by = (t) => tiers.filter((x) => x.tier_label === t).map((x) => x.deck_id);
 const fail = [];
 const check = (ok, msg) => { console.log(`  ${ok ? "✓" : "✗"} ${msg}`); if (!ok) fail.push(msg); };
 
-// §5 자격: games >= 100 그리고 avg_place < 4.75
-const qualified = stats.filter((s) => s.games >= 100 && Number(s.avg_place) < 4.75);
-const qIds = new Set(qualified.map((s) => s.deck_id));
+// §5 자격: 제외 사유는 표본(100판) 하나뿐. 성적은 D 로 갈린다.
+const eligible = stats.filter((s) => s.games >= 100);
+const eIds = new Set(eligible.map((s) => s.deck_id));
+// §6.3 순서 0: D 는 percent_rank 모집단에서 빠진다 → 아래 순위 검사는 D 를 뺀 집합으로 한다.
+const qualified = eligible.filter((s) => Number(s.avg_place) < 4.75);
 
-console.log(`패치 ${patch.version} · 자격 ${qualified.length}개, 티어 부여 ${tiers.length}개\n`);
+console.log(`패치 ${patch.version} · 자격 ${eligible.length}개(D 제외 ${qualified.length}개), 티어 부여 ${tiers.length}개\n`);
 
 console.log("§5 자격");
-check(tiers.length === qualified.length, `자격 덱 수(${qualified.length}) == 티어 부여 수(${tiers.length})`);
-const ghosts = tiers.filter((t) => !qIds.has(t.deck_id)).map((t) => t.deck_id);
-check(ghosts.length === 0, `자격 미달·사라진 덱에 티어가 붙지 않았다${ghosts.length ? ` — ${ghosts.length}개: ${ghosts.slice(0, 5).join(", ")}${ghosts.length > 5 ? " …" : ""}` : ""}`);
-check(qualified.every((s) => tierOf.has(s.deck_id)), "자격 덱이 티어 없이 누락되지 않았다");
+check(tiers.length === eligible.length, `자격 덱 수(${eligible.length}) == 티어 부여 수(${tiers.length})`);
+const ghosts = tiers.filter((t) => !eIds.has(t.deck_id)).map((t) => t.deck_id);
+check(ghosts.length === 0, `표본 미달·사라진 덱에 티어가 붙지 않았다${ghosts.length ? ` — ${ghosts.length}개: ${ghosts.slice(0, 5).join(", ")}${ghosts.length > 5 ? " …" : ""}` : ""}`);
+check(eligible.every((s) => tierOf.has(s.deck_id)), "자격 덱이 티어 없이 누락되지 않았다");
 check(new Set(tiers.map((t) => t.deck_id)).size === tiers.length, "한 덱에 티어가 둘 이상 붙지 않았다");
 
 // §6.2 순위 (동률은 같은 순위 = 그룹의 최소 등수 기준)
@@ -61,8 +63,16 @@ if (rest.length >= 10) {
   console.log(`  - A/B/C 비율 검사 생략 (나머지 ${rest.length}개, 10개 미만)`);
 }
 
+// §6.3 순서 0: D 는 절대 기준(4.75등)으로만 정해진다. 양방향으로 본다.
+console.log("\n§6.3 D 티어");
+const dDecks = by("D");
+check(dDecks.every((d) => Number(statOf.get(d).avg_place) >= 4.75), `D 는 전부 평균 4.75등 이상 (${dDecks.length}개)`);
+const shouldBeD = eligible.filter((s) => Number(s.avg_place) >= 4.75).map((s) => s.deck_id);
+check(shouldBeD.every((d) => tierOf.get(d) === "D"), `평균 4.75등 이상인 덱은 전부 D (${shouldBeD.length}개)`);
+check(["OP", "S", "A", "B", "C"].flatMap(by).every((d) => Number(statOf.get(d).avg_place) < 4.75), "OP~C 에는 4.75등 이상인 덱이 없다");
+
 console.log("\n티어별 분포");
-for (const t of ["OP", "S", "A", "B", "C"]) {
+for (const t of ["OP", "S", "A", "B", "C", "D"]) {
   const v = by(t).map((d) => statOf.get(d)).filter(Boolean).sort((a, b) => Number(a.avg_place) - Number(b.avg_place));
   if (v.length) console.log(`  ${t.padEnd(3)} ${String(v.length).padStart(3)}개  평균 ${Number(v[0].avg_place).toFixed(2)} ~ ${Number(v[v.length - 1].avg_place).toFixed(2)}  표본 ${Math.min(...v.map((x) => x.games))}~${Math.max(...v.map((x) => x.games))}판`);
 }

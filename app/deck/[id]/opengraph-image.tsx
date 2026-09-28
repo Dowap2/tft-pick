@@ -23,7 +23,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const COST_COLOR: Record<number, string> = { 1: "#5b6472", 2: "#2f9e5b", 3: "#3b7ddd", 4: "#a855f7", 5: "#c9a227" };
-const TIER_COLOR: Record<string, string> = { OP: "#e5484d", S: "#6366f1", A: "#8b5cf6", B: "#3f4654", C: "#3f4654" };
+const TIER_COLOR: Record<string, string> = { OP: "#e5484d", S: "#6366f1", A: "#8b5cf6", B: "#3f4654", C: "#3f4654", D: "#5a3437" };
 
 // satori 는 webp 를 못 읽는다 → 빌드 타임에 png 로 변환해 data URI 로 심는다. 유닛당 1회만.
 const pngCache = new Map<string, string>();

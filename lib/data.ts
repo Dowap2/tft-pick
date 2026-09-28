@@ -51,8 +51,8 @@ export type LevelComp = { units: UnitId[]; avg: number; count: number };
 export type Deck = {
   id: string;
   name: string;
-  tierLabel: "OP" | "S" | "A" | "B" | "C";
-  tier: 1 | 2 | 3 | 4 | 5;  // OP=1, S=2, A=3, B=4, C=5
+  tierLabel: "OP" | "S" | "A" | "B" | "C" | "D";   // D = avg_place >= 4.75 (docs/티어기준.md §6.3)
+  tier: 1 | 2 | 3 | 4 | 5 | 6;  // OP=1, S=2, A=3, B=4, C=5, D=6
   avgPlacement: number;
   games?: number;            // 표본 수
   winRate?: number;          // 1등 비율 (0~1)
