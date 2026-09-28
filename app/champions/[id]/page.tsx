@@ -26,7 +26,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const decks = await getDecks();
   const use = unitUsage(u.id, decks);
   const items = use.items.slice(0, 3).map((i) => itemById(i)?.name).filter(Boolean).join(", ");
-  const title = `${KW.a} ${u.name} 아이템·시너지 (${u.cost}코)`;
+  // "롤체 {챔피언} 덱" 이 이 페이지를 찾는 주 검색어다. 캐리가 아닌 기물은 /deck/* 페이지에
+  // 자기 이름이 안 들어가서 챔피언 페이지가 유일한 착지점인데, 제목에 "덱" 이 없었다.
+  // 덱이 0개인 기물에는 붙이지 않는다 — 없는 걸 제목으로 약속하면 들어온 사람이 그대로 튕긴다.
+  const title = use.decks.length
+    ? `${KW.a} ${u.name} 덱·아이템 (${u.cost}코)`
+    : `${KW.a} ${u.name} 아이템·시너지 (${u.cost}코)`;
   const description = `${KW.b} ${KW.season} ${u.name}: ${COST_NAME[u.cost]}, 시너지 ${u.traits.join("·")}. 추천 아이템 ${items || "데이터 수집 중"}. ${withJosa(u.name, "이가")} 들어가는 메타 덱 ${use.decks.length}개와 캐리로 쓰는 덱, 같이 쓰는 기물까지.`;
   return { title, description, alternates: { canonical: `/champions/${u.id}` }, openGraph: { title, description, images: [`/img/units/${u.id}.webp`] } };
 }
