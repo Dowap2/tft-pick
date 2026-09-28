@@ -16,6 +16,8 @@
 // 필요 env: RIOT_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // 레이트 리밋: 20 req/s, 100 req/2min → 아래 limiter 가 자동으로 맞춤. 429 는 Retry-After 대기.
 
+import { fetchRetry } from "./db.mjs";   // 네트워크 예외 재시도 (db.mjs 가 공용)
+
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, all) => a.startsWith("--") ? [a.slice(2), all[i + 1]?.startsWith("--") || all[i + 1] == null ? true : all[i + 1]] : []).filter(Boolean));
 const TIERS = String(args.tiers ?? "challenger,grandmaster,master,diamond,emerald").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
 const PER_TIER = Number(args["per-tier"] ?? 300);
@@ -59,7 +61,7 @@ let reqCount = 0;
 async function riot(url, attempt = 0) {
   await throttle();
   reqCount++;
-  const res = await fetch(url, { headers: { "X-Riot-Token": RIOT_API_KEY } });
+  const res = await fetchRetry(url, { headers: { "X-Riot-Token": RIOT_API_KEY } }, "riot");
   if (res.status === 429) {
     const ra = Number(res.headers.get("retry-after") ?? 5);
     console.warn(`  429 rate limited → ${ra}s 대기`);
@@ -76,12 +78,12 @@ async function riot(url, attempt = 0) {
 // ---- Supabase PostgREST 직접 호출 (supabase-js 는 Node 20에서 WebSocket 요구 → fetch 로 충분) ----
 const SB_HEADERS = { apikey: SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json" };
 async function rpc(fn, params = {}) {
-  const res = await fetch(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/rpc/${fn}`, { method: "POST", headers: SB_HEADERS, body: JSON.stringify(params) });
+  const res = await fetchRetry(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/rpc/${fn}`, { method: "POST", headers: SB_HEADERS, body: JSON.stringify(params) }, `rpc ${fn}`);
   if (!res.ok) throw new Error(`${fn}: ${res.status} ${await res.text()}`);
   return res.json();
 }
 async function select(table, query) {
-  const res = await fetch(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}?${query}`, { headers: SB_HEADERS });
+  const res = await fetchRetry(`${NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}?${query}`, { headers: SB_HEADERS }, `select ${table}`);
   if (!res.ok) throw new Error(`${table}: ${res.status} ${await res.text()}`);
   return res.json();
 }
@@ -188,7 +190,13 @@ const endAt = Date.now() + DURATION_MS;
 let lastSeed = Date.now();
 for (;;) {
   const cs = Date.now();
-  const n = await cycle();
+  // 재시도를 다 쓰고도 터진 사이클은 건너뛴다. 3시간 잡이 한 번의 장애로 끝나면 안 된다.
+  let n = 0;
+  try {
+    n = await cycle();
+  } catch (e) {
+    console.warn(`  사이클 실패 → 건너뜀: ${e.cause?.code ?? e.message}`);
+  }
   cycles++;
   console.log(`[${new Date().toISOString().slice(11, 19)}] 사이클 ${cycles}: +${n}판 (누적 적재 ${stored}, 건너뜀 ${skipped}, 요청 ${reqCount})`);
   if (!LOOP_SEC || Date.now() >= endAt) break;

@@ -3,8 +3,25 @@ const { NEXT_PUBLIC_SUPABASE_URL: URL_, SUPABASE_SERVICE_ROLE_KEY: KEY } = proce
 if (!URL_ || !KEY) { console.error("✗ NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY 없음 — node --env-file=.env.local 로 실행"); process.exit(1); }
 const H = { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" };
 
+/** fetch 자체가 throw 하는 경우(DNS·연결 끊김)를 재시도로 흡수한다.
+ *  상태 코드로 오지 않아 호출자가 못 잡고 프로세스가 그대로 죽었다 —
+ *  실측: ENOTFOUND asia.api.riotgames.com 한 번에 170분 수집 잡이 5사이클만 돌고 끝났다.
+ *  상시로 도는 스크립트라 일시적 장애는 삼키고 계속 가야 한다. */
+export async function fetchRetry(url, init, label = "fetch", tries = 5) {
+  for (let i = 0; ; i++) {
+    try {
+      return await fetch(url, init);
+    } catch (e) {
+      if (i >= tries) throw e;
+      const wait = 2000 * (i + 1);
+      console.warn(`  ${label} 네트워크 오류 (${e.cause?.code ?? e.message}) → ${wait / 1000}s 후 재시도 ${i + 1}/${tries}`);
+      await new Promise((r) => setTimeout(r, wait));
+    }
+  }
+}
+
 export async function rpc(fn, params = {}, query = "") {
-  const res = await fetch(`${URL_}/rest/v1/rpc/${fn}${query ? `?${query}` : ""}`, { method: "POST", headers: H, body: JSON.stringify(params) });
+  const res = await fetchRetry(`${URL_}/rest/v1/rpc/${fn}${query ? `?${query}` : ""}`, { method: "POST", headers: H, body: JSON.stringify(params) }, `rpc ${fn}`);
   if (!res.ok) throw new Error(`rpc ${fn}: ${res.status} ${await res.text()}`);
   const t = await res.text();
   return t ? JSON.parse(t) : null;
@@ -20,16 +37,16 @@ export async function rpcAll(fn, params = {}, order = "", page = 1000, max = Inf
   return out;
 }
 export async function select(table, query = "") {
-  const res = await fetch(`${URL_}/rest/v1/${table}?${query}`, { headers: H });
+  const res = await fetchRetry(`${URL_}/rest/v1/${table}?${query}`, { headers: H }, `select ${table}`);
   if (!res.ok) throw new Error(`select ${table}: ${res.status} ${await res.text()}`);
   return res.json();
 }
 /** upsert (PK/unique 충돌 시 갱신). 500행씩 분할 */
 export async function upsert(table, rows, onConflict) {
   for (let i = 0; i < rows.length; i += 500) {
-    const res = await fetch(`${URL_}/rest/v1/${table}${onConflict ? `?on_conflict=${onConflict}` : ""}`, {
+    const res = await fetchRetry(`${URL_}/rest/v1/${table}${onConflict ? `?on_conflict=${onConflict}` : ""}`, {
       method: "POST", headers: { ...H, Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify(rows.slice(i, i + 500)),
-    });
+    }, `upsert ${table}`);
     if (!res.ok) throw new Error(`upsert ${table}: ${res.status} ${await res.text()}`);
   }
   return rows.length;
