@@ -180,9 +180,10 @@ export function scoreDeck(input: RecommendInput, deck: EngineDeck, ctx: EngineCt
   for (const c of comps) {
     const hit = c.units.filter((u) => starOf.has(u));
     const weighted = hit.reduce((s, u) => s + STAR_MULT[starOf.get(u)!], 0);
-    // 분모는 "지금 낼 수 있는 유닛 수". 창이 [L, L+1] 이고 4~6렙 데이터가 없는 덱은
-    // 상위 조합으로 대체되므로, 조합 크기로 나누면 초반 보드가 구조적으로 반토막 난다.
-    const denom = p.L ? Math.min(c.units.length, p.L) : c.units.length;
+    // 분모는 "지금 낼 수 있는 유닛 수"(레벨). 조합 크기로 나누면 양쪽으로 다 틀린다:
+    //  - 4~6렙 데이터가 없는 덱은 상위 조합으로 대체돼 초반 보드가 구조적으로 반토막 나고
+    //  - 반대로 크기가 깨진 데이터(유닛 1개짜리 '5렙' 조합)는 1/1 이 되어 만점이 된다.
+    const denom = p.L ?? c.units.length;
     const ratio = Math.min(weighted / denom, 1.25) * c.w;
     if (ratio > best.ratio) best = { label: c.label, ratio, hit, total: c.units.length, units: c.units };
   }

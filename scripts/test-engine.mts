@@ -4,17 +4,41 @@ import { jsonCtx, toEngineDeck } from "../lib/engine/adapt";
 import { DECKS_JSON } from "../lib/decks-json";
 const engineDecks = DECKS_JSON.map(toEngineDeck);
 
-const U = (s: string) => s.split(",").filter(Boolean).map((p) => { const [unitId, st] = p.split(":"); return { unitId, star: (Number(st) || 1) as 1 | 2 | 3 }; });
+const nm = (id: string) => jsonCtx.unitName?.(id) ?? id;
+const inm = (id: string) => jsonCtx.itemName?.(id) ?? id;
+const at = (ids: string[], star: 1 | 2 | 3) => ids.map((unitId) => ({ unitId, star }));
+const lvLine = (d: (typeof engineDecks)[number]) =>
+  Object.entries(d.levels ?? {}).sort((a, b) => Number(a[0]) - Number(b[0]))[0]?.[1].units ?? d.units.map((u) => u.unitId);
+const carryItems = (d: (typeof engineDecks)[number]) => d.items.filter((i) => i.unitId === d.carryUnitId && i.priority === 1);
+const carryComps = (d: (typeof engineDecks)[number]) => carryItems(d).flatMap((i) => jsonCtx.itemRecipe(i.itemId) ?? []);
+
+// 케이스는 현재 스냅샷에서 뽑는다 — 챔피언 이름을 박아두면 패치마다 전부 "후보 없음" 이 되고
+// (실제로 coreGate="all" 9케이스가 그 상태로 후반 경로를 검증하지 못하고 있었다) 조용히 썩는다.
+const T = engineDecks.find((d) => carryItems(d).length > 0 && d.coreUnitIds.length > 0 && lvLine(d).length >= 3 && Object.keys(d.levels ?? {}).some((l) => Number(l) <= 6)) ?? engineDecks[0];
+const RIVAL = engineDecks.find((d) => d.id !== T.id) ?? T;
+const early3 = lvLine(T).slice(0, 3);
+const comps = carryComps(T);
+const lowCost = T.units.map((u) => u.unitId).find((u) => u !== T.carryUnitId && jsonCtx.unitCost(u) <= 3);
+const highCost = T.units.map((u) => u.unitId).find((u) => jsonCtx.unitCost(u) >= 4);
+
+console.log(`대상 덱: ${T.name} (캐리 ${nm(T.carryUnitId)}, 코어 ${T.coreUnitIds.map(nm).join("/")}) · 로비 덱: ${RIVAL.name}`);
+
 const cases: Array<{ name: string; input: RecommendInput }> = [
-  { name: "2-1 오른1 자야1 바루스1 + BF·곡궁",      input: { stage: "2-1", components: ["bf", "bow"], completed: [], units: U("ornn:1,xayah:1,varus:1") } },
-  { name: "2-5 오른2 자야2 바루스1 + BF·망토",       input: { stage: "2-5", components: ["bf", "cloak"], completed: [], units: U("ornn:2,xayah:2,varus:1") } },
-  { name: "3-3 코부코2 베이가2 + 지팡이",            input: { stage: "3-3", components: ["rod"], completed: [], units: U("kobuko:2,veigar:2") } },
-  { name: "3-3 베이가3 (3성 규칙)",                   input: { stage: "3-3", components: [], completed: [], units: U("veigar:3,kobuko:2") } },
-  { name: "4-5 드레이븐2 마오카이2 + 죽음의검 완성",  input: { stage: "4-5", components: ["bow"], completed: ["deathblade"], units: U("draven:2,maokai:2,ezreal:2") } },
-  { name: "4-5 드레이븐2 알리스타2 아무무2 (코어 전부 보유)", input: { stage: "4-5", components: ["bf"], completed: ["deathblade"], units: U("draven:2,alistar:2,amumu:2") } },
-  { name: "4-5 아펠리오스3 (4코 3성 → 2성 취급)",     input: { stage: "4-5", components: [], completed: [], units: U("aphelios:3,nidalee:2,sentinel:2") } },
-  { name: "스테이지 없음 + 로비(아펠·니달리)",        input: { components: ["bf", "cloak"], completed: [], units: U("ornn:2,xayah:2,varus:1"), rivals: ["aphelios", "nidalee", "sentinel"] } },
-  { name: "입력 없음 (메타 순)",                      input: { components: [], completed: [], units: [] } },
+  { name: `2-1 ${early3.map(nm).join(" ")} 1★ + 재료 ${comps.slice(0, 2).map(inm).join("·")}`,
+    input: { stage: "2-1", components: comps.slice(0, 2), completed: [], units: at(early3, 1) } },
+  { name: `2-5 같은 보드 2★ 업그레이드`,
+    input: { stage: "2-5", components: comps.slice(0, 2), completed: [], units: at(early3, 2) } },
+  { name: `3-3 캐리 ${nm(T.carryUnitId)}2★ + 재료 1개`,
+    input: { stage: "3-3", components: comps.slice(0, 1), completed: [], units: at([T.carryUnitId, ...early3.slice(0, 1)], 2) } },
+  ...(lowCost ? [{ name: `3-3 저코 ${nm(lowCost)}3★ (3성 규칙)`,
+    input: { stage: "3-3", components: [], completed: [], units: [{ unitId: lowCost, star: 3 as const }, ...at([T.carryUnitId], 2)] } }] : []),
+  { name: `4-5 코어 전부 보유(${T.coreUnitIds.map(nm).join(" ")}) + ${inm(carryItems(T)[0].itemId)} 완성 → 게이트 all 통과해야 함`,
+    input: { stage: "4-5", components: comps.slice(2, 3), completed: [carryItems(T)[0].itemId], units: at(T.coreUnitIds, 2) } },
+  ...(highCost ? [{ name: `4-5 4코 이상 ${nm(highCost)}3★ (2★ 취급) + 코어 전부`,
+    input: { stage: "4-5", components: [], completed: [], units: [{ unitId: highCost, star: 3 as const }, ...at(T.coreUnitIds.filter((u) => u !== highCost), 2)] } }] : []),
+  { name: `스테이지 없음 + 로비에 ${RIVAL.name} (경합·상성)`,
+    input: { components: comps.slice(0, 2), completed: [], units: at(early3, 2), rivals: RIVAL.units.map((u) => u.unitId) } },
+  { name: "입력 없음 (메타 순)", input: { components: [], completed: [], units: [] } },
 ];
 
 for (const gate of ["stage", "all"] as const) {
@@ -48,8 +72,13 @@ const ok = (cond: boolean, msg: string) => { if (!cond) { console.error(`✗ ${m
     id: "_t", name: "_t", carryUnitId: "_u1", coreUnitIds: [], avgPlace: 4.5,
     units: eight.map((unitId) => ({ unitId, star: 2 as const })), items: [], levels: { "8": { units: eight } },
   };
-  const s = scoreDeck({ stage: "2-1", components: [], completed: [], units: U("_u1,_u2,_u3") }, lateOnly, jsonCtx);
+  const s = scoreDeck({ stage: "2-1", components: [], completed: [], units: at(eight.slice(0, 3), 1) }, lateOnly, jsonCtx);
   ok(Math.abs(s.earlyScore - 24) < 0.01, `8렙 조합만 있는 덱 · 2-1(4렙) 3유닛 일치 → 조합 24 (3/4) 여야 하는데 ${s.earlyScore.toFixed(1)} (3/8 이면 12)`);
+
+  // 반대 방향: 크기가 깨진 조합(유닛 1개짜리 '5렙')이 1/1 로 만점이 되면 안 된다.
+  const tiny = { ...lateOnly, levels: { "5": { units: [eight[0]] } } };
+  const t = scoreDeck({ stage: "2-1", components: [], completed: [], units: at([eight[0]], 1) }, tiny, jsonCtx);
+  ok(Math.abs(t.earlyScore - 8) < 0.01, `유닛 1개짜리 조합 · 1유닛 일치 → 조합 8 (1/4) 여야 하는데 ${t.earlyScore.toFixed(1)} (1/1 이면 32)`);
 }
 
 // 2) 재료 2개 = 완성템 1개. 초반엔 재료로 들고 있는 게 정상이므로 재료만으로 만점까지 가야 한다.
