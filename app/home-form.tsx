@@ -208,7 +208,7 @@ export function HomeForm() {
             placeholder="챔피언 검색 (예: 아리)"
             inputMode="search"
             enterKeyHint="search"
-            className="mb-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
+            className="mb-2 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
           />
           {/* 초상화 + 이름만. 코스트는 UnitIcon 의 육각 테두리 색으로 (COST_BG) */}
           <div className="grid max-h-[55vh] grid-cols-4 gap-1 overflow-y-auto overscroll-contain rounded-lg border border-line p-2 sm:max-h-[26rem] sm:grid-cols-5">
@@ -330,7 +330,7 @@ export function HomeForm() {
               value={rivalQuery}
               onChange={(e) => setRivalQuery(e.target.value)}
               placeholder="상대가 들고 있는 유닛 검색 (예: 아펠리오스)"
-              className="mb-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
+              className="mb-2 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm outline-none focus:border-accent/60"
             />
             {rivalQuery.trim() && (
               <div className="flex flex-wrap gap-1">

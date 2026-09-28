@@ -41,7 +41,7 @@ export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<stri
         onChange={(e) => setQ(e.target.value)}
         placeholder="덱, 챔피언, 아이템 검색..."
         aria-label="덱 검색"
-        className="mb-3 w-full rounded-lg border border-line bg-surface px-4 py-3 text-base outline-none placeholder:text-muted/60 focus:border-accent"
+        className="mb-3 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-base outline-none placeholder:text-muted/60 focus:border-accent"
       />
       <div className="mb-5 flex flex-wrap items-center gap-2">
         <div className="flex gap-1">

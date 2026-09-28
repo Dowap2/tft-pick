@@ -46,14 +46,15 @@ const pairs = (T: Record<string, string>): [string, string, string, number, numb
   ["neg / surface", T.neg, T.surface, 4.5],
   ["warn / surface", T.warn, T.surface, 4.5],
   ["흰 글자 / accent-strong (버튼·S티어)", "#ffffff", T["accent-strong"], 4.5],
-  ["흰 글자 / accent-2 90% (A티어)", "#ffffff", over(T["accent-2"], T.surface, 0.9), 4.5],
-  ["흰 글자 / neg (OP티어)", "#ffffff", T.neg, 4.5],
+  ["흰 글자 / accent-2-strong (A티어)", "#ffffff", T["accent-2-strong"], 4.5],
+  ["흰 글자 / neg-strong (OP티어)", "#ffffff", T["neg-strong"], 4.5],
   ["흰 글자 / accent-strong (CTA 부가)", "#ffffff", T["accent-strong"], 4.5],
   ["D티어 neg / surface-2", T.neg, T["surface-2"], 4.5],
   ...([1, 2, 3, 4, 5].map((n) => [`코스트${n} 글자 / surface`, T[`cost-${n}`], T.surface, 4.5] as [string, string, string, number])),
   // WCAG 1.4.11 은 "식별에 필요한 UI 경계" 에만 3:1 을 요구한다. 패널 구분선은 장식이라
   // 대상이 아니지만(디자인.md: 옅은 테두리만), 입력창은 경계가 없으면 어디를 누를지 모른다.
-  ["입력창 경계 line / surface", T.line, T.surface, 3],
+  ["입력창 경계 line-strong / surface", T["line-strong"], T.surface, 3],
+  ["선택 칩 text / accent-2 70%", T.text, over(T["accent-2"], T.surface, 0.7), 4.5],
 ];
 
 let failed = 0;

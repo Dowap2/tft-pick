@@ -10,7 +10,7 @@ export const COST_TEXT: Record<number, string> = {
   1: "text-cost-1", 2: "text-cost-2", 3: "text-cost-3", 4: "text-cost-4", 5: "text-cost-5",
 };
 export const TIER_COLOR: Record<string, string> = {
-  OP: "bg-neg text-white", S: "bg-accent-strong text-white", A: "bg-accent-2/90 text-white", B: "bg-surface-2 text-text border border-line", C: "bg-surface-2 text-muted border border-line",
+  OP: "bg-neg-strong text-white", S: "bg-accent-strong text-white", A: "bg-accent-2-strong text-white", B: "bg-surface-2 text-text border border-line", C: "bg-surface-2 text-muted border border-line",
   // D = 기대 평균(4.5등) 이하. C 와 눈으로 구분돼야 하지만 경고색을 가득 칠하진 않는다 — 금지가 아니라 "이건 아래쪽" 이다.
   D: "bg-surface-2 text-neg border border-neg/40",
 };
