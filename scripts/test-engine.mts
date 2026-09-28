@@ -38,6 +38,8 @@ const cases: Array<{ name: string; input: RecommendInput }> = [
     input: { stage: "4-5", components: [], completed: [], units: [{ unitId: highCost, star: 3 as const }, ...at(T.coreUnitIds.filter((u) => u !== highCost), 2)] } }] : []),
   { name: `스테이지 없음 + 로비에 ${RIVAL.name} (경합·상성)`,
     input: { components: comps.slice(0, 2), completed: [], units: at(early3, 2), rivals: RIVAL.units.map((u) => u.unitId) } },
+  { name: `4-1 재료만 ${comps.slice(0, 2).map(inm).join("·")} · 유닛 0 (게이트 풀려야 함)`,
+    input: { stage: "4-1", components: comps.slice(0, 2), completed: [], units: [] } },
   { name: "입력 없음 (메타 순)", input: { components: [], completed: [], units: [] } },
 ];
 
@@ -100,6 +102,13 @@ const ok = (cond: boolean, msg: string) => { if (!cond) { console.error(`✗ ${m
     const dup = scoreDeck({ ...base, components: Array(slots + 3).fill(one) }, d, jsonCtx);
     ok(dup.itemScore <= (slots / comps.length) * 25 + 0.01, `${one} ${slots + 3}개 → 템 ${dup.itemScore.toFixed(1)} (칸이 ${slots}개뿐이라 ${((slots / comps.length) * 25).toFixed(1)} 이 상한)`);
   }
+}
+
+// 3) 유닛 0개면 코어 게이트가 걸러낼 근거가 없다 — 빈 목록 대신 아이템·메타 순으로 세운다.
+{
+  const input: RecommendInput = { stage: "4-1", components: carryComps(T).slice(0, 2), completed: [], units: [] };
+  for (const gate of ["stage", "all"] as const)
+    ok(recommend(input, engineDecks, jsonCtx, { coreGate: gate }).length > 0, `4-1 재료만(유닛 0) · gate=${gate} → 후보 0개`);
 }
 
 console.log(failed ? `\n✗ 가드 ${failed}건 실패` : "\n✓ 가드 통과");

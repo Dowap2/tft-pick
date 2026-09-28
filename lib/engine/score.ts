@@ -149,6 +149,9 @@ function tryBuild(itemId: string, pool: Record<string, number>, ctx: EngineCtx):
 export function passesCoreGate(input: RecommendInput, deck: EngineDeck, mode: RecommendOptions["coreGate"] = "all"): boolean {
   if (mode === "stage") { const L = stageLevel(input.stage); mode = L == null || L <= 5 ? "none" : L <= 7 ? "any" : "all"; }
   if (mode === "none" || deck.coreUnitIds.length === 0) return true;
+  // 유닛을 하나도 안 넣었으면 게이트가 걸러낼 근거가 없다. 7렙 이상에서 재료만 입력하면
+  // 21덱이 전부 탈락해 빈 목록이 나왔다 — 통과시키고 아이템·메타 점수로 세운다.
+  if (input.units.length === 0) return true;
   const owned = new Set(input.units.map((u) => u.unitId));
   const hits = deck.coreUnitIds.filter((id) => owned.has(id)).length;
   return mode === "all" ? hits === deck.coreUnitIds.length : hits > 0;
