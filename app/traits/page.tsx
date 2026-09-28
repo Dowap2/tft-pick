@@ -35,7 +35,7 @@ export default async function TraitsPage() {
         {rows.map((t) => (
           <article key={t.name} className="px-3 py-3">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="flex size-8 items-center justify-center rounded bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-5 brightness-0 invert" /></span>
+              <span className="flex size-8 items-center justify-center rounded bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-5 trait-icon" /></span>
               <h2 className="text-sm font-semibold"><Link href={`/traits/${t.id.toLowerCase()}`} className="hover:text-accent">{t.name}</Link></h2>
               <span className="num text-xs text-muted">{t.breakpoints.join(" / ")}</span>
               <div className="ml-auto flex flex-wrap justify-end gap-1 text-[11px]">

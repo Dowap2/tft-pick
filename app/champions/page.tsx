@@ -43,7 +43,7 @@ export default async function ChampionsPage() {
                     <div className="mt-1 flex flex-wrap gap-1.5 text-[10px] text-muted">
                       {u.traits.map((t) => (
                         <span key={t} className="flex items-center gap-0.5">
-                          {traitByName(t) && <img src={traitImgByApi(traitByName(t)!.id)} alt="" className="size-3 opacity-70 brightness-0 invert" />}{t}
+                          {traitByName(t) && <img src={traitImgByApi(traitByName(t)!.id)} alt="" className="size-3 opacity-70 trait-icon" />}{t}
                         </span>
                       ))}
                     </div>

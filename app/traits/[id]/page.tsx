@@ -32,7 +32,7 @@ export default async function TraitPage({ params }: { params: Promise<{ id: stri
     <main className="w-full max-w-3xl px-4 py-8 sm:py-10">
       <Breadcrumbs items={[{ name: "시너지", href: "/traits" }, { name: t.name, href: `/traits/${t.id.toLowerCase()}` }]} />
       <header className="mb-6 flex items-center gap-4">
-        <span className="flex size-14 items-center justify-center rounded-lg bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-8 brightness-0 invert" /></span>
+        <span className="flex size-14 items-center justify-center rounded-lg bg-surface-2"><img src={traitImgByApi(t.id)} alt="" className="size-8 trait-icon" /></span>
         <div>
           <h1 className="text-2xl font-bold sm:text-3xl">{t.name}</h1>
           <p className="mt-1 text-sm text-muted">활성 단계 <span className="num text-text">{t.breakpoints.join(" / ")}</span> · 기물 {units.length}명</p>

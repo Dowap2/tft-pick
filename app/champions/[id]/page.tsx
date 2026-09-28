@@ -48,7 +48,7 @@ export default async function ChampionPage({ params }: { params: Promise<{ id: s
           <p className="mt-1 flex flex-wrap gap-2 text-sm text-muted">
             {u.traits.map((t) => {
               const tr = traitByName(t);
-              return tr ? <Link key={t} href={`/traits/${tr.id.toLowerCase()}`} className="flex items-center gap-1 hover:text-text"><img src={traitImgByApi(tr.id)} alt="" className="size-3.5 brightness-0 invert" />{t}</Link> : <span key={t}>{t}</span>;
+              return tr ? <Link key={t} href={`/traits/${tr.id.toLowerCase()}`} className="flex items-center gap-1 hover:text-text"><img src={traitImgByApi(tr.id)} alt="" className="size-3.5 trait-icon" />{t}</Link> : <span key={t}>{t}</span>;
             })}
           </p>
         </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import meta from "@/lib/gen/meta.json";
+import { ThemeToggle } from "./theme-toggle";
 
 const MENU = [
   { href: "/", label: "덱 추천", match: (p: string) => p === "/" || p.startsWith("/recommend") },
@@ -36,8 +37,11 @@ export function Header() {
             </Link>
           );
         })}
-        <span className="num ml-auto hidden rounded-md border border-line px-2 py-0.5 text-xs uppercase text-muted sm:inline">
-          Set {meta.set} · {meta.patch}
+        <span className="ml-auto flex shrink-0 items-center gap-1.5 pl-2">
+          <span className="num hidden rounded-md border border-line px-2 py-0.5 text-xs uppercase text-muted sm:inline">
+            Set {meta.set} · {meta.patch}
+          </span>
+          <ThemeToggle />
         </span>
       </nav>
     </header>

@@ -22,10 +22,36 @@
   --font-display: "Rajdhani", "Pretendard Variable", sans-serif;  /* 영문 제목·큰 숫자·패치 라벨 전용 */
 }
 
+/* 라이트 모드. 기본은 다크(사이트 정체성이고 기존 사용자 화면이 안 바뀐다) — 헤더 버튼으로만 켠다.
+   코스트 색은 인게임 색을 쓰지만 흰 배경에선 회색·녹색이 본문 대비를 못 내서 한 단계 어둡게 잡았다. */
+:root[data-theme="light"] {
+  --color-bg: #f6f7fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #eceff5;
+  --color-line: #d5dae4;
+  --color-text: #161922;
+  --color-muted: #5c6373;
+  --color-accent: #4453dd;
+  --color-accent-2: #7733e0;
+  --color-pos: #12874f;
+  --color-neg: #cf3f3f;
+  --color-warn: #9a6d12;
+  --color-cost-1: #5f6773;
+  --color-cost-2: #157a4c;
+  --color-cost-3: #1d5fd4;
+  --color-cost-4: #7b30bd;
+  --color-cost-5: #a86711;
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-text);
 }
+
+/* 시너지 아이콘은 단색 실루엣이다. 다크에선 흰색, 라이트에선 검정으로 칠한다
+   (invert 를 고정으로 박아두면 라이트 모드에서 흰 배경에 흰 아이콘이 된다). */
+.trait-icon { filter: brightness(0) invert(1); }
+:root[data-theme="light"] .trait-icon { filter: brightness(0); }
 
 /* 키보드 포커스 */
 :where(a, button, input, summary):focus-visible {

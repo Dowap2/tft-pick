@@ -12,7 +12,15 @@ export const SITE_URL = "https://panlab.lol";
 // 토큰은 빌드 타임에 주입된다 (wrangler.jsonc vars / GitHub 환경변수). 없으면 아무것도 넣지 않는다.
 const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON ?? "";
 
-export const viewport: Viewport = { themeColor: "#0b0d12", width: "device-width", initialScale: 1, viewportFit: "cover" };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6f7fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -33,6 +41,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full antialiased">
       <head>
+        {/* 페인트 전에 저장된 테마를 붙인다. 이게 없으면 라이트 사용자가 다크 한 프레임을 본다.
+            기본은 다크라 값이 없으면 아무것도 하지 않는다. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('tft-pick:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
         {/* Rajdhani(숫자·영문 라벨) — next/font 는 OpenNext(Workers) 빌드에서 woff2 로더 문제가 있어 링크로 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

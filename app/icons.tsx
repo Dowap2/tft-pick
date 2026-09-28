@@ -78,7 +78,7 @@ export function TraitRow({ unitIds, className = "" }: { unitIds: string[]; class
     <div className={`flex flex-wrap gap-1 ${className}`}>
       {traits.map((t) => (
         <span key={t.name} title={`${t.name} ${t.count}`} className={`flex items-center gap-1 rounded px-1 py-px text-[10px] text-white ${TRAIT_LEVEL[Math.min(t.level, 5)]}`}>
-          {t.img && <img src={t.img} alt="" className="size-3.5 brightness-0 invert" />}
+          {t.img && <img src={t.img} alt="" className="size-3.5 trait-icon" />}
           <span className="num">{t.count}</span>
         </span>
       ))}
