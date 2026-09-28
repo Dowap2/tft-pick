@@ -77,6 +77,38 @@ export async function getDecksMeta(): Promise<Cached> {
 }
 export const getDecks = async () => (await getDecksMeta()).decks;
 
+// ── 에디터 덱 (0022_editorial_decks.sql) ──────────────────────────────
+// 사람이 직접 만든 덱. 통계 기준(§5)을 타지 않으므로 티어도 평균 등수도 없다.
+// 타입을 Deck 과 분리해 둔 이유: 티어·표본을 옵셔널로 끼우면 화면에서 둘이 섞이고,
+// "자체 수집 통계" 라는 설명과 모순되는 숫자가 나간다.
+export type EditorialDeck = {
+  id: string; name: string; playstyle?: string; carryId?: string; coreUnitIds: string[];
+  levelling?: string; difficulty?: string; requirementNote?: string;
+  units: { unitId: string; star: number; pos?: [number, number] | null; core?: boolean }[];
+  items: { unitId: string; itemId: string; role: string; priority: number }[];
+  levels: Record<string, { units: string[] }>;
+};
+
+let editorialCache: Promise<EditorialDeck[]> | null = null;
+export function getEditorialDecks(): Promise<EditorialDeck[]> {
+  // 뷰가 없는 환경(마이그레이션 전)에서도 빌드는 통과해야 한다 → 실패는 빈 배열.
+  editorialCache ??= (async () => {
+    try {
+      const rows = await rest("decks_editorial?select=*");
+      return rows.map((d): EditorialDeck => ({
+        id: d.id, name: d.name, playstyle: d.playstyle ?? undefined, carryId: d.carry_unit_id ?? undefined,
+        coreUnitIds: d.core_unit_ids ?? [], levelling: d.levelling ?? undefined,
+        difficulty: d.difficulty ?? undefined, requirementNote: d.requirement_note ?? undefined,
+        units: d.units ?? [], items: d.items ?? [], levels: d.levels ?? {},
+      })).filter((d) => d.units.length > 0);
+    } catch (e) {
+      console.warn("[decks] decks_editorial 조회 실패 → 에디터 덱 생략:", (e as Error).message);
+      return [];
+    }
+  })();
+  return editorialCache;
+}
+
 // ── 내려간 덱 (0020_decks_retired.sql) ────────────────────────────────
 // 자격에서 떨어져 티어 리스트에 안 나오는 덱. 예전 링크가 404 되지 않게 페이지만 남긴다.
 // 사이트맵에도, 추천에도, 내부 링크에도 넣지 않는다 — 옛 링크로 들어온 사람만 닿는 페이지다.

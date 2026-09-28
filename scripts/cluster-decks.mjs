@@ -216,7 +216,9 @@ for (const d of decks) console.log(`  ${String(d.n).padStart(4)}판  avg ${d.avg
 if (DRY) process.exit(0);
 
 // ---- 4) 적재 ----
-await rpc("reset_decks", { p_patch_id: pid });
+// 이번 출력에 있는 덱 id 를 넘긴다: 없는 덱은 지우지 않고 내리기만 하고(은퇴 페이지가 받는다),
+// 있는 덱은 자식 행을 비워 재작성한다. 에디터 덱은 건드리지 않는다 (0022).
+await rpc("reset_decks", { p_patch_id: pid, p_keep_ids: decks.map((d) => d.id) });
 await upsert("decks", decks.map((d) => ({
   id: d.id, patch_id: pid, name: d.name, carry_unit_id: d.carry, core_unit_ids: d.coreIds,
   levelling: d.levelling, difficulty: null, signature: d.signature, is_published: true,

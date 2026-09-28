@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { deckById, unitById } from "@/lib/data";
-import { getDecks, getRetiredDecks, type RetiredDeck } from "@/lib/decks";
-import { UnitIcon } from "@/app/icons";
+import { getDecks, getRetiredDecks, getEditorialDecks, type RetiredDeck, type EditorialDeck } from "@/lib/decks";
+import { ItemIcon, UnitIcon } from "@/app/icons";
 import { DeckAugments, DeckCounters, DeckProComps, DeckTrends } from "@/app/deck-extras";
 import { DeckInteractive } from "./deck-interactive";
 import { describeDeck } from "@/lib/describe";
@@ -14,8 +14,8 @@ import { josa, withJosa } from "@/lib/josa";
 export const dynamicParams = false;
 export async function generateStaticParams() {
   // 라이브 덱 + 내려간 덱. 후자는 예전 링크를 404 로 만들지 않기 위한 것뿐이다.
-  const [live, retired] = await Promise.all([getDecks(), getRetiredDecks()]);
-  return [...live, ...retired].map((d) => ({ id: d.id }));
+  const [live, retired, editorial] = await Promise.all([getDecks(), getRetiredDecks(), getEditorialDecks()]);
+  return [...live, ...retired, ...editorial].map((d) => ({ id: d.id }));
 }
 
 type Params = Promise<{ id: string }>;
@@ -24,6 +24,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const id = (await params).id;
   const deck = deckById(id, await getDecks());
   if (!deck) {
+    const ed = (await getEditorialDecks()).find((x) => x.id === id);
+    if (ed) {
+      const units = ed.units.map((u) => unitById(u.unitId)?.name).filter(Boolean).join(", ");
+      const description = `${ed.playstyle ?? `${ed.name} 공략`} 조합: ${units}.${ed.levelling ? ` 레벨링 ${ed.levelling}.` : ""} 에디터가 직접 구성한 덱으로, 자동 집계 티어와는 별개입니다.`;
+      return {
+        title: `롤체 ${ed.name} 덱 공략`, description, alternates: { canonical: `/deck/${ed.id}` },
+        // OG 이미지는 통계 덱만 생성된다 (opengraph-image.tsx) → 루트 이미지를 명시적으로 건다
+        openGraph: { title: `${ed.name} 덱 | 롤체 ${KW.season}`, description, images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }] },
+        twitter: { card: "summary_large_image", title: `${ed.name} 덱`, description, images: ["/opengraph-image.png"] },
+      };
+    }
     const r = (await getRetiredDecks()).find((x) => x.id === id);
     if (!r) return { title: "덱을 찾을 수 없음" };
     // 티어를 주장하지 않는다 — 자격에서 떨어진 덱이다. OG 이미지도 라이브 덱만 생성되므로
@@ -59,6 +70,8 @@ export default async function DeckDetailPage({ params }: { params: Params }) {
   const decks = await getDecks();
   const deck = deckById(id, decks);
   if (!deck) {
+    const ed = (await getEditorialDecks()).find((x) => x.id === id);
+    if (ed) return <EditorialDeckPage d={ed} />;
     const r = (await getRetiredDecks()).find((x) => x.id === id);
     if (!r) notFound();
     return <RetiredDeckPage r={r} decks={decks} />;
@@ -158,6 +171,76 @@ function RetiredDeckPage({ r, decks }: { r: RetiredDeck; decks: Awaited<ReturnTy
           ))}
         </div>
       </section>
+
+      <Link href="/decks" className="inline-block rounded-lg border border-line px-4 py-2 text-sm hover:bg-surface-2">
+        전체 덱 티어 리스트
+      </Link>
+    </main>
+  );
+}
+
+/** 에디터 덱: 사람이 만든 덱. 통계 덱과 같은 화면을 쓰지 않는다 — 티어·평균 등수·표본이 없고,
+ *  있는 척하면 "자체 수집 통계" 라는 설명과 모순된다. 무엇을 보고 만들었는지만 정직하게 보여준다. */
+function EditorialDeckPage({ d }: { d: EditorialDeck }) {
+  const itemsOf = (unitId: string) => d.items.filter((i) => i.unitId === unitId).sort((a, b) => a.priority - b.priority);
+  const levels = Object.entries(d.levels).sort((a, b) => Number(a[0]) - Number(b[0]));
+
+  return (
+    <main className="w-full max-w-3xl px-4 py-8 sm:py-12">
+      <Breadcrumbs items={[{ name: "덱 티어 리스트", href: "/decks" }, { name: d.name, href: `/deck/${d.id}` }]} />
+      <header className="mb-4">
+        <span className="num rounded border border-accent/50 px-1.5 py-px text-[10px] uppercase text-accent">에디터 추천</span>
+        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{d.name}</h1>
+        <p className="mt-1 text-xs text-muted">
+          직접 구성한 덱입니다. 자동 집계 티어(OP~D)와 평균 등수는 붙지 않습니다 —
+          <Link href="/decks" className="ml-1 text-accent hover:underline">통계 기반 티어 리스트</Link>
+        </p>
+      </header>
+
+      {d.playstyle && <p className="panel mb-6 rounded-xl bg-surface p-4 text-sm leading-6">{d.playstyle}</p>}
+
+      <section className="mb-6">
+        <h2 className="mb-2 text-lg font-semibold">최종 조합</h2>
+        <div className="flex flex-wrap gap-2">
+          {d.units.map((u) => (
+            <div key={u.unitId} className="flex w-16 flex-col items-center">
+              <Link href={`/champions/${u.unitId}`}>
+                <UnitIcon id={u.unitId} size="md" carry={u.unitId === d.carryId} />
+              </Link>
+              <span className="w-full truncate text-center text-[10px] text-muted">{unitById(u.unitId)?.name}</span>
+              {u.star > 1 && <span className="text-[10px] leading-none text-warn">{"★".repeat(u.star)}</span>}
+              {itemsOf(u.unitId).length > 0 && (
+                <span className="mt-0.5 flex gap-px">
+                  {itemsOf(u.unitId).slice(0, 3).map((i) => <ItemIcon key={i.itemId} id={i.itemId} className="size-4! rounded-sm border-0" />)}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {levels.length > 0 && (
+        <section className="mb-6">
+          <h2 className="mb-2 text-lg font-semibold">레벨별 조합</h2>
+          <div className="panel divide-y divide-line rounded-xl bg-surface">
+            {levels.map(([lv, v]) => (
+              <div key={lv} className="flex flex-wrap items-center gap-2 px-3 py-2.5">
+                <span className="num w-10 shrink-0 text-sm text-accent">{lv}렙</span>
+                <div className="flex flex-wrap gap-1">
+                  {v.units.map((uid) => (
+                    <span key={uid} className="flex flex-col items-center">
+                      <UnitIcon id={uid} size="sm" />
+                      <span className="w-12 truncate text-center text-[9px] text-muted">{unitById(uid)?.name}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {d.requirementNote && <p className="mb-6 text-sm text-warn">{d.requirementNote}</p>}
 
       <Link href="/decks" className="inline-block rounded-lg border border-line px-4 py-2 text-sm hover:bg-surface-2">
         전체 덱 티어 리스트
