@@ -20,6 +20,13 @@
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyY3FtemhueWF5a3JxenhoaXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1OTg1MTEsImV4cCI6MjEwNTE3NDUxMX0.iWgVI1NacIz3A_p6dF-56Sn1D2BUVqcr5MyaqDA3ywc",
     // Cloudflare Web Analytics 토큰. 대시보드 Web Analytics 에서 사이트 추가 후 받은 값을 넣는다.
     // 비워두면 비콘을 아예 렌더하지 않는다 (대시보드 자동 주입을 쓸 경우 비워둬도 된다).
-    "NEXT_PUBLIC_CF_BEACON": ""
+    "NEXT_PUBLIC_CF_BEACON": "",
+    // AdSense 광고 슬롯 id. output: export 라 빌드 타임에 있어야 한다 (next.config.ts 가
+    // 여기 vars 를 process.env 로 주입한다) — 대시보드에만 넣어도 정적 HTML 에는 안 들어간다.
+    // AdSense > 광고 > 광고 단위 기준 에서 "디스플레이 광고" 세로형 2개를 만들고
+    // data-ad-slot 숫자(10자리)를 넣는다. 퍼블리셔 id 는 lib/ads.ts 에 기본값으로 있다.
+    // 비어 있으면 광고 자리를 아예 렌더하지 않는다 (빈 박스가 나가지 않게).
+    "NEXT_PUBLIC_ADSENSE_SLOT_LEFT": "",
+    "NEXT_PUBLIC_ADSENSE_SLOT_RIGHT": ""
   }
 }

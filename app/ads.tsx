@@ -20,6 +20,10 @@ export function SideAd({ side }: { side: "left" | "right" }) {
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
   }, [slot]);
 
+  // 슬롯이 없으면 자리를 잡지도 않는다. 예전엔 빈 aside 가 xl 에서 160px + 여백을 먹어
+  // 광고가 하나도 없는 상태로 양쪽 400px 를 버리고 있었다. (개발에서는 자리 확인용으로 남긴다)
+  if (!(ADSENSE_CLIENT && slot) && process.env.NODE_ENV === "production") return null;
+
   return (
     <aside className="hidden w-40 shrink-0 xl:block">
       <div className="sticky top-16">

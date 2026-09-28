@@ -141,7 +141,8 @@ export function describeItem(it: { id: string; name: string }, rows: [string, { 
       (bestDeck ? `가장 성적이 좋은 조합은 ${bestDeck.d.name}(${bestDeck.d.tierLabel}티어, ${place(bestDeck.d)})의 ${unitById(bestDeck.uid)?.name}입니다.` : ""),
     );
   }
-  if (siblings.length) out.push(`같은 재료를 쓰는 다른 완성 아이템으로는 ${siblings.slice(0, 5).map((s) => s.name).join(", ")}이 있어, 재료가 겹칠 때 무엇을 만들지 비교해 보세요.`);
+  // 조사는 이어붙인 문자열의 마지막 글자로 갈린다 ("이온 스파크가", "쇼진의 창이")
+  if (siblings.length) out.push(`같은 재료를 쓰는 다른 완성 아이템으로는 ${withJosa(siblings.slice(0, 5).map((s) => s.name).join(", "), "이가")} 있어, 재료가 겹칠 때 무엇을 만들지 비교해 보세요.`);
   return out;
 }
 
@@ -158,5 +159,40 @@ export function describeTrait(t: { name: string; breakpoints: number[] }, rows: 
   const carries = [...new Set(rows.map((r) => r.d.carryId).filter(Boolean))].slice(0, 4).map((c) => unitById(c!)?.name).filter(Boolean);
   out.push(`${t.name} 시너지를 쓰는 상위 티어 덱은 ${rows.length}개이고, 이 덱들의 평균 등수는 ${avg.toFixed(2)}등입니다. 가장 흔한 활성 단계는 ${common}명입니다.`);
   if (carries.length) out.push(`${t.name} 덱의 주요 캐리는 ${carries.join(", ")}입니다.`);
+
+  // ── 자체 수집 통계. 문장마다 숫자가 붙어야 하고, 숫자가 없으면 문단을 만들지 않는다.
+  const ds = rows.map((r) => r.d);
+  const totalGames = ds.reduce((s, d) => s + (d.games ?? 0), 0);
+  const places = ds.map((d) => d.avgPlacement).sort((a, b) => a - b);
+  const tierText = TIERS.map((x) => [x, ds.filter((d) => d.tierLabel === x).length] as const)
+    .filter(([, n]) => n > 0).map(([x, n]) => `${x}티어 ${n}개`).join(", ");
+  if (totalGames > 0) {
+    out.push(
+      `최근 7일 자체 수집 표본 기준, ${t.name} 덱들의 표본은 합계 ${totalGames.toLocaleString()}판입니다. ` +
+      `평균 등수는 ${places[0].toFixed(2)}등에서 ${places[places.length - 1].toFixed(2)}등까지 걸쳐 있고, 티어 분포는 ${tierText}입니다.`,
+    );
+  }
+
+  // 시너지 페이지에만 가능한 계산: 활성 단계별 성적. "몇 명까지 맞추는 게 이득인가" 에 답한다.
+  // 덱별 표본이 있어야 나오는 값이라 다른 곳에서 못 본다.
+  const byCount = new Map<number, Deck[]>();
+  for (const r of rows) byCount.set(r.count, [...(byCount.get(r.count) ?? []), r.d]);
+  const steps = [...byCount]
+    .filter(([, g]) => g.reduce((s, d) => s + (d.games ?? 0), 0) >= 100)   // §5 자격과 같은 하한
+    .sort((a, b) => a[0] - b[0]);
+  if (steps.length >= 2) {
+    const best = [...steps].sort((a, b) => wAvgPlace(a[1]) - wAvgPlace(b[1]))[0];
+    out.push(
+      `활성 단계별로 나눠 보면 ${steps.map(([n, g]) => `${n}명 ${wAvgPlace(g).toFixed(2)}등(덱 ${g.length}개)`).join(", ")}입니다. ` +
+      `표본상 성적이 가장 좋은 단계는 ${best[0]}명입니다. ` +
+      `다만 단계가 높은 덱은 그만큼 보드가 완성됐다는 뜻이기도 해서, 단계만 올리면 등수가 오른다는 의미는 아닙니다.`,
+    );
+  }
+
+  // 이 시너지가 메타에서 차지하는 비중. 반올림해서 0.0% 가 되면 문단을 만들지 않는다.
+  const pick = ds.reduce((s, d) => s + (d.pickRate ?? 0), 0);
+  if (pick * 100 >= 0.05) {
+    out.push(`${withJosa(t.name, "을를")} 활성화하는 덱들은 수집된 전체 보드의 약 ${(pick * 100).toFixed(1)}%를 차지합니다.`);
+  }
   return out;
 }

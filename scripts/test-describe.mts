@@ -65,5 +65,26 @@ const say = (decks: Deck[], carryOf: Deck[] = []) => describeUnit(U, { decks, it
   ok(!t.includes("자체 수집 표본"), "덱 0개인데 통계 문단이 나왔다");
 }
 
+// 조사 하드코딩 검사 — 이 세션에서 같은 실수를 세 번 했다. 인스턴스가 아니라 부류를 막는다.
+// `${이름}은` 처럼 보간 직후에 조사를 박으면 모음으로 끝나는 이름에서 틀린다 ("자이라은", "스파크이").
+// lib/josa.ts 의 josa()/withJosa() 를 쓰면 마지막 글자를 보고 골라준다.
+{
+  const { readFileSync, readdirSync, statSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const walk = (dir: string): string[] => readdirSync(dir).flatMap((f) => {
+    const p = join(dir, f);
+    if (statSync(p).isDirectory()) return f === "gen" ? [] : walk(p);
+    return /\.tsx?$/.test(f) ? [p] : [];
+  });
+  const bad: string[] = [];
+  for (const f of [...walk("lib"), ...walk("app")]) {
+    readFileSync(f, "utf8").split("\n").forEach((line, i) => {
+      const m = line.match(/\}(은|는|이|가|을|를|과|와)(?=[\s,.·)]|$)/);
+      if (m) bad.push(`${f}:${i + 1} → "}${m[1]}"`);
+    });
+  }
+  ok(bad.length === 0, `보간 직후에 조사를 하드코딩한 곳 ${bad.length}건 (josa/withJosa 를 쓸 것):\n    ${bad.join("\n    ")}`);
+}
+
 console.log(failed ? `\n✗ ${failed}건 실패` : "✓ describe 통계 검증 통과");
 process.exitCode = failed ? 1 : 0;
