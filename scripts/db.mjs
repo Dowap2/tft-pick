@@ -66,7 +66,11 @@ const ITEM_ALIAS = {
   TacticiansCape: "tacticiansring", TacticiansShield: "tacticiansscepter", TacticiansCrown: "forceofnature",
 };
 export function riotItemId(api) {
-  if (!/^DA_[A-Za-z]+$/.test(api) || /Radiant$/.test(api)) return null;   // 찬란/유물/상징/재료 제외
+  // 상징(DA_18_EmblemInferno)은 정규 아이템이라 살린다. id 는 sync.mjs 와 같은 규칙(<특성>emblem).
+  // 이게 없으면 상징을 낀 보드에서 그 칸이 통째로 버려져 덱 추천 아이템에 상징이 영영 안 뜬다.
+  const emb = api.match(/^DA_\d+_Emblem([A-Za-z]+)$/);
+  if (emb) return `${emb[1].toLowerCase()}emblem`;
+  if (!/^DA_[A-Za-z]+$/.test(api) || /Radiant$/.test(api)) return null;   // 찬란/유물/재료 제외
   const key = api.slice(3);
   return ITEM_ALIAS[key] ?? key.toLowerCase();
 }

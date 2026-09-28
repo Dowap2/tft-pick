@@ -13,6 +13,8 @@ const COMPONENT = {
   TFT_Item_TearOfTheGoddess: "tear", TFT_Item_ChainVest: "vest", TFT_Item_NegatronCloak: "cloak",
   TFT_Item_GiantsBelt: "belt", TFT_Item_SparringGloves: "gloves", TFT_Item_Spatula: "spatula", TFT_Item_FryingPan: "pan",
 };
+// 세트 18 상징은 재료를 DA_Component_* 로 참조한다 (기본 아이템은 TFT_Item_*). 같은 재료인데 이름만 다르다.
+for (const [k, v] of Object.entries({ ...COMPONENT })) COMPONENT[k.replace(/^TFT_Item_/, "DA_Component_")] = v;
 
 const res = await fetch(`https://raw.communitydragon.org/${patch}/cdragon/tft/ko_kr.json`);
 if (!res.ok) throw new Error(`fetch failed: ${res.status}`);
@@ -38,14 +40,22 @@ const items = [];
 const seenRecipe = new Set();
 for (const it of data.items) {
   const isCore = /^TFT_Item_[A-Za-z]+$/.test(it.apiName) && !/Corrupted/.test(it.apiName);
-  const isEmblem = new RegExp(`^TFT${SET}_Item_[A-Za-z]+EmblemItem$`).test(it.apiName); // 세트 상징 (뒤집개/후라이팬 조합)
+  // 세트 상징 (뒤집개/후라이팬 조합). 세트마다 apiName 규칙이 다르다:
+  //   ~17세트  TFT15_Item_EdgelordEmblemItem
+  //   18세트   DA_18_EmblemInferno        ← 접두어가 TFT 가 아니라 DA 다
+  // 이걸 못 맞춰서 조합 가능한 상징 16개가 통째로 빠져 있었다 (아이템 조합표·덱 추천템 양쪽).
+  const isEmblem = new RegExp(`^TFT${SET}_Item_[A-Za-z]+EmblemItem$`).test(it.apiName)
+    || new RegExp(`^DA_${SET}_Emblem[A-Za-z]+$`).test(it.apiName);
   if (!isCore && !isEmblem) continue;
   if (it.composition?.length !== 2 || !it.composition.every((c) => COMPONENT[c])) continue;
   const recipe = it.composition.map((c) => COMPONENT[c]).sort();
   const key = recipe.join("+");
   if (seenRecipe.has(key)) continue;
   seenRecipe.add(key);
-  const id = it.apiName.replace(/^TFT\d*_Item_/, "").replace(/EmblemItem$/, "emblem").toLowerCase();
+  // id 규칙은 예전 세트와 맞춘다: <특성>emblem (edgelordemblem, infernoemblem …)
+  const id = it.apiName.startsWith(`DA_${SET}_Emblem`)
+    ? `${it.apiName.slice(`DA_${SET}_Emblem`.length).toLowerCase()}emblem`
+    : it.apiName.replace(/^TFT\d*_Item_/, "").replace(/EmblemItem$/, "emblem").toLowerCase();
   items.push({ id, name: it.name, recipe, img: asset(it.icon) });
 }
 items.sort((a, b) => a.recipe.join().localeCompare(b.recipe.join()));
