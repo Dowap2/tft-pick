@@ -124,6 +124,13 @@ async function loadSeeds() {
 }
 let seeds = await loadSeeds();
 let seedTier = new Map(seeds.map((s) => [s.puuid, s.tier]));   // 참가자 행에 남기는 시드 티어 (나머지 7명은 null)
+
+// 증강 감시 (docs/티어기준.md §4.9). Set 18 MATCH-V1 응답에는 participant.augments 가 아예 없다
+// (2026-09-28 실측: companion, gold_left, last_round, level, missions, placement,
+//  players_eliminated, puuid, riotIdGameName, riotIdTagline, time_eliminated,
+//  total_damage_to_players, units, traits, win). 집계 코드·스키마는 이미 들어가 있고 입력만 없다.
+// 그냥 두면 영원히 조용히 빈 배열을 넣으므로, 필드가 생기는 날 로그로 바로 보이게 센다.
+let augSeen = 0, augBoards = 0;
 if (!seeds.length) die("시드 0명 — 리그 응답에 puuid 가 없다. Riot 이 엔트리 스키마를 또 바꿨는지 확인");
 const byGroup = seeds.reduce((m, s) => ({ ...m, [s.group]: (m[s.group] ?? 0) + 1 }), {});
 console.log(`시드 ${seeds.length}명 (${Object.entries(byGroup).map(([g, n]) => `${g} ${n}`).join(", ")}) · 사이클당 시드 ${SEEDS_PER_CYCLE}명 / 매치 ${MAX_MATCHES}판${LOOP_SEC ? ` · ${LOOP_SEC}초 주기 ${(DURATION_MS / 60000).toFixed(0)}분` : ""}${DRY ? " (dry-run)" : ""}`);
@@ -167,7 +174,7 @@ async function cycle() {
       tier: seedTier.get(p.puuid) ?? null,
       units: p.units.map((u) => ({ character_id: u.character_id, tier: u.tier, items: u.itemNames ?? [] })),
       traits: p.traits.filter((t) => t.tier_current > 0).map((t) => ({ name: t.name, num_units: t.num_units, tier_current: t.tier_current })),
-      augments: p.augments ?? [],
+      augments: (() => { const a = p.augments ?? []; augBoards++; if (a.length) augSeen++; return a; })(),
     }));
     const row = {
       match_id: id, patch_id: patch?.id ?? 0,
@@ -205,4 +212,9 @@ for (;;) {
 }
 
 console.log(`\n완료: 사이클 ${cycles}, 적재 ${stored}, 건너뜀 ${skipped}, Riot 요청 ${reqCount}회, ${((Date.now() - t0) / 1000 / 60).toFixed(1)}분`);
+console.log(
+  augBoards === 0 ? "증강: 확인한 보드 없음"
+  : augSeen === 0 ? `증강: 보드 ${augBoards}개 중 0개에 증강 있음 — API 가 여전히 안 내려준다 (docs/티어기준.md §4.9)`
+  : `★ 증강 감지: 보드 ${augBoards}개 중 ${augSeen}개 (${((augSeen / augBoards) * 100).toFixed(1)}%). cluster-decks 가 자동으로 집계한다 — /augments 폴백을 걷어낼 때다`,
+);
 if (!DRY) { const [s] = await rpc("raw_stats"); console.log(`raw 누적: 매치 ${s.matches}, 참가자 ${s.participants}, 최신 ${s.latest}`); }
