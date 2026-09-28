@@ -76,3 +76,37 @@ export async function getDecksMeta(): Promise<Cached> {
   return cache;
 }
 export const getDecks = async () => (await getDecksMeta()).decks;
+
+// ── 내려간 덱 (0020_decks_retired.sql) ────────────────────────────────
+// 자격에서 떨어져 티어 리스트에 안 나오는 덱. 예전 링크가 404 되지 않게 페이지만 남긴다.
+// 사이트맵에도, 추천에도, 내부 링크에도 넣지 않는다 — 옛 링크로 들어온 사람만 닿는 페이지다.
+export type RetiredDeck = {
+  id: string; name: string; carryId?: string; levelling?: string;
+  games?: number; avgPlacement?: number; winRate?: number; top4Rate?: number;
+  units: { unitId: string; star: number }[];
+};
+
+let retiredCache: Promise<RetiredDeck[]> | null = null;
+export function getRetiredDecks(): Promise<RetiredDeck[]> {
+  // 뷰가 아직 없는 환경(마이그레이션 전·JSON 폴백)에서도 빌드는 통과해야 한다 → 실패는 빈 배열.
+  retiredCache ??= (async () => {
+    try {
+      const rows = await rest("decks_retired?select=*");
+      return rows
+        .map((d): RetiredDeck => ({
+          id: d.id, name: d.name, carryId: d.carry_unit_id ?? undefined, levelling: d.levelling ?? undefined,
+          games: d.games ?? undefined,
+          avgPlacement: d.avg_place == null ? undefined : Number(d.avg_place),
+          winRate: d.win_rate == null ? undefined : Number(d.win_rate),
+          top4Rate: d.top4_rate == null ? undefined : Number(d.top4_rate),
+          units: (d.units ?? []) as RetiredDeck["units"],
+        }))
+        // 조합을 못 그리면 보여줄 게 없다. 그런 행은 페이지를 만들지 않는다.
+        .filter((d) => d.units.length > 0);
+    } catch (e) {
+      console.warn("[decks] decks_retired 조회 실패 → 은퇴 덱 페이지 생략:", (e as Error).message);
+      return [];
+    }
+  })();
+  return retiredCache;
+}
