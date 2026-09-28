@@ -66,7 +66,7 @@ export function PivotTree({ decks, ownedIds }: { decks: Deck[]; ownedIds: Set<st
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[10px] text-muted/70">밑줄 인디고 = 그 덱에만 있는 유닛 · 흐림 = 미보유. 공통 유닛만 사두면 어느 쪽으로든 갈 수 있음.</p>
+      <p className="mt-2 text-[10px] text-muted">밑줄 인디고 = 그 덱에만 있는 유닛 · 흐림 = 미보유. 공통 유닛만 사두면 어느 쪽으로든 갈 수 있음.</p>
     </section>
   );
 }

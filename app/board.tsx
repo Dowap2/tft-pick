@@ -51,7 +51,7 @@ export function Board({ deck, carryId, ownedIds, onToggle }: Props) {
           })}
         </div>
       ))}
-      <div className="mt-1 flex justify-between text-[10px] text-muted/70">
+      <div className="mt-1 flex justify-between text-[10px] text-muted">
         <span>↑ 최전방</span>
         <span className="opacity-60">흐림 = 미보유{onToggle && " · 클릭하면 보유 토글"} · C = 캐리</span>
       </div>

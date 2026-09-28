@@ -22,7 +22,7 @@ export function DeckAugments({ deck }: { deck: Deck }) {
   );
   return (
     <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">추천 증강 <span className="text-xs font-normal text-muted/70">{self ? "이 덱에서 실제로 성적이 좋았던 순" : "이 덱과 잘 맞는 순 (metatft)"}</span></h2>
+      <h2 className="mb-3 text-lg font-semibold">추천 증강 <span className="text-xs font-normal text-muted">{self ? "이 덱에서 실제로 성적이 좋았던 순" : "이 덱과 잘 맞는 순 (metatft)"}</span></h2>
       <div className="panel space-y-3 rounded-lg bg-surface p-3">
         <div>
           <div className="mb-1.5 flex items-center gap-2 text-xs"><TierBadge tier="S" /> <span className="num text-muted">{group("S").length}</span></div>
@@ -56,7 +56,7 @@ export function DeckCounters({ deck, decks }: { deck: Deck; decks: Deck[] }) {
   );
   return (
     <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">상성 <span className="text-xs font-normal text-muted/70">같은 로비에 있을 때 내 평균 등수 변화</span></h2>
+      <h2 className="mb-3 text-lg font-semibold">상성 <span className="text-xs font-normal text-muted">같은 로비에 있을 때 내 평균 등수 변화</span></h2>
       <div className="panel grid gap-3 rounded-lg bg-surface p-3 sm:grid-cols-2">
         <div>
           <div className="mb-1 text-[10px] uppercase tracking-wide text-neg">불리</div>
@@ -86,7 +86,7 @@ export function DeckTrends({ deck }: { deck: Deck }) {
   const delta = last.avg - first.avg;
   return (
     <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">추세 <span className="text-xs font-normal text-muted/70">최근 {t.length}일</span></h2>
+      <h2 className="mb-3 text-lg font-semibold">추세 <span className="text-xs font-normal text-muted">최근 {t.length}일</span></h2>
       <div className="panel rounded-lg bg-surface p-3">
         <div className="mb-2 flex flex-wrap gap-4 text-xs">
           <span>평균 등수 <span className="num text-text">{last.avg.toFixed(2)}</span> <span className={`num ${delta <= 0 ? "text-pos" : "text-neg"}`}>({delta > 0 ? "+" : ""}{delta.toFixed(2)})</span></span>
@@ -111,7 +111,7 @@ export function DeckProComps({ deck }: { deck: Deck }) {
   if (list.length === 0) return null;
   return (
     <section className="mb-6">
-      <h2 className="mb-3 text-lg font-semibold">고랭커 보드 <span className="text-xs font-normal text-muted/70">metatft 팀 빌더 공개 덱</span></h2>
+      <h2 className="mb-3 text-lg font-semibold">고랭커 보드 <span className="text-xs font-normal text-muted">metatft 팀 빌더 공개 덱</span></h2>
       <div className="space-y-2">
         {list.map((p, i) => (
           <article key={i} className="panel rounded-lg bg-surface p-3">

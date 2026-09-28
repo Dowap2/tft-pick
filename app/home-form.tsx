@@ -119,9 +119,9 @@ export function HomeForm() {
       <section className="mb-4">
         <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <span className="mr-1 shrink-0 text-xs text-muted">스테이지</span>
-          <button onClick={() => setStage("")} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${!stage ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>전체</button>
+          <button onClick={() => setStage("")} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${!stage ? "border-accent bg-accent-strong text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>전체</button>
           {STAGES.map((s) => (
-            <button key={s} onClick={() => setStage(s)} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>{s}</button>
+            <button key={s} onClick={() => setStage(s)} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "border-accent bg-accent-strong text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>{s}</button>
           ))}
         </div>
         {history.length > 0 && (
@@ -152,7 +152,7 @@ export function HomeForm() {
             key={k}
             onClick={() => setTab(k)}
             aria-pressed={tab === k}
-            className={`flex-1 rounded-lg border py-2 text-sm font-semibold transition-colors duration-150 ${tab === k ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted"}`}
+            className={`flex-1 rounded-lg border py-2 text-sm font-semibold transition-colors duration-150 ${tab === k ? "border-accent bg-accent-strong text-white" : "border-line bg-surface text-muted"}`}
           >
             {label}
           </button>
@@ -195,7 +195,7 @@ export function HomeForm() {
                 key={c}
                 onClick={() => setCostTab(c)}
                 className={`rounded-md border px-3 py-1.5 text-xs font-semibold transition ${
-                  costTab === c ? "border-accent bg-accent text-white" : `border-line bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:border-accent/60`
+                  costTab === c ? "border-accent bg-accent-strong text-white" : `border-line bg-surface ${c ? COST_TEXT[c] : "text-muted"} hover:border-accent/60`
                 }`}
               >
                 {c ? `${c}코` : "전체"}
@@ -350,9 +350,9 @@ export function HomeForm() {
         <button
           onClick={submit}
           disabled={!canSubmit}
-          className="flex-1 rounded-lg bg-accent py-3 font-semibold text-white transition-colors duration-150 hover:bg-accent/85 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex-1 rounded-lg bg-accent-strong py-3 font-semibold text-white transition-colors duration-150 hover:bg-accent-strong/85 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          덱 추천받기{units.length + components.length + completed.length > 0 && <span className="num ml-2 text-xs font-normal text-white/70">유닛 {units.length} · 재료 {slotsUsed}</span>}
+          덱 추천받기{units.length + components.length + completed.length > 0 && <span className="num ml-2 text-xs font-normal text-white">유닛 {units.length} · 재료 {slotsUsed}</span>}
         </button>
         <Link
           href="/"

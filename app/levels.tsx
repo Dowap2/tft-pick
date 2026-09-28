@@ -17,7 +17,7 @@ export function LevelComps({ deck, ownedIds, onToggle }: Props) {
         <div key={lv} className="flex items-center gap-3 px-3 py-2">
           <div className="w-10 shrink-0">
             <div className="text-sm font-bold text-text">{lv}렙</div>
-            <div className="text-[10px] text-muted/70">{comp.avg.toFixed(2)}등</div>
+            <div className="text-[10px] text-muted">{comp.avg.toFixed(2)}등</div>
           </div>
           <div className="flex flex-wrap gap-1">
             {comp.units.map((uid) => {

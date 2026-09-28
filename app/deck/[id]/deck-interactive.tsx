@@ -160,12 +160,12 @@ export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extr
           <div className="ml-auto flex gap-0.5">
             {lvKeys.map((k) => (
               <button key={k} type="button" onClick={() => setLv(k)}
-                className={`num min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${lv === k ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+                className={`num min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${lv === k ? "bg-accent-strong text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
                 {k}
               </button>
             ))}
             <button type="button" onClick={() => setLv(null)}
-              className={`min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${!lv ? "bg-accent text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
+              className={`min-h-9 rounded px-3 py-1 text-xs transition-colors duration-150 sm:min-h-0 sm:px-2 sm:py-0.5 ${!lv ? "bg-accent-strong text-white" : "bg-surface-2 text-muted hover:text-text"}`}>
               최종
             </button>
           </div>
@@ -178,7 +178,7 @@ export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extr
 
       {/* 필수 유닛 */}
       <section className="mb-6">
-        <h2 className="mb-3 text-lg font-semibold">필수 유닛 <span className="text-xs font-normal text-muted/70">클릭하면 보유 토글</span></h2>
+        <h2 className="mb-3 text-lg font-semibold">필수 유닛 <span className="text-xs font-normal text-muted">클릭하면 보유 토글</span></h2>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {deck.coreUnits.map((cu) => {
             const meta = unitById(cu.unitId);
@@ -232,7 +232,7 @@ export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extr
                   {isCarry && <span className="text-[10px] text-accent">★캐리</span>}
                 </div>
                 {deck.altItems?.[uid]?.length ? (
-                  <div className="mb-2 flex items-center gap-1 text-[10px] text-muted/70">
+                  <div className="mb-2 flex items-center gap-1 text-[10px] text-muted">
                     대체 {deck.altItems[uid].map((iid, i) => <ItemIcon key={i} id={iid} className="size-5! opacity-70" />)}
                   </div>
                 ) : null}

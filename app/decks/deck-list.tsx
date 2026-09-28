@@ -32,7 +32,7 @@ export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<stri
   }, [decks, q, tier, sort]);
 
   const chip = (active: boolean) =>
-    `rounded-md px-3 py-1.5 text-sm transition-colors duration-150 ${active ? "bg-accent font-semibold text-white" : "bg-surface-2 text-muted hover:text-text"}`;
+    `rounded-md px-3 py-1.5 text-sm transition-colors duration-150 ${active ? "bg-accent-strong font-semibold text-white" : "bg-surface-2 text-muted hover:text-text"}`;
 
   return (
     <>
@@ -98,7 +98,7 @@ export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<stri
                 </div>
                 <div className="order-last basis-full border-t border-line pt-3 sm:order-none sm:basis-auto sm:border-0 sm:pt-0">
                   <DeckStats deck={deck} />
-                  <div className="mt-1 flex items-center justify-end gap-2 text-[10px] text-muted/70">
+                  <div className="mt-1 flex items-center justify-end gap-2 text-[10px] text-muted">
                     <CopyTeamCode code={teamCode(deck.coreUnits.map((u) => u.unitId))} />
                     <span>게임 <span className="num">{fmt(deck.games)}</span></span>
                   </div>
@@ -137,7 +137,7 @@ export function DeckList({ decks, guides }: { decks: Deck[]; guides: Record<stri
                     ))}
                   </div>
                 </div>
-                <Link href={`/deck/${deck.id}`} className="inline-block rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent/85">
+                <Link href={`/deck/${deck.id}`} className="inline-block rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-strong/85">
                   최종 배치 · 상세 보기 →
                 </Link>
               </div>
