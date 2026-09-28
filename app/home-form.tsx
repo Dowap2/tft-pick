@@ -105,29 +105,27 @@ export function HomeForm() {
   const canSubmit = components.length > 0 || completed.length > 0 || units.length > 0;
 
   return (
-    <main className="w-full max-w-5xl px-4 py-8 sm:py-12">
-      <header className="mb-8 flex items-center gap-4">
-        <img src="/logo.png" alt="TFT PICK" className="size-16 shrink-0" />
-        <div>
-          <h1 className="text-2xl font-bold sm:text-3xl">덱 추천</h1>
-          <p className="mt-1 text-sm text-muted">
-            지금 가진 아이템과 유닛을 입력하면 초반에 갈 수 있는 덱 3개를 추천합니다. 입력은 자동 저장됩니다.
-          </p>
+    <main className="w-full max-w-5xl px-4 py-5 sm:py-8">
+      <header className="mb-5 flex items-center gap-3">
+        <img src="/logo.png" alt="TFT PICK" className="size-11 shrink-0" />
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold sm:text-2xl">덱 추천</h1>
+          <p className="text-xs text-muted">가진 아이템과 유닛을 넣으면 갈 수 있는 덱 3개. 입력은 자동 저장.</p>
         </div>
       </header>
 
       {/* 스테이지 + 이번 판 기록 */}
-      <section className="mb-6">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs text-muted">지금 스테이지</span>
-          <button onClick={() => setStage("")} className={`num rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${!stage ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>전체</button>
+      <section className="mb-4">
+        <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <span className="mr-1 shrink-0 text-xs text-muted">스테이지</span>
+          <button onClick={() => setStage("")} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${!stage ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>전체</button>
           {STAGES.map((s) => (
-            <button key={s} onClick={() => setStage(s)} className={`num rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>{s}</button>
+            <button key={s} onClick={() => setStage(s)} className={`num shrink-0 rounded-md border px-3 py-1.5 text-xs transition-colors duration-150 ${stage === s ? "border-accent bg-accent text-white" : "border-line bg-surface text-muted hover:border-accent/60 hover:text-text"}`}>{s}</button>
           ))}
         </div>
         {history.length > 0 && (
-          <div className="mt-3 rounded-lg border border-line p-3">
-            <div className="mb-1.5 flex items-center justify-between text-xs">
+          <div className="mt-2 rounded-lg border border-line p-2.5">
+            <div className="mb-1 flex items-center justify-between text-xs">
               <span className="font-semibold">이번 판 기록</span>
               <button onClick={() => { setHistory([]); try { localStorage.removeItem(HISTORY_KEY); } catch {} }} className="rounded-md border border-line px-2 py-1 text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text">새 판 시작</button>
             </div>
@@ -146,22 +144,22 @@ export function HomeForm() {
       </section>
 
       {/* 챔피언(좌) + 아이템(우) — 둘을 한 화면에 */}
-      <div className="mb-10 grid gap-6 md:grid-cols-2">
+      <div className="mb-6 grid gap-4 md:grid-cols-2 md:gap-5">
 
         {/* ── 왼쪽: 챔피언 ── */}
         <section>
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-2 flex items-baseline justify-between">
             <h2 className="text-base font-semibold">챔피언</h2>
             <span className="text-xs text-muted/80">{units.length}개 선택</span>
           </div>
 
           {units.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-1.5">
+            <div className="mb-2 flex flex-wrap gap-1">
               {units.map((u) => {
                 const meta = UNITS.find((x) => x.id === u.unitId);
                 return (
                   <div key={u.unitId} className="flex items-center gap-1.5 rounded-md bg-accent-2/70 py-1 pl-1 pr-2 text-sm">
-                    <UnitIcon id={u.unitId} className="h-7" />
+                    <UnitIcon id={u.unitId} className="h-6" />
                     <span className="max-w-20 truncate">{meta?.name}</span>
                     <div className="flex gap-0.5">
                       {[1, 2, 3].map((st) => (
@@ -223,13 +221,13 @@ export function HomeForm() {
 
         {/* ── 오른쪽: 아이템 ── */}
         <section>
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-2 flex items-baseline justify-between">
             <h2 className="text-base font-semibold">아이템</h2>
             <span className="text-xs text-muted/80">재료 환산 {slotsUsed}/{MAX_COMPONENTS}</span>
           </div>
 
           {(components.length > 0 || completed.length > 0) && (
-            <div className="mb-3 flex flex-wrap gap-1.5">
+            <div className="mb-2 flex flex-wrap gap-1">
               {completed.map((id, i) => (
                 <button
                   key={`c${i}`}
@@ -252,13 +250,13 @@ export function HomeForm() {
             </div>
           )}
 
-          <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+          <div className="grid grid-cols-5 gap-1">
             {COMPONENTS.map((c) => (
               <button
                 key={c.id}
                 onClick={() => addComponent(c.id)}
                 disabled={slotsUsed >= MAX_COMPONENTS}
-                className="flex flex-col items-center gap-1 rounded-lg border border-line bg-surface px-1 py-1.5 text-[10px] transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40 sm:py-2 sm:text-xs"
+                className="flex flex-col items-center gap-0.5 rounded-lg border border-line bg-surface px-1 py-1.5 text-[10px] transition hover:border-accent/60 hover:bg-surface-2 disabled:opacity-40"
               >
                 <ItemIcon id={c.id} size="md" />
                 {c.name}
@@ -269,7 +267,7 @@ export function HomeForm() {
           <button
             onClick={() => setShowItems(!showItems)}
             aria-expanded={showItems}
-            className="mt-3 w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-sm text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text"
+            className="mt-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-left text-sm text-muted transition-colors duration-150 hover:border-accent/60 hover:text-text"
           >
             {showItems ? "▾" : "▸"} 이미 완성한 아이템 추가 <span className="text-muted/60">(재료로 분해되지 않음)</span>
           </button>
@@ -292,7 +290,7 @@ export function HomeForm() {
       </div>
 
       {/* 로비 스카우팅 (선택) */}
-      <section className="mb-10">
+      <section className="mb-6">
         <button
           onClick={() => setShowRivals(!showRivals)}
           aria-expanded={showRivals}
@@ -302,7 +300,7 @@ export function HomeForm() {
           {rivals.length > 0 && <span className="num ml-2 text-accent">{rivals.length}</span>}
         </button>
         {showRivals && (
-          <div className="mt-2 rounded-lg border border-line p-3">
+          <div className="mt-2 rounded-lg border border-line p-2.5">
             {rivals.length > 0 && (
               <div className="mb-2 flex flex-wrap gap-1.5">
                 {rivals.map((id) => (
