@@ -56,6 +56,9 @@ export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extr
   const carryItems = score?.carryItems ?? deck.coreItems.filter((ci) => ci.unitId === carryId).map((ci) => ci.itemId);
   const buildable = score?.buildableCarryItems ?? [];
   const itemsByUnit = deck.coreItems.reduce<Record<string, string[]>>((acc, ci) => { (acc[ci.unitId] ??= []).push(ci.itemId); return acc; }, {});
+  // 이 순서가 왜 이 순서인지 보이게 한다 (§4.11: 빈도가 아니라 성적순).
+  // 안 보여주면 "딜러에 방어템이 왜 1순위냐" 를 계속 의심하게 된다 — 실제로 그 질문이 나왔다.
+  const deltaOf = new Map(deck.coreItems.filter((ci) => ci.unitId === carryId && ci.placeDelta != null).map((ci) => [ci.itemId, ci.placeDelta!]));
 
   return (
     <>
@@ -126,6 +129,11 @@ export function DeckInteractive({ deck, extras, guide = [] }: { deck: Deck; extr
                   <ItemIcon id={iid} />
                   {canBuild && "✓ "}
                   {itemById(iid)?.name ?? iid}
+                  {deltaOf.has(iid) && (
+                    <span className="num text-[10px] text-pos" title="이 아이템을 낀 판의 평균 등수 − 이 기물 전체 평균 (음수일수록 좋음)">
+                      {deltaOf.get(iid)! > 0 ? "+" : ""}{deltaOf.get(iid)!.toFixed(2)}
+                    </span>
+                  )}
                 </span>
               );
             })}

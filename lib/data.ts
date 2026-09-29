@@ -46,7 +46,9 @@ export type Row = 0 | 1 | 2 | 3;              // 0=최전방, 3=최후방
 export type Col = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 // pos 없으면 lib/board.ts 휴리스틱으로 자동 배치
 export type DeckUnit = { unitId: UnitId; star: 1 | 2 | 3; pos?: [Row, Col] };
-export type DeckItemPlacement = { unitId: UnitId; itemId: string };
+// placeDelta = 그 아이템을 낀 판의 평균 등수 − 그 유닛 전체 평균 (음수=좋음, §4.11).
+// 표본 10판 미만이면 없다. 이 값이 코어 아이템의 순서를 정한다 — 빈도가 아니다.
+export type DeckItemPlacement = { unitId: UnitId; itemId: string; placeDelta?: number };
 export type LevelComp = { units: UnitId[]; avg: number; count: number };
 export type Deck = {
   id: string;
@@ -69,7 +71,7 @@ export type Deck = {
   threeStarTargets?: UnitId[];   // 이 덱에서 3성을 노리는 유닛
   carryId?: UnitId;          // 메인 캐리
   coreUnits: DeckUnit[];     // 최종 조합
-  coreItems: DeckItemPlacement[];          // 1순위 빌드
+  coreItems: DeckItemPlacement[];          // 1순위 빌드 (성적순 — docs/티어기준.md §4.11)
   altItems?: Record<UnitId, string[]>;     // 유닛별 대체 아이템
   levels?: Record<string, LevelComp>;      // 레벨별(4~10) 최빈 조합
   counters?: { deckId: string; placeChange: number }[];  // 같이 만나면 불리한 덱 (+ = 내 등수 나빠짐)

@@ -46,7 +46,8 @@ function toDeck(d: Row, tier: string | undefined): Deck {
     threeStarTargets: units.filter((u) => u.star === 3).map((u) => u.unitId),
     carryId: d.carry_unit_id,
     coreUnits: units.map((u): DeckUnit => ({ unitId: u.unitId, star: u.star, pos: u.pos ?? undefined })),
-    coreItems: items.filter((i) => i.priority === 1).map((i) => ({ unitId: i.unitId, itemId: i.itemId })),
+    // 뷰가 priority → place_delta 순으로 정렬해 준다 (§4.11). 그 순서를 그대로 쓴다.
+    coreItems: items.filter((i) => i.priority === 1).map((i) => ({ unitId: i.unitId, itemId: i.itemId, placeDelta: i.placeDelta ?? undefined })),
     altItems: alt, levels: d.levels ?? undefined, counters: d.counters ?? undefined,
     augments: d.augments ?? undefined,
     playstyle: d.playstyle ?? undefined,

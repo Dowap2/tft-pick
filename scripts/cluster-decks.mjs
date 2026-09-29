@@ -110,13 +110,24 @@ function describe(members) {
   // 유닛별 성 최빈값 (4~5코는 2 캡, 캐리는 아래서 보정), 아이템 빈도
   const starMode = new Map(), itemFreq = new Map(), itemLoad = new Map();
   for (const du of deckUnits) {
-    const inst = members.flatMap((m) => m.us.filter((u) => u.id === du.id));
+    // 등수를 같이 들고 온다 — 아이템을 성적으로 줄 세우려면 보드의 placement 가 필요하다 (§4.11)
+    const inst = members.flatMap((m) => m.us.filter((u) => u.id === du.id).map((u) => ({ ...u, place: m.placement })));
     starMode.set(du.id, mode(inst.map((u) => u.star)) ?? 2);
     // 캐리 지표: 인스턴스당 평균 아이템 개수 (공격/방어 구분 없음 — docs/티어기준.md §4.7)
     // 방어템을 빼고 세면 가고일·워모그를 끼고 캐리하는 유닛(말파이트 등)을 영영 못 잡는다.
     itemLoad.set(du.id, inst.reduce((s, u) => s + u.items.length, 0) / inst.length);
-    const f = new Map(); for (const u of inst) for (const it of u.items) f.set(it, (f.get(it) ?? 0) + 1);
-    itemFreq.set(du.id, [...f].map(([it, k]) => ({ it, rate: k / inst.length })).sort((a, b) => b.rate - a.rate));
+    // 아이템별 빈도 + 평균 등수. 같은 아이템 2개를 낀 경우는 1회로 센다 (등수는 보드 단위다).
+    const f = new Map();
+    for (const u of inst) for (const it of new Set(u.items)) {
+      const a = f.get(it) ?? { k: 0, s: 0 }; a.k++; a.s += u.place; f.set(it, a);
+    }
+    const unitAvg = inst.reduce((s, u) => s + u.place, 0) / inst.length;
+    // §4.11: 표본 10판 이상이면 성적순(delta 오름차순), 미만이면 노이즈라 빈도순으로 뒤에 붙인다.
+    // 빈도순으로만 매기면 "많이 하는 빌드" 가 "잘 되는 빌드" 를 밀어낸다 (실측: 애쉬).
+    const ITEM_MIN = 10;
+    itemFreq.set(du.id, [...f]
+      .map(([it, a]) => ({ it, rate: a.k / inst.length, n: a.k, delta: a.k >= ITEM_MIN ? a.s / a.k - unitAvg : null }))
+      .sort((a, b) => (a.delta == null) - (b.delta == null) || (a.delta != null ? a.delta - b.delta : b.rate - a.rate)));
   }
   // 캐리 = 아이템을 가장 많이 받는 유닛 (동률이면 고코스트)
   const carry = [...deckUnits].sort((a, b) => (itemLoad.get(b.id) - itemLoad.get(a.id)) || (unitById.get(b.id).cost - unitById.get(a.id).cost))[0].id;
@@ -228,14 +239,23 @@ await upsert("deck_units", decks.flatMap((d) => d.deckUnits.map((u) => {
   const target = cost >= 4 ? 2 : u.id === d.carry && cost <= 3 ? 3 : Math.min(2, d.starMode.get(u.id));   // 지시서 스타 규칙
   return { deck_id: d.id, patch_id: pid, unit_id: u.id, target_star: target, is_core: u.core };
 })), "deck_id,patch_id,unit_id");
+// place_delta 는 0023 에서 추가된다. 마이그레이션 전에 이 코드가 배포돼도 클러스터링이
+// 깨지면 안 되므로(3시간마다 도는 잡이다) 컬럼이 있을 때만 넣는다.
+const hasDelta = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/deck_items?select=place_delta&limit=1`,
+  { headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` } }).then((r) => r.ok);
+if (!hasDelta) console.warn("  deck_items.place_delta 없음 → 성적 delta 저장 생략 (0023 미적용). 순서는 성적순으로 매긴다");
+
 await upsert("deck_items", decks.flatMap((d) => d.deckUnits.flatMap((u) => {
   const top = d.itemFreq.get(u.id).slice(0, 5);
   if (top.length === 0) return [];
   const isCarry = u.id === d.carry;
   return top.map((x, i) => ({
     deck_id: d.id, patch_id: pid, unit_id: u.id, item_id: x.it,
-    role: isCarry ? (x.rate >= 0.5 ? "carry_core" : "carry_flex") : isDefensive(x.it) ? "tank" : "utility",
+    // 캐리의 코어/플렉스도 빈도가 아니라 성적 순위로 가른다 (위 정렬 기준과 일치시킨다).
+    // 엔진의 ROLE_W(carry_core 2 / carry_flex 1)가 이 값을 그대로 쓰므로 어긋나면 점수도 어긋난다.
+    role: isCarry ? (i < 2 && x.delta != null ? "carry_core" : "carry_flex") : isDefensive(x.it) ? "tank" : "utility",
     priority: i < 3 ? 1 : i - 1, pick_rate: Number(x.rate.toFixed(4)),
+    ...(hasDelta ? { place_delta: x.delta == null ? null : Number(x.delta.toFixed(2)) } : {}),
   }));
 })), "deck_id,patch_id,unit_id,item_id");
 await upsert("deck_levels", decks.flatMap((d) => Object.entries(d.levels).map(([L, v]) => ({
