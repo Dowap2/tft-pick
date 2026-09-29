@@ -59,6 +59,13 @@ export async function currentPatch() {
 
 // metatft/Riot 아이템명(DA_GuinsoosRageblade) → 우리 item id (cdragon apiName 소문자)
 const ITEM_ALIAS = {
+  // ★ RedBuff: 세트 18 에서 DA_RedBuff = 붉은 덩굴정령(곡궁+곡궁) 인데, cdragon 의 레거시
+  //   TFT_Item_RedBuff 는 태양불꽃 망토(흉갑+벨트)라 우리 id `redbuff` 가 그쪽을 가리킨다.
+  //   별칭이 없으면 두 아이템이 redbuff 한 id 로 뭉개져, 곡궁+곡궁 통계가 영영 안 잡히고
+  //   그 사용량이 "태양불꽃 망토" 라는 엉뚱한 이름으로 덱 추천템에 표시된다.
+  //   (실측 2026-09-29: 애쉬에 붙은 "태양불꽃 망토 52%" 는 전부 붉은 덩굴정령이었다)
+  //   scripts/check-item-ids.mts 가 조합식으로 전수 검증한다 — 세트가 바뀌면 다시 돌려라.
+  RedBuff: "rapidfirecannon",
   KrakensFury: "runaanshurricane", EdgeOfNight: "guardianangel", NashorsTooth: "leviathan",
   VoidStaff: "statikkshiv", SpiritVisage: "redemption", StrikersFlail: "powergauntlet",
   SunfireCape: "redbuff", SteadfastHeart: "nightharvester", Evenshroud: "spectralgauntlet",
