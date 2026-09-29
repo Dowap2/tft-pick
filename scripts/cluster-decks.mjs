@@ -124,9 +124,15 @@ function describe(members) {
     const unitAvg = inst.reduce((s, u) => s + u.place, 0) / inst.length;
     // §4.11: 표본 10판 이상이면 성적순(delta 오름차순), 미만이면 노이즈라 빈도순으로 뒤에 붙인다.
     // 빈도순으로만 매기면 "많이 하는 빌드" 가 "잘 되는 빌드" 를 밀어낸다 (실측: 애쉬).
-    const ITEM_MIN = 10;
+    const ITEM_MIN = 10;      // delta(순서)를 믿을 최소 표본
+    const ITEM_MIN_RATE = 0.15;   // 추천으로 올릴 최소 등장률 — 아래 설명
+    // 등장률 하한이 없으면 표본이 거의 없는 아이템이 1순위로 올라간다.
+    // 실측: 유나라는 인스턴스 409개 중 38%만 아이템을 받는데(나머지는 시너지용 몸),
+    // 그 탓에 픽률 3% 짜리(공허의 지팡이 9회)가 추천 아이템으로 표시됐다.
+    // 유닛이 하한을 넘는 아이템이 없으면 아이템을 아예 안 보여준다 — 그게 사실이다.
     itemFreq.set(du.id, [...f]
       .map(([it, a]) => ({ it, rate: a.k / inst.length, n: a.k, delta: a.k >= ITEM_MIN ? a.s / a.k - unitAvg : null }))
+      .filter((x) => x.rate >= ITEM_MIN_RATE)
       .sort((a, b) => (a.delta == null) - (b.delta == null) || (a.delta != null ? a.delta - b.delta : b.rate - a.rate)));
   }
   // 캐리 = 아이템을 가장 많이 받는 유닛 (동률이면 고코스트)
