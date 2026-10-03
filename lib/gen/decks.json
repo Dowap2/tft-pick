@@ -4,17 +4,18 @@
     "name": "나무정령 카직스",
     "tierLabel": "S",
     "tier": 2,
-    "avgPlacement": 4.22,
-    "games": 775018,
-    "winRate": 0.1378,
-    "top4Rate": 0.5235,
-    "pickRate": 0.0249,
+    "avgPlacement": 4.2,
+    "games": 736962,
+    "winRate": 0.1399,
+    "top4Rate": 0.5272,
+    "pickRate": 0.0239,
     "levelling": "lvl 7",
     "difficulty": "보통",
     "threeStarTargets": [
       "khazix",
       "hecarim",
       "diana",
+      "azir",
       "rengar",
       "rammus",
       "cassiopeia",
@@ -82,11 +83,11 @@
     "coreItems": [
       {
         "unitId": "khazix",
-        "itemId": "guardianangel"
+        "itemId": "leviathan"
       },
       {
         "unitId": "khazix",
-        "itemId": "unstableconcoction"
+        "itemId": "rabadonsdeathcap"
       },
       {
         "unitId": "hecarim",
@@ -127,24 +128,24 @@
     ],
     "altItems": {
       "khazix": [
-        "rabadonsdeathcap",
-        "leviathan",
-        "powergauntlet"
+        "guardianangel",
+        "unstableconcoction",
+        "jeweledgauntlet"
       ],
       "hecarim": [
         "crownguard",
-        "bramblevest",
-        "nightharvester"
+        "nightharvester",
+        "bramblevest"
       ],
       "ezreal": [
-        "infinityedge",
+        "lastwhisper",
         "powergauntlet",
-        "lastwhisper"
+        "infinityedge"
       ],
       "diana": [
         "bloodthirster",
-        "hextechgunblade",
-        "rabadonsdeathcap"
+        "titansresolve",
+        "hextechgunblade"
       ]
     },
     "levels": {
@@ -155,15 +156,15 @@
           "yunara",
           "karma"
         ],
-        "avg": 4.2124,
-        "count": 739
+        "avg": 4.217,
+        "count": 811
       },
       "5": {
         "units": [
           "khazix"
         ],
-        "avg": 3.1508,
-        "count": 882
+        "avg": 3.1243,
+        "count": 893
       },
       "7": {
         "units": [
@@ -175,8 +176,8 @@
           "soraka",
           "fiddlesticks"
         ],
-        "avg": 4.1405,
-        "count": 2903
+        "avg": 4.12,
+        "count": 2917
       },
       "8": {
         "units": [
@@ -189,8 +190,8 @@
           "soraka",
           "fiddlesticks"
         ],
-        "avg": 1.6865,
-        "count": 1668
+        "avg": 1.68,
+        "count": 1731
       },
       "9": {
         "units": [
@@ -204,8 +205,8 @@
           "soraka",
           "fiddlesticks"
         ],
-        "avg": 1.5221,
-        "count": 362
+        "avg": 1.5361,
+        "count": 388
       },
       "10": {
         "units": [
@@ -220,8 +221,8 @@
           "soraka",
           "fiddlesticks"
         ],
-        "avg": 1.5455,
-        "count": 22
+        "avg": 1.5714,
+        "count": 28
       }
     },
     "counters": [
@@ -251,6 +252,10 @@
       },
       {
         "deckId": "mt-425013",
+        "placeChange": 0.02
+      },
+      {
+        "deckId": "mt-425010",
         "placeChange": 0.02
       },
       {
@@ -284,18 +289,14 @@
       {
         "deckId": "mt-425005",
         "placeChange": -0.15
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.18
       }
     ],
     "augments": [],
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.42,
-        "pick": 2.99
+        "avg": 4.36,
+        "pick": 3.5
       },
       {
         "day": "09-26",
@@ -329,8 +330,8 @@
       },
       {
         "day": "10-02",
-        "avg": 3.69,
-        "pick": 3.18
+        "avg": 4.2,
+        "pick": 2.61
       }
     ],
     "proComps": [
@@ -435,24 +436,22 @@
     "name": "주문술사 베이가",
     "tierLabel": "S",
     "tier": 2,
-    "avgPlacement": 4.23,
-    "games": 1461092,
-    "winRate": 0.1401,
-    "top4Rate": 0.5324,
+    "avgPlacement": 4.22,
+    "games": 1448734,
+    "winRate": 0.14,
+    "top4Rate": 0.5326,
     "pickRate": 0.047,
     "levelling": "lvl 5",
-    "difficulty": "보통",
+    "difficulty": "어려움",
     "threeStarTargets": [
       "veigar",
       "ornn",
       "alistar",
       "leblanc",
       "reksai",
-      "kobuko",
       "leona",
       "xayah",
       "yorick",
-      "rakan",
       "camille",
       "varus",
       "akali"
@@ -526,6 +525,14 @@
         "itemId": "jeweledgauntlet"
       },
       {
+        "unitId": "ornn",
+        "itemId": "crownguard"
+      },
+      {
+        "unitId": "ornn",
+        "itemId": "gargoylestoneplate"
+      },
+      {
         "unitId": "alistar",
         "itemId": "crownguard"
       },
@@ -538,20 +545,12 @@
         "itemId": "warmogsarmor"
       },
       {
-        "unitId": "ornn",
-        "itemId": "crownguard"
-      },
-      {
-        "unitId": "ornn",
-        "itemId": "gargoylestoneplate"
-      },
-      {
         "unitId": "leblanc",
         "itemId": "bluebuff"
       },
       {
         "unitId": "leblanc",
-        "itemId": "morellonomicon"
+        "itemId": "jeweledgauntlet"
       },
       {
         "unitId": "leblanc",
@@ -570,14 +569,14 @@
         "bramblevest"
       ],
       "ornn": [
-        "warmogsarmor",
         "redemption",
-        "frozenheart"
+        "warmogsarmor",
+        "bramblevest"
       ],
       "leblanc": [
-        "jeweledgauntlet",
+        "morellonomicon",
         "spearofshojin",
-        "redbuff"
+        "madredsbloodrazor"
       ]
     },
     "levels": {
@@ -588,8 +587,8 @@
           "reksai",
           "veigar"
         ],
-        "avg": 3.9819,
-        "count": 28275
+        "avg": 3.9916,
+        "count": 30054
       },
       "7": {
         "units": [
@@ -601,8 +600,8 @@
           "veigar",
           "fiddlesticks"
         ],
-        "avg": 5.2017,
-        "count": 19507
+        "avg": 5.2101,
+        "count": 20275
       },
       "8": {
         "units": [
@@ -615,8 +614,8 @@
           "veigar",
           "fiddlesticks"
         ],
-        "avg": 3.2935,
-        "count": 2528
+        "avg": 3.3335,
+        "count": 2600
       },
       "9": {
         "units": [
@@ -630,8 +629,8 @@
           "veigar",
           "fiddlesticks"
         ],
-        "avg": 2.0734,
-        "count": 2617
+        "avg": 2.0844,
+        "count": 2786
       },
       "10": {
         "units": [
@@ -646,8 +645,8 @@
           "veigar",
           "fiddlesticks"
         ],
-        "avg": 1.5543,
-        "count": 92
+        "avg": 1.5575,
+        "count": 113
       }
     },
     "counters": [
@@ -672,6 +671,10 @@
         "placeChange": 0.07
       },
       {
+        "deckId": "mt-425010",
+        "placeChange": 0.06
+      },
+      {
         "deckId": "mt-425022",
         "placeChange": 0.06
       },
@@ -682,10 +685,6 @@
       {
         "deckId": "mt-425012",
         "placeChange": 0.01
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.01
       },
       {
         "deckId": "mt-425023",
@@ -733,8 +732,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.15,
-        "pick": 5.96
+        "avg": 4.14,
+        "pick": 6.16
       },
       {
         "day": "09-26",
@@ -768,8 +767,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.07,
-        "pick": 7.55
+        "avg": 4.22,
+        "pick": 7.05
       }
     ],
     "proComps": [
@@ -815,11 +814,11 @@
     "name": "날렵이 아지르",
     "tierLabel": "A",
     "tier": 3,
-    "avgPlacement": 4.31,
-    "games": 1263736,
-    "winRate": 0.1713,
-    "top4Rate": 0.5825,
-    "pickRate": 0.0406,
+    "avgPlacement": 4.29,
+    "games": 1437428,
+    "winRate": 0.1728,
+    "top4Rate": 0.5849,
+    "pickRate": 0.0467,
     "levelling": "lvl 7",
     "difficulty": "쉬움",
     "threeStarTargets": [
@@ -828,13 +827,11 @@
       "teemo",
       "fiddlesticks",
       "khazix",
-      "ornn",
       "cassiopeia",
       "rengar",
-      "akali",
-      "camille",
       "varus",
-      "xayah"
+      "xayah",
+      "camille"
     ],
     "carryId": "azir",
     "coreUnits": [
@@ -949,12 +946,12 @@
       "rammus": [
         "warmogsarmor",
         "bramblevest",
-        "redemption"
+        "nightharvester"
       ],
       "azir": [
         "archangelsstaff",
         "jeweledgauntlet",
-        "madredsbloodrazor"
+        "powergauntlet"
       ],
       "zyra": [
         "redbuff",
@@ -975,8 +972,8 @@
           "reksai",
           "veigar"
         ],
-        "avg": 3.876,
-        "count": 1202
+        "avg": 3.7286,
+        "count": 1389
       },
       "5": {
         "units": [
@@ -986,8 +983,8 @@
           "veigar",
           "fiddlesticks"
         ],
-        "avg": 3.5457,
-        "count": 2014
+        "avg": 3.5485,
+        "count": 2308
       },
       "7": {
         "units": [
@@ -999,8 +996,8 @@
           "zyra",
           "fiddlesticks"
         ],
-        "avg": 5.4883,
-        "count": 16608
+        "avg": 5.4737,
+        "count": 16947
       },
       "8": {
         "units": [
@@ -1013,8 +1010,8 @@
           "zyra",
           "fiddlesticks"
         ],
-        "avg": 2.6413,
-        "count": 3178
+        "avg": 2.6493,
+        "count": 3402
       },
       "9": {
         "units": [
@@ -1028,8 +1025,8 @@
           "zyra",
           "fiddlesticks"
         ],
-        "avg": 1.7879,
-        "count": 580
+        "avg": 1.837,
+        "count": 589
       },
       "10": {
         "units": [
@@ -1044,14 +1041,18 @@
           "raptor",
           "fiddlesticks"
         ],
-        "avg": 1.8,
-        "count": 25
+        "avg": 1.8696,
+        "count": 23
       }
     },
     "counters": [
       {
         "deckId": "mt-425008",
         "placeChange": 0.37
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.33
       },
       {
         "deckId": "mt-425007",
@@ -1106,10 +1107,6 @@
         "placeChange": -0.12
       },
       {
-        "deckId": "mt-425006",
-        "placeChange": -0.21
-      },
-      {
         "deckId": "mt-425026",
         "placeChange": -0.29
       }
@@ -1147,8 +1144,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.49,
-        "pick": 1.77
+        "avg": 4.12,
+        "pick": 2.87
       },
       {
         "day": "09-26",
@@ -1183,7 +1180,7 @@
       {
         "day": "10-02",
         "avg": 4.27,
-        "pick": 5.19
+        "pick": 4.76
       }
     ],
     "proComps": [
@@ -1239,17 +1236,18 @@
     "name": "달빛 아펠리오스 니달리",
     "tierLabel": "A",
     "tier": 3,
-    "avgPlacement": 4.31,
-    "games": 1864662,
-    "winRate": 0.1098,
-    "top4Rate": 0.6094,
-    "pickRate": 0.0599,
+    "avgPlacement": 4.3,
+    "games": 1872157,
+    "winRate": 0.1096,
+    "top4Rate": 0.6087,
+    "pickRate": 0.0608,
     "levelling": "Fast 8",
     "difficulty": "보통",
     "threeStarTargets": [
       "leona",
-      "kobuko",
+      "reksai",
       "ornn",
+      "kobuko",
       "rengar",
       "veigar",
       "karma"
@@ -1348,11 +1346,11 @@
       },
       {
         "unitId": "amumu",
-        "itemId": "dragonsclaw"
+        "itemId": "gargoylestoneplate"
       },
       {
         "unitId": "amumu",
-        "itemId": "gargoylestoneplate"
+        "itemId": "redemption"
       },
       {
         "unitId": "amumu",
@@ -1383,14 +1381,14 @@
         "bloodthirster"
       ],
       "amumu": [
-        "redemption",
+        "dragonsclaw",
         "nightharvester",
         "crownguard"
       ],
       "sentinel": [
+        "redemption",
         "warmogsarmor",
-        "crownguard",
-        "redemption"
+        "crownguard"
       ]
     },
     "levels": {
@@ -1401,8 +1399,8 @@
           "cassiopeia",
           "elise"
         ],
-        "avg": 3.5946,
-        "count": 2025
+        "avg": 3.5874,
+        "count": 2140
       },
       "5": {
         "units": [
@@ -1412,8 +1410,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.4189,
-        "count": 1559
+        "avg": 4.4347,
+        "count": 1654
       },
       "6": {
         "units": [
@@ -1424,21 +1422,21 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.5716,
-        "count": 782
+        "avg": 4.6742,
+        "count": 841
       },
       "7": {
         "units": [
           "aphelios",
           "diana",
-          "varus",
           "amumu",
+          "kogmaw",
           "nidalee",
           "sentinel",
           "vi"
         ],
-        "avg": 5.6613,
-        "count": 62
+        "avg": 6.0847,
+        "count": 59
       },
       "8": {
         "units": [
@@ -1451,8 +1449,8 @@
           "sentinel",
           "vi"
         ],
-        "avg": 4.9753,
-        "count": 50379
+        "avg": 4.9592,
+        "count": 52273
       },
       "9": {
         "units": [
@@ -1466,8 +1464,8 @@
           "sentinel",
           "vi"
         ],
-        "avg": 3.1025,
-        "count": 6007
+        "avg": 3.1128,
+        "count": 6044
       },
       "10": {
         "units": [
@@ -1481,8 +1479,8 @@
           "sentinel",
           "vi"
         ],
-        "avg": 2.0657,
-        "count": 426
+        "avg": 2.0446,
+        "count": 448
       }
     },
     "counters": [
@@ -1503,10 +1501,6 @@
         "placeChange": 0.05
       },
       {
-        "deckId": "mt-425006",
-        "placeChange": 0.05
-      },
-      {
         "deckId": "mt-425023",
         "placeChange": 0.04
       },
@@ -1524,6 +1518,10 @@
       },
       {
         "deckId": "mt-425047",
+        "placeChange": -0.01
+      },
+      {
+        "deckId": "mt-425010",
         "placeChange": -0.01
       },
       {
@@ -1932,8 +1930,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.3,
-        "pick": 8.89
+        "avg": 4.42,
+        "pick": 9.52
       },
       {
         "day": "09-26",
@@ -1963,12 +1961,12 @@
       {
         "day": "10-01",
         "avg": 4.31,
-        "pick": 10.49
+        "pick": 10.48
       },
       {
         "day": "10-02",
-        "avg": 4.4,
-        "pick": 12.37
+        "avg": 4.3,
+        "pick": 10.82
       }
     ],
     "proComps": [
@@ -2002,7 +2000,7 @@
             "items": [
               "infinityedge",
               "steraksgage",
-              "bloodthirster"
+              "unstableconcoction"
             ]
           },
           {
@@ -2080,16 +2078,16 @@
     "tierLabel": "A",
     "tier": 3,
     "avgPlacement": 4.36,
-    "games": 1057909,
+    "games": 1047305,
     "winRate": 0.1295,
-    "top4Rate": 0.5528,
+    "top4Rate": 0.5519,
     "pickRate": 0.034,
     "levelling": "Fast 8",
     "difficulty": "어려움",
     "threeStarTargets": [
-      "xayah",
       "akali",
       "leona",
+      "xayah",
       "varus"
     ],
     "carryId": "ahri",
@@ -2198,10 +2196,6 @@
       },
       {
         "unitId": "sett",
-        "itemId": "steraksgage"
-      },
-      {
-        "unitId": "sett",
         "itemId": "warmogsarmor"
       }
     ],
@@ -2209,12 +2203,12 @@
       "ahri": [
         "rabadonsdeathcap",
         "spearofshojin",
-        "bluebuff"
+        "leviathan"
       ],
       "morgana": [
         "hextechgunblade",
-        "archangelsstaff",
-        "adaptivehelm"
+        "adaptivehelm",
+        "archangelsstaff"
       ],
       "sentinel": [
         "adaptivehelm",
@@ -2223,8 +2217,8 @@
       ],
       "sett": [
         "redemption",
-        "bramblevest",
-        "nightharvester"
+        "steraksgage",
+        "bramblevest"
       ]
     },
     "levels": {
@@ -2235,8 +2229,8 @@
           "cassiopeia",
           "elise"
         ],
-        "avg": 3.7934,
-        "count": 3301
+        "avg": 3.7915,
+        "count": 3582
       },
       "5": {
         "units": [
@@ -2246,8 +2240,8 @@
           "elise",
           "rakan"
         ],
-        "avg": 4.1656,
-        "count": 1075
+        "avg": 4.1694,
+        "count": 1110
       },
       "6": {
         "units": [
@@ -2258,8 +2252,8 @@
           "elise",
           "karma"
         ],
-        "avg": 3.9286,
-        "count": 406
+        "avg": 3.8638,
+        "count": 426
       },
       "7": {
         "units": [
@@ -2271,8 +2265,8 @@
           "krug",
           "sentinel"
         ],
-        "avg": 5.9906,
-        "count": 106
+        "avg": 6.1875,
+        "count": 112
       },
       "8": {
         "units": [
@@ -2285,8 +2279,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 5.0657,
-        "count": 8782
+        "avg": 5.0428,
+        "count": 8856
       },
       "9": {
         "units": [
@@ -2300,8 +2294,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 2.6162,
-        "count": 2465
+        "avg": 2.6117,
+        "count": 2498
       },
       "10": {
         "units": [
@@ -2316,7 +2310,7 @@
           "sentinel",
           "taric"
         ],
-        "avg": 2.0765,
+        "avg": 2.1588,
         "count": 170
       }
     },
@@ -2332,10 +2326,6 @@
       {
         "deckId": "mt-425022",
         "placeChange": 0.09
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": 0.08
       },
       {
         "deckId": "mt-425002",
@@ -2384,6 +2374,10 @@
       {
         "deckId": "mt-425007",
         "placeChange": -0.06
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": -0.1
       }
     ],
     "augments": [
@@ -2580,6 +2574,14 @@
         "tier": "S"
       },
       {
+        "id": "DA_BronzeForLifeI",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BronzeForLifeII",
+        "tier": "S"
+      },
+      {
         "id": "DA_18_BranchingOut",
         "tier": "A"
       },
@@ -2743,8 +2745,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.36,
-        "pick": 7.8
+        "avg": 4.43,
+        "pick": 8.49
       },
       {
         "day": "09-26",
@@ -2778,8 +2780,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.38,
-        "pick": 8.19
+        "avg": 4.35,
+        "pick": 7.6
       }
     ],
     "proComps": [
@@ -2839,17 +2841,18 @@
     "name": "기원자 모르가나",
     "tierLabel": "A",
     "tier": 3,
-    "avgPlacement": 4.37,
-    "games": 300666,
-    "winRate": 0.1439,
-    "top4Rate": 0.5514,
-    "pickRate": 0.0097,
+    "avgPlacement": 4.39,
+    "games": 306115,
+    "winRate": 0.1453,
+    "top4Rate": 0.5527,
+    "pickRate": 0.0099,
     "levelling": "Fast 8",
-    "difficulty": "쉬움",
+    "difficulty": "보통",
     "threeStarTargets": [
       "elise",
       "murkwolf",
-      "rengar"
+      "rengar",
+      "masteryi"
     ],
     "carryId": "morgana",
     "coreUnits": [
@@ -2929,11 +2932,7 @@
     "coreItems": [
       {
         "unitId": "morgana",
-        "itemId": "hextechgunblade"
-      },
-      {
-        "unitId": "morgana",
-        "itemId": "redbuff"
+        "itemId": "morellonomicon"
       },
       {
         "unitId": "morgana",
@@ -2941,11 +2940,11 @@
       },
       {
         "unitId": "sentinel",
-        "itemId": "adaptivehelm"
+        "itemId": "crownguard"
       },
       {
         "unitId": "sentinel",
-        "itemId": "frozenheart"
+        "itemId": "gargoylestoneplate"
       },
       {
         "unitId": "sentinel",
@@ -2953,49 +2952,45 @@
       },
       {
         "unitId": "alune",
-        "itemId": "jeweledgauntlet"
+        "itemId": "adaptivehelm"
       },
       {
         "unitId": "alune",
-        "itemId": "leviathan"
+        "itemId": "archangelsstaff"
       },
       {
-        "unitId": "alune",
-        "itemId": "spearofshojin"
+        "unitId": "taric",
+        "itemId": "gargoylestoneplate"
       },
       {
-        "unitId": "brambleback",
-        "itemId": "guardianangel"
+        "unitId": "taric",
+        "itemId": "nightharvester"
       },
       {
-        "unitId": "brambleback",
-        "itemId": "unstableconcoction"
-      },
-      {
-        "unitId": "brambleback",
-        "itemId": "quicksilver"
+        "unitId": "taric",
+        "itemId": "warmogsarmor"
       }
     ],
     "altItems": {
       "morgana": [
-        "morellonomicon",
-        "adaptivehelm",
+        "hextechgunblade",
+        "redbuff",
         "rabadonsdeathcap"
       ],
       "sentinel": [
-        "gargoylestoneplate",
+        "frozenheart",
         "warmogsarmor",
-        "crownguard"
+        "adaptivehelm"
       ],
       "alune": [
-        "archangelsstaff",
-        "adaptivehelm",
-        "rabadonsdeathcap"
+        "jeweledgauntlet",
+        "leviathan",
+        "spearofshojin"
       ],
-      "brambleback": [
-        "madredsbloodrazor",
-        "steraksgage",
-        "titansresolve"
+      "taric": [
+        "bramblevest",
+        "redemption",
+        "dragonsclaw"
       ]
     },
     "levels": {
@@ -3006,8 +3001,8 @@
           "cassiopeia",
           "elise"
         ],
-        "avg": 3.6434,
-        "count": 774
+        "avg": 3.699,
+        "count": 877
       },
       "5": {
         "units": [
@@ -3017,8 +3012,8 @@
           "diana",
           "elise"
         ],
-        "avg": 3.7346,
-        "count": 437
+        "avg": 3.7764,
+        "count": 483
       },
       "7": {
         "units": [
@@ -3030,8 +3025,8 @@
           "murkwolf",
           "sentinel"
         ],
-        "avg": 5.2391,
-        "count": 92
+        "avg": 5.1837,
+        "count": 98
       },
       "8": {
         "units": [
@@ -3044,8 +3039,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 5.6264,
-        "count": 182
+        "avg": 5.7399,
+        "count": 173
       },
       "9": {
         "units": [
@@ -3059,8 +3054,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 3.7271,
-        "count": 601
+        "avg": 3.7488,
+        "count": 633
       },
       "10": {
         "units": [
@@ -3075,8 +3070,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 2,
-        "count": 30
+        "avg": 1.9394,
+        "count": 33
       }
     },
     "counters": [
@@ -3090,10 +3085,6 @@
       },
       {
         "deckId": "mt-425003",
-        "placeChange": 0.16
-      },
-      {
-        "deckId": "mt-425006",
         "placeChange": 0.16
       },
       {
@@ -3133,6 +3124,10 @@
         "placeChange": -0.02
       },
       {
+        "deckId": "mt-425010",
+        "placeChange": -0.16
+      },
+      {
         "deckId": "mt-425007",
         "placeChange": -0.17
       },
@@ -3149,8 +3144,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.39,
-        "pick": 0.75
+        "avg": 4.54,
+        "pick": 0.7
       },
       {
         "day": "09-26",
@@ -3184,8 +3179,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.81,
-        "pick": 0.73
+        "avg": 4.41,
+        "pick": 0.91
       }
     ],
     "proComps": [
@@ -3284,14 +3279,13 @@
     "tierLabel": "A",
     "tier": 3,
     "avgPlacement": 4.4,
-    "games": 256466,
-    "winRate": 0.1174,
-    "top4Rate": 0.5231,
-    "pickRate": 0.0082,
+    "games": 278322,
+    "winRate": 0.1189,
+    "top4Rate": 0.5248,
+    "pickRate": 0.009,
     "levelling": "Fast 8",
     "difficulty": "보통",
     "threeStarTargets": [
-      "karma",
       "rengar"
     ],
     "carryId": "zyra",
@@ -3309,7 +3303,7 @@
         "star": 2,
         "pos": [
           0,
-          5
+          2
         ]
       },
       {
@@ -3349,7 +3343,7 @@
         "star": 2,
         "pos": [
           0,
-          2
+          5
         ]
       },
       {
@@ -3418,19 +3412,19 @@
         "statikkshiv"
       ],
       "nidalee": [
-        "redbuff",
         "statikkshiv",
-        "hextechgunblade"
+        "redbuff",
+        "madredsbloodrazor"
       ],
       "amumu": [
+        "ionicspark",
         "redbuff",
-        "dragonsclaw",
         "nightharvester"
       ],
       "vi": [
-        "redemption",
-        "warmogsarmor",
-        "ionicspark"
+        "nightharvester",
+        "ionicspark",
+        "bramblevest"
       ]
     },
     "levels": {
@@ -3441,8 +3435,8 @@
           "yunara",
           "karma"
         ],
-        "avg": 4.1255,
-        "count": 534
+        "avg": 4.1513,
+        "count": 641
       },
       "5": {
         "units": [
@@ -3452,8 +3446,8 @@
           "yorick",
           "scuttlecrab"
         ],
-        "avg": 4.7662,
-        "count": 154
+        "avg": 4.7017,
+        "count": 181
       },
       "6": {
         "units": [
@@ -3464,21 +3458,21 @@
           "karma",
           "scuttlecrab"
         ],
-        "avg": 4.1466,
-        "count": 191
+        "avg": 3.9954,
+        "count": 218
       },
       "7": {
         "units": [
           "rakan",
           "sejuani",
           "yorick",
+          "zyra",
           "amumu",
-          "nidalee",
           "scuttlecrab",
           "vi"
         ],
-        "avg": 4.5446,
-        "count": 101
+        "avg": 3.7153,
+        "count": 137
       },
       "8": {
         "units": [
@@ -3491,8 +3485,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 5.7546,
-        "count": 3235
+        "avg": 5.7192,
+        "count": 3487
       },
       "9": {
         "units": [
@@ -3506,8 +3500,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 2.9095,
-        "count": 1756
+        "avg": 2.8694,
+        "count": 1906
       },
       "10": {
         "units": [
@@ -3522,8 +3516,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 2.0417,
-        "count": 120
+        "avg": 1.9756,
+        "count": 123
       }
     },
     "counters": [
@@ -3534,10 +3528,6 @@
       {
         "deckId": "mt-425000",
         "placeChange": 0.26
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": 0.25
       },
       {
         "deckId": "mt-425003",
@@ -3554,6 +3544,10 @@
       {
         "deckId": "mt-425026",
         "placeChange": 0.11
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.09
       },
       {
         "deckId": "mt-425008",
@@ -3957,8 +3951,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.44,
-        "pick": 0.96
+        "avg": 4.42,
+        "pick": 0.83
       },
       {
         "day": "09-26",
@@ -3992,8 +3986,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.09,
-        "pick": 2.09
+        "avg": 4.38,
+        "pick": 2.22
       }
     ],
     "proComps": [
@@ -4047,25 +4041,805 @@
     ]
   },
   {
+    "id": "mt-425001",
+    "name": "속사포 아펠리오스",
+    "tierLabel": "A",
+    "tier": 3,
+    "avgPlacement": 4.41,
+    "games": 180171,
+    "winRate": 0.0989,
+    "top4Rate": 0.5569,
+    "pickRate": 0.0058,
+    "levelling": "Fast 8",
+    "difficulty": "보통",
+    "threeStarTargets": [
+      "rengar"
+    ],
+    "carryId": "aphelios",
+    "coreUnits": [
+      {
+        "unitId": "aphelios",
+        "star": 2,
+        "pos": [
+          3,
+          0
+        ]
+      },
+      {
+        "unitId": "rakan",
+        "star": 2,
+        "pos": [
+          1,
+          3
+        ]
+      },
+      {
+        "unitId": "varus",
+        "star": 2,
+        "pos": [
+          3,
+          6
+        ]
+      },
+      {
+        "unitId": "xayah",
+        "star": 2,
+        "pos": [
+          3,
+          2
+        ]
+      },
+      {
+        "unitId": "amumu",
+        "star": 2,
+        "pos": [
+          0,
+          3
+        ]
+      },
+      {
+        "unitId": "brambleback",
+        "star": 2,
+        "pos": [
+          2,
+          0
+        ]
+      },
+      {
+        "unitId": "raptor",
+        "star": 2,
+        "pos": [
+          3,
+          1
+        ]
+      },
+      {
+        "unitId": "sentinel",
+        "star": 2,
+        "pos": [
+          0,
+          4
+        ]
+      }
+    ],
+    "coreItems": [
+      {
+        "unitId": "aphelios",
+        "itemId": "deathblade"
+      },
+      {
+        "unitId": "aphelios",
+        "itemId": "infinityedge"
+      },
+      {
+        "unitId": "aphelios",
+        "itemId": "powergauntlet"
+      },
+      {
+        "unitId": "brambleback",
+        "itemId": "guardianangel"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "spectralgauntlet"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "gargoylestoneplate"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "warmogsarmor"
+      },
+      {
+        "unitId": "sentinel",
+        "itemId": "adaptivehelm"
+      },
+      {
+        "unitId": "sentinel",
+        "itemId": "adaptivehelm"
+      },
+      {
+        "unitId": "sentinel",
+        "itemId": "frozenheart"
+      }
+    ],
+    "altItems": {
+      "brambleback": [
+        "steraksgage",
+        "quicksilver",
+        "bloodthirster"
+      ],
+      "aphelios": [
+        "runaanshurricane",
+        "redbuff",
+        "madredsbloodrazor"
+      ],
+      "sentinel": [
+        "crownguard",
+        "spectralgauntlet",
+        "warmogsarmor"
+      ],
+      "amumu": [
+        "bramblevest",
+        "dragonsclaw",
+        "redemption"
+      ]
+    },
+    "levels": {
+      "4": {
+        "units": [
+          "rakan",
+          "varus",
+          "xayah",
+          "yorick"
+        ],
+        "avg": 4.5916,
+        "count": 191
+      },
+      "5": {
+        "units": [
+          "rakan",
+          "varus",
+          "xayah",
+          "yorick",
+          "raptor"
+        ],
+        "avg": 4.3145,
+        "count": 159
+      },
+      "6": {
+        "units": [
+          "diana",
+          "rakan",
+          "varus",
+          "xayah",
+          "yorick",
+          "raptor"
+        ],
+        "avg": 4.2667,
+        "count": 60
+      },
+      "7": {
+        "units": [
+          "aphelios",
+          "diana",
+          "varus",
+          "xayah",
+          "brambleback",
+          "raptor",
+          "sentinel"
+        ],
+        "avg": 5.1429,
+        "count": 7
+      },
+      "8": {
+        "units": [
+          "aphelios",
+          "rakan",
+          "varus",
+          "xayah",
+          "amumu",
+          "brambleback",
+          "raptor",
+          "sentinel"
+        ],
+        "avg": 5.2123,
+        "count": 2247
+      },
+      "9": {
+        "units": [
+          "aphelios",
+          "diana",
+          "rakan",
+          "varus",
+          "xayah",
+          "amumu",
+          "brambleback",
+          "raptor",
+          "sentinel"
+        ],
+        "avg": 3.1609,
+        "count": 553
+      },
+      "10": {
+        "units": [
+          "aphelios",
+          "diana",
+          "rakan",
+          "varus",
+          "xayah",
+          "amumu",
+          "brambleback",
+          "raptor",
+          "sentinel",
+          "taric"
+        ],
+        "avg": 1.8957,
+        "count": 115
+      }
+    },
+    "counters": [
+      {
+        "deckId": "mt-425026",
+        "placeChange": 0.39
+      },
+      {
+        "deckId": "mt-425002",
+        "placeChange": 0.32
+      },
+      {
+        "deckId": "mt-425003",
+        "placeChange": 0.07
+      },
+      {
+        "deckId": "mt-425005",
+        "placeChange": 0.06
+      },
+      {
+        "deckId": "mt-425014",
+        "placeChange": 0.03
+      },
+      {
+        "deckId": "mt-425019",
+        "placeChange": 0.02
+      },
+      {
+        "deckId": "mt-425025",
+        "placeChange": 0.02
+      },
+      {
+        "deckId": "mt-425012",
+        "placeChange": 0.01
+      },
+      {
+        "deckId": "mt-425007",
+        "placeChange": 0.01
+      },
+      {
+        "deckId": "mt-425022",
+        "placeChange": -0.01
+      },
+      {
+        "deckId": "mt-425013",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425047",
+        "placeChange": -0.04
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": -0.05
+      },
+      {
+        "deckId": "mt-425008",
+        "placeChange": -0.14
+      },
+      {
+        "deckId": "mt-425000",
+        "placeChange": -0.18
+      },
+      {
+        "deckId": "mt-425023",
+        "placeChange": -0.21
+      }
+    ],
+    "augments": [
+      {
+        "id": "DA_BandOfThieves",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDeliveryPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDeliveryPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ComponentBuffet",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FeelingLucky",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FutureFocused",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GlassCannon_Silver",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ItemGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_LatentForge",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PartialAscension",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PatienceIsAVirtue",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagic",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_RollingForDays",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SilverDestinyPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SliceOfLife",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SlightlyMagicRoll",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SmallGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BigGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BoosterPackPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_CyberneticImplants_Gold",
+        "tier": "S"
+      },
+      {
+        "id": "DA_EpicRolldown",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ExclusiveCustomization",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GainGold",
+        "tier": "S"
+      },
+      {
+        "id": "DA_MagicRoll",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SalvageBin",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Swordsmith",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_PrimalAugment_Nidalee",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_PrimalAugment_Sivir",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_PrimalAugmentPlus_Sivir",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_PrimalAugmentPlus_Nidalee",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BronzeForLifeII",
+        "tier": "S"
+      },
+      {
+        "id": "DA_StandUnited",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BeltOverflow",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BuriedTreasuresIII",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamble",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamblePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamblePlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvils",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvilsPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ShoppingSpree",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SwordOverflow",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BronzeForLifeI",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BackupBows",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_CaretakersAlly",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CarveAPath",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ChampDelivery",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CognitiveTaxPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Expedition",
+        "tier": "A"
+      },
+      {
+        "id": "DA_FindYourCenter",
+        "tier": "A"
+      },
+      {
+        "id": "DA_FlowingTears",
+        "tier": "A"
+      },
+      {
+        "id": "DA_FocusedFire",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_GoodForSomethingI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_IronAssets",
+        "tier": "A"
+      },
+      {
+        "id": "DA_KickStart",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MissedConnections",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PandorasItemsI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SilverDestiny",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SilverDestinyPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SilverSpoon",
+        "tier": "A"
+      },
+      {
+        "id": "DA_TwinGuardians",
+        "tier": "A"
+      },
+      {
+        "id": "DA_AdvancedLoan",
+        "tier": "A"
+      },
+      {
+        "id": "DA_AdvancedLoanPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Ascension",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BoosterPack",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BoosterPackPlusPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CaretakersFavor",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ClutteredMind",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_DuoQueue",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Epoch",
+        "tier": "A"
+      },
+      {
+        "id": "DA_EpochPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ExplosiveGrowth",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ExplosiveGrowthPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungry_NotBroken",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungryPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Replication",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PortableForge",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SalvageBinPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Slammin",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PatientStudy",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SlamminPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_TradeSectorPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CallToChaos",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ForgedInStrength",
+        "tier": "A"
+      },
+      {
+        "id": "DA_LivingForge",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Min_Max",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyMonsoon",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PrismaticDestiny",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PrismaticDestinyPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Retribution",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SweetTreats",
+        "tier": "A"
+      }
+    ],
+    "trends": [
+      {
+        "day": "09-25",
+        "avg": 4.24,
+        "pick": 1.76
+      },
+      {
+        "day": "09-26",
+        "avg": 4.4,
+        "pick": 1.39
+      },
+      {
+        "day": "09-27",
+        "avg": 4.43,
+        "pick": 1.38
+      },
+      {
+        "day": "09-28",
+        "avg": 4.4,
+        "pick": 1.35
+      },
+      {
+        "day": "09-29",
+        "avg": 4.41,
+        "pick": 1.34
+      },
+      {
+        "day": "09-30",
+        "avg": 4.41,
+        "pick": 1.3
+      },
+      {
+        "day": "10-01",
+        "avg": 4.42,
+        "pick": 1.23
+      },
+      {
+        "day": "10-02",
+        "avg": 4.39,
+        "pick": 1.2
+      }
+    ],
+    "proComps": [
+      {
+        "title": "APHELIOS > Lvl 8 push",
+        "author": "Sologesang#EUW",
+        "notes": "- PRIMAL: Attack Speed > Execute > Gain Components only if you hit Primal stage 2 or 3 and are winstreaking;\n- Itemisation: Nidalee2 > Aphelios2 > Nidalee1;\n- try to prioritise BF for Nidalee Items -> Deathblade on Aphelios if you need it for winstreak or hit Aphelios2 early;",
+        "units": [
+          {
+            "unitId": "vi",
+            "items": []
+          },
+          {
+            "unitId": "diana",
+            "items": []
+          },
+          {
+            "unitId": "sentinel",
+            "items": []
+          },
+          {
+            "unitId": "amumu",
+            "items": [
+              "gargoylestoneplate",
+              "redemption",
+              "bramblevest"
+            ]
+          },
+          {
+            "unitId": "nidalee",
+            "items": [
+              "infinityedge",
+              "steraksgage",
+              "unstableconcoction"
+            ]
+          },
+          {
+            "unitId": "varus",
+            "items": []
+          },
+          {
+            "unitId": "kogmaw",
+            "items": []
+          },
+          {
+            "unitId": "aphelios",
+            "items": [
+              "redbuff",
+              "runaanshurricane",
+              "deathblade"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "mt-425000",
     "name": "전쟁기계 자이라 시비르",
     "tierLabel": "A",
     "tier": 3,
     "avgPlacement": 4.41,
-    "games": 1060731,
-    "winRate": 0.1645,
-    "top4Rate": 0.5489,
-    "pickRate": 0.0341,
+    "games": 1108541,
+    "winRate": 0.1627,
+    "top4Rate": 0.5475,
+    "pickRate": 0.036,
     "levelling": "Fast 8",
     "difficulty": "보통",
     "threeStarTargets": [
       "reksai",
       "rengar",
-      "veigar",
+      "cassiopeia",
       "kobuko",
-      "ornn",
       "leona",
-      "camille"
+      "camille",
+      "ornn",
+      "veigar"
     ],
     "carryId": "zyra",
     "coreUnits": [
@@ -4165,11 +4939,11 @@
       },
       {
         "unitId": "sivir",
-        "itemId": "infinityedge"
+        "itemId": "madredsbloodrazor"
       },
       {
         "unitId": "sivir",
-        "itemId": "powergauntlet"
+        "itemId": "infinityedge"
       },
       {
         "unitId": "vi",
@@ -4180,22 +4954,22 @@
       "zyra": [
         "spearofshojin",
         "bluebuff",
-        "statikkshiv"
-      ],
-      "sivir": [
-        "madredsbloodrazor",
-        "redbuff",
-        "lastwhisper"
+        "adaptivehelm"
       ],
       "amumu": [
-        "nightharvester",
+        "bramblevest",
         "redemption",
         "dragonsclaw"
       ],
+      "sivir": [
+        "redbuff",
+        "powergauntlet",
+        "runaanshurricane"
+      ],
       "vi": [
-        "gargoylestoneplate",
-        "redemption",
-        "nightharvester"
+        "nightharvester",
+        "spectralgauntlet",
+        "redbuff"
       ]
     },
     "levels": {
@@ -4206,8 +4980,8 @@
           "yunara",
           "karma"
         ],
-        "avg": 4.1155,
-        "count": 2069
+        "avg": 4.1116,
+        "count": 2195
       },
       "5": {
         "units": [
@@ -4217,8 +4991,8 @@
           "karma",
           "scuttlecrab"
         ],
-        "avg": 4.1848,
-        "count": 541
+        "avg": 4.2464,
+        "count": 617
       },
       "6": {
         "units": [
@@ -4229,8 +5003,8 @@
           "karma",
           "scuttlecrab"
         ],
-        "avg": 4.3345,
-        "count": 867
+        "avg": 4.2751,
+        "count": 927
       },
       "7": {
         "units": [
@@ -4242,8 +5016,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 3.7494,
-        "count": 451
+        "avg": 3.8507,
+        "count": 489
       },
       "8": {
         "units": [
@@ -4256,8 +5030,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 6.0267,
-        "count": 5429
+        "avg": 5.9919,
+        "count": 5767
       },
       "9": {
         "units": [
@@ -4271,8 +5045,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 3.0929,
-        "count": 5294
+        "avg": 3.1102,
+        "count": 5480
       },
       "10": {
         "units": [
@@ -4287,11 +5061,15 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 1.7692,
-        "count": 416
+        "avg": 1.7522,
+        "count": 460
       }
     },
     "counters": [
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.26
+      },
       {
         "deckId": "mt-425007",
         "placeChange": 0.24
@@ -4327,10 +5105,6 @@
       {
         "deckId": "mt-425047",
         "placeChange": 0
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.02
       },
       {
         "deckId": "mt-425001",
@@ -4722,8 +5496,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.35,
-        "pick": 3.13
+        "avg": 4.69,
+        "pick": 3.97
       },
       {
         "day": "09-26",
@@ -4753,12 +5527,12 @@
       {
         "day": "10-01",
         "avg": 4.42,
-        "pick": 5.31
+        "pick": 5.3
       },
       {
         "day": "10-02",
-        "avg": 4.91,
-        "pick": 5.96
+        "avg": 4.42,
+        "pick": 5.46
       }
     ],
     "proComps": [
@@ -4865,802 +5639,20 @@
     ]
   },
   {
-    "id": "mt-425001",
-    "name": "속사포 아펠리오스",
-    "tierLabel": "A",
-    "tier": 3,
-    "avgPlacement": 4.41,
-    "games": 184253,
-    "winRate": 0.0993,
-    "top4Rate": 0.5581,
-    "pickRate": 0.0059,
-    "levelling": "Fast 8",
-    "difficulty": "보통",
-    "threeStarTargets": [
-      "rengar"
-    ],
-    "carryId": "aphelios",
-    "coreUnits": [
-      {
-        "unitId": "aphelios",
-        "star": 2,
-        "pos": [
-          3,
-          0
-        ]
-      },
-      {
-        "unitId": "rakan",
-        "star": 2,
-        "pos": [
-          1,
-          3
-        ]
-      },
-      {
-        "unitId": "varus",
-        "star": 2,
-        "pos": [
-          3,
-          6
-        ]
-      },
-      {
-        "unitId": "xayah",
-        "star": 2,
-        "pos": [
-          3,
-          2
-        ]
-      },
-      {
-        "unitId": "amumu",
-        "star": 2,
-        "pos": [
-          0,
-          3
-        ]
-      },
-      {
-        "unitId": "brambleback",
-        "star": 2,
-        "pos": [
-          2,
-          0
-        ]
-      },
-      {
-        "unitId": "raptor",
-        "star": 2,
-        "pos": [
-          3,
-          1
-        ]
-      },
-      {
-        "unitId": "sentinel",
-        "star": 2,
-        "pos": [
-          0,
-          4
-        ]
-      }
-    ],
-    "coreItems": [
-      {
-        "unitId": "aphelios",
-        "itemId": "deathblade"
-      },
-      {
-        "unitId": "aphelios",
-        "itemId": "infinityedge"
-      },
-      {
-        "unitId": "aphelios",
-        "itemId": "powergauntlet"
-      },
-      {
-        "unitId": "brambleback",
-        "itemId": "guardianangel"
-      },
-      {
-        "unitId": "brambleback",
-        "itemId": "steraksgage"
-      },
-      {
-        "unitId": "amumu",
-        "itemId": "spectralgauntlet"
-      },
-      {
-        "unitId": "amumu",
-        "itemId": "gargoylestoneplate"
-      },
-      {
-        "unitId": "amumu",
-        "itemId": "warmogsarmor"
-      },
-      {
-        "unitId": "sentinel",
-        "itemId": "adaptivehelm"
-      },
-      {
-        "unitId": "sentinel",
-        "itemId": "adaptivehelm"
-      },
-      {
-        "unitId": "sentinel",
-        "itemId": "frozenheart"
-      }
-    ],
-    "altItems": {
-      "aphelios": [
-        "runaanshurricane",
-        "madredsbloodrazor",
-        "hextechgunblade"
-      ],
-      "brambleback": [
-        "quicksilver",
-        "titansresolve",
-        "bloodthirster"
-      ],
-      "sentinel": [
-        "spectralgauntlet",
-        "gargoylestoneplate",
-        "warmogsarmor"
-      ],
-      "amumu": [
-        "bramblevest",
-        "redemption",
-        "dragonsclaw"
-      ]
-    },
-    "levels": {
-      "4": {
-        "units": [
-          "rakan",
-          "varus",
-          "xayah",
-          "yorick"
-        ],
-        "avg": 4.9326,
-        "count": 178
-      },
-      "5": {
-        "units": [
-          "rakan",
-          "varus",
-          "xayah",
-          "yorick",
-          "raptor"
-        ],
-        "avg": 4.2825,
-        "count": 177
-      },
-      "6": {
-        "units": [
-          "diana",
-          "rakan",
-          "varus",
-          "xayah",
-          "yorick",
-          "raptor"
-        ],
-        "avg": 3.9672,
-        "count": 61
-      },
-      "7": {
-        "units": [
-          "aphelios",
-          "rakan",
-          "varus",
-          "amumu",
-          "brambleback",
-          "raptor",
-          "sentinel"
-        ],
-        "avg": 6.625,
-        "count": 8
-      },
-      "8": {
-        "units": [
-          "aphelios",
-          "rakan",
-          "varus",
-          "xayah",
-          "amumu",
-          "brambleback",
-          "raptor",
-          "sentinel"
-        ],
-        "avg": 5.1979,
-        "count": 2299
-      },
-      "9": {
-        "units": [
-          "aphelios",
-          "diana",
-          "rakan",
-          "varus",
-          "xayah",
-          "amumu",
-          "brambleback",
-          "raptor",
-          "sentinel"
-        ],
-        "avg": 3.1585,
-        "count": 593
-      },
-      "10": {
-        "units": [
-          "aphelios",
-          "diana",
-          "rakan",
-          "varus",
-          "xayah",
-          "amumu",
-          "brambleback",
-          "raptor",
-          "sentinel",
-          "taric"
-        ],
-        "avg": 2.0769,
-        "count": 117
-      }
-    },
-    "counters": [
-      {
-        "deckId": "mt-425026",
-        "placeChange": 0.39
-      },
-      {
-        "deckId": "mt-425002",
-        "placeChange": 0.32
-      },
-      {
-        "deckId": "mt-425003",
-        "placeChange": 0.07
-      },
-      {
-        "deckId": "mt-425005",
-        "placeChange": 0.06
-      },
-      {
-        "deckId": "mt-425014",
-        "placeChange": 0.03
-      },
-      {
-        "deckId": "mt-425019",
-        "placeChange": 0.02
-      },
-      {
-        "deckId": "mt-425025",
-        "placeChange": 0.02
-      },
-      {
-        "deckId": "mt-425012",
-        "placeChange": 0.01
-      },
-      {
-        "deckId": "mt-425007",
-        "placeChange": 0.01
-      },
-      {
-        "deckId": "mt-425022",
-        "placeChange": -0.01
-      },
-      {
-        "deckId": "mt-425013",
-        "placeChange": -0.03
-      },
-      {
-        "deckId": "mt-425047",
-        "placeChange": -0.04
-      },
-      {
-        "deckId": "mt-425008",
-        "placeChange": -0.14
-      },
-      {
-        "deckId": "mt-425000",
-        "placeChange": -0.18
-      },
-      {
-        "deckId": "mt-425023",
-        "placeChange": -0.21
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.32
-      }
-    ],
-    "augments": [
-      {
-        "id": "DA_BandOfThieves",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ChampDeliveryPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ChampDeliveryPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ComponentBuffet",
-        "tier": "S"
-      },
-      {
-        "id": "DA_FeelingLucky",
-        "tier": "S"
-      },
-      {
-        "id": "DA_FutureFocused",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GlassCannon_Silver",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ItemGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_LatentForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PartialAscension",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PatienceIsAVirtue",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_ResidualMagic",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_RollingForDays",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SilverDestinyPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SliceOfLife",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SlightlyMagicRoll",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SmallGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BigGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BoosterPackPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_CyberneticImplants_Gold",
-        "tier": "S"
-      },
-      {
-        "id": "DA_EpicRolldown",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ExclusiveCustomization",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GainGold",
-        "tier": "S"
-      },
-      {
-        "id": "DA_MagicRoll",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SalvageBin",
-        "tier": "S"
-      },
-      {
-        "id": "DA_Swordsmith",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_PrimalAugment_Nidalee",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_PrimalAugment_Sivir",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_PrimalAugmentPlus_Sivir",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_PrimalAugmentPlus_Nidalee",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BronzeForLifeII",
-        "tier": "S"
-      },
-      {
-        "id": "DA_StandUnited",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BeltOverflow",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BuriedTreasuresIII",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GoldenGamble",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GoldenGamblePlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GoldenGamblePlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvils",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvilsPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ShoppingSpree",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SwordOverflow",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BronzeForLifeI",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BackupBows",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_CaretakersAlly",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CarveAPath",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ChampDelivery",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CognitiveTaxPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Expedition",
-        "tier": "A"
-      },
-      {
-        "id": "DA_FindYourCenter",
-        "tier": "A"
-      },
-      {
-        "id": "DA_FlowingTears",
-        "tier": "A"
-      },
-      {
-        "id": "DA_FocusedFire",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_GoodForSomethingI",
-        "tier": "A"
-      },
-      {
-        "id": "DA_IronAssets",
-        "tier": "A"
-      },
-      {
-        "id": "DA_KickStart",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MissedConnections",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PandorasItemsI",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SilverDestiny",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SilverDestinyPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SilverSpoon",
-        "tier": "A"
-      },
-      {
-        "id": "DA_TwinGuardians",
-        "tier": "A"
-      },
-      {
-        "id": "DA_AdvancedLoan",
-        "tier": "A"
-      },
-      {
-        "id": "DA_AdvancedLoanPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Ascension",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoosterPack",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoosterPackPlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CaretakersFavor",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ClutteredMind",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_DuoQueue",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Epoch",
-        "tier": "A"
-      },
-      {
-        "id": "DA_EpochPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ExplosiveGrowth",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ExplosiveGrowthPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungry_NotBroken",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungryPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Replication",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PortableForge",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SalvageBinPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Slammin",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PatientStudy",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SlamminPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_TradeSectorPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CallToChaos",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ForgedInStrength",
-        "tier": "A"
-      },
-      {
-        "id": "DA_LivingForge",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Min_Max",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyMonsoon",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PrismaticDestiny",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PrismaticDestinyPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Retribution",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SweetTreats",
-        "tier": "A"
-      }
-    ],
-    "trends": [
-      {
-        "day": "09-25",
-        "avg": 4.34,
-        "pick": 1.42
-      },
-      {
-        "day": "09-26",
-        "avg": 4.4,
-        "pick": 1.39
-      },
-      {
-        "day": "09-27",
-        "avg": 4.43,
-        "pick": 1.38
-      },
-      {
-        "day": "09-28",
-        "avg": 4.4,
-        "pick": 1.35
-      },
-      {
-        "day": "09-29",
-        "avg": 4.41,
-        "pick": 1.34
-      },
-      {
-        "day": "09-30",
-        "avg": 4.41,
-        "pick": 1.3
-      },
-      {
-        "day": "10-01",
-        "avg": 4.43,
-        "pick": 1.23
-      },
-      {
-        "day": "10-02",
-        "avg": 4.53,
-        "pick": 1.46
-      }
-    ],
-    "proComps": [
-      {
-        "title": "APHELIOS > Lvl 8 push",
-        "author": "Sologesang#EUW",
-        "notes": "- PRIMAL: Attack Speed > Execute > Gain Components only if you hit Primal stage 2 or 3 and are winstreaking;\n- Itemisation: Nidalee2 > Aphelios2 > Nidalee1;\n- try to prioritise BF for Nidalee Items -> Deathblade on Aphelios if you need it for winstreak or hit Aphelios2 early;",
-        "units": [
-          {
-            "unitId": "vi",
-            "items": []
-          },
-          {
-            "unitId": "diana",
-            "items": []
-          },
-          {
-            "unitId": "sentinel",
-            "items": []
-          },
-          {
-            "unitId": "amumu",
-            "items": [
-              "gargoylestoneplate",
-              "redemption",
-              "bramblevest"
-            ]
-          },
-          {
-            "unitId": "nidalee",
-            "items": [
-              "infinityedge",
-              "steraksgage",
-              "bloodthirster"
-            ]
-          },
-          {
-            "unitId": "varus",
-            "items": []
-          },
-          {
-            "unitId": "kogmaw",
-            "items": []
-          },
-          {
-            "unitId": "aphelios",
-            "items": [
-              "redbuff",
-              "runaanshurricane",
-              "deathblade"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "mt-425025",
     "name": "전쟁기계 시비르",
     "tierLabel": "A",
     "tier": 3,
-    "avgPlacement": 4.42,
-    "games": 1218495,
-    "winRate": 0.2171,
-    "top4Rate": 0.5259,
-    "pickRate": 0.0392,
+    "avgPlacement": 4.41,
+    "games": 1229697,
+    "winRate": 0.2164,
+    "top4Rate": 0.5252,
+    "pickRate": 0.0399,
     "levelling": "Fast 9",
     "difficulty": "어려움",
     "threeStarTargets": [
       "rengar",
+      "kobuko",
       "leona",
       "veigar"
     ],
@@ -5782,7 +5774,7 @@
       },
       {
         "unitId": "amumu",
-        "itemId": "nightharvester"
+        "itemId": "redemption"
       },
       {
         "unitId": "amumu",
@@ -5798,17 +5790,17 @@
       "maokai": [
         "crownguard",
         "dragonsclaw",
-        "bramblevest"
+        "nightharvester"
       ],
       "sivir": [
         "deathblade",
-        "madredsbloodrazor",
-        "bluebuff"
+        "bluebuff",
+        "madredsbloodrazor"
       ],
       "amumu": [
-        "redemption",
-        "dragonsclaw",
-        "bramblevest"
+        "bramblevest",
+        "frozenheart",
+        "crownguard"
       ]
     },
     "levels": {
@@ -5819,8 +5811,8 @@
           "yunara",
           "karma"
         ],
-        "avg": 4.2006,
-        "count": 1406
+        "avg": 4.2231,
+        "count": 1452
       },
       "5": {
         "units": [
@@ -5830,8 +5822,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.4734,
-        "count": 414
+        "avg": 4.5024,
+        "count": 422
       },
       "6": {
         "units": [
@@ -5842,8 +5834,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 4.1149,
-        "count": 322
+        "avg": 3.9888,
+        "count": 356
       },
       "7": {
         "units": [
@@ -5855,8 +5847,8 @@
           "scuttlecrab",
           "vi"
         ],
-        "avg": 4.3917,
-        "count": 120
+        "avg": 4.0685,
+        "count": 146
       },
       "8": {
         "units": [
@@ -5869,8 +5861,8 @@
           "taric",
           "vi"
         ],
-        "avg": 5.7386,
-        "count": 241
+        "avg": 5.8264,
+        "count": 242
       },
       "9": {
         "units": [
@@ -5884,8 +5876,8 @@
           "taric",
           "vi"
         ],
-        "avg": 3.4722,
-        "count": 5214
+        "avg": 3.4514,
+        "count": 5304
       },
       "10": {
         "units": [
@@ -5900,8 +5892,8 @@
           "taric",
           "vi"
         ],
-        "avg": 1.6312,
-        "count": 301
+        "avg": 1.6053,
+        "count": 304
       }
     },
     "counters": [
@@ -5934,8 +5926,8 @@
         "placeChange": 0.04
       },
       {
-        "deckId": "mt-425006",
-        "placeChange": 0.04
+        "deckId": "mt-425010",
+        "placeChange": 0.03
       },
       {
         "deckId": "mt-425023",
@@ -6323,8 +6315,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.38,
-        "pick": 4.72
+        "avg": 4.56,
+        "pick": 4.97
       },
       {
         "day": "09-26",
@@ -6358,8 +6350,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.63,
-        "pick": 5.91
+        "avg": 4.42,
+        "pick": 4.93
       }
     ],
     "proComps": [
@@ -6468,13 +6460,13 @@
   {
     "id": "mt-425047",
     "name": "협곡야수 파수꾼",
-    "tierLabel": "A",
-    "tier": 3,
-    "avgPlacement": 4.45,
-    "games": 2591741,
-    "winRate": 0.18,
-    "top4Rate": 0.4585,
-    "pickRate": 0.0833,
+    "tierLabel": "B",
+    "tier": 4,
+    "avgPlacement": 4.46,
+    "games": 2556969,
+    "winRate": 0.1796,
+    "top4Rate": 0.4587,
+    "pickRate": 0.083,
     "levelling": "Fast 9",
     "difficulty": "어려움",
     "threeStarTargets": [],
@@ -6608,13 +6600,13 @@
       ],
       "maokai": [
         "dragonsclaw",
-        "frozenheart",
-        "nightharvester"
+        "nightharvester",
+        "crownguard"
       ],
       "kennen": [
+        "rabadonsdeathcap",
         "bloodthirster",
-        "redbuff",
-        "hextechgunblade"
+        "madredsbloodrazor"
       ]
     },
     "levels": {
@@ -6626,8 +6618,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.1981,
-        "count": 863
+        "avg": 4.3119,
+        "count": 840
       },
       "6": {
         "units": [
@@ -6638,8 +6630,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.2616,
-        "count": 432
+        "avg": 4.2671,
+        "count": 438
       },
       "7": {
         "units": [
@@ -6651,8 +6643,8 @@
           "murkwolf",
           "scuttlecrab"
         ],
-        "avg": 4.91,
-        "count": 211
+        "avg": 4.9397,
+        "count": 232
       },
       "8": {
         "units": [
@@ -6664,8 +6656,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 5.24,
-        "count": 175
+        "avg": 5.1346,
+        "count": 156
       },
       "9": {
         "units": [
@@ -6678,8 +6670,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 3.8839,
-        "count": 26046
+        "avg": 3.8951,
+        "count": 26351
       },
       "10": {
         "units": [
@@ -6693,8 +6685,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 1.8177,
-        "count": 1860
+        "avg": 1.8473,
+        "count": 1847
       },
       "11": {
         "units": [
@@ -6709,8 +6701,8 @@
           "sentinel",
           "taric"
         ],
-        "avg": 1.7632,
-        "count": 38
+        "avg": 1.75,
+        "count": 40
       }
     },
     "counters": [
@@ -6729,10 +6721,6 @@
       {
         "deckId": "mt-425003",
         "placeChange": 0.07
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": 0.06
       },
       {
         "deckId": "mt-425002",
@@ -6760,6 +6748,10 @@
       },
       {
         "deckId": "mt-425005",
+        "placeChange": -0.02
+      },
+      {
+        "deckId": "mt-425010",
         "placeChange": -0.02
       },
       {
@@ -7132,8 +7124,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.42,
-        "pick": 10.78
+        "avg": 4.29,
+        "pick": 8.96
       },
       {
         "day": "09-26",
@@ -7163,12 +7155,12 @@
       {
         "day": "10-01",
         "avg": 4.45,
-        "pick": 9.92
+        "pick": 9.93
       },
       {
         "day": "10-02",
-        "avg": 4.74,
-        "pick": 6.28
+        "avg": 4.45,
+        "pick": 9.89
       }
     ],
     "proComps": [
@@ -7274,667 +7266,14 @@
     ]
   },
   {
-    "id": "mt-425006",
-    "name": "개화 렝가",
-    "tierLabel": "B",
-    "tier": 4,
-    "avgPlacement": 4.46,
-    "games": 298713,
-    "winRate": 0.1159,
-    "top4Rate": 0.5363,
-    "pickRate": 0.0096,
-    "levelling": "lvl 7",
-    "difficulty": "보통",
-    "threeStarTargets": [
-      "masteryi",
-      "rengar",
-      "krug",
-      "vi",
-      "kogmaw",
-      "rammus",
-      "khazix"
-    ],
-    "carryId": "rengar",
-    "coreUnits": [
-      {
-        "unitId": "masteryi",
-        "star": 3,
-        "pos": [
-          2,
-          6
-        ]
-      },
-      {
-        "unitId": "rengar",
-        "star": 3,
-        "pos": [
-          2,
-          5
-        ]
-      },
-      {
-        "unitId": "sett",
-        "star": 2,
-        "pos": [
-          0,
-          3
-        ]
-      },
-      {
-        "unitId": "yorick",
-        "star": 2,
-        "pos": [
-          0,
-          2
-        ]
-      },
-      {
-        "unitId": "krug",
-        "star": 2,
-        "pos": [
-          0,
-          1
-        ]
-      },
-      {
-        "unitId": "nidalee",
-        "star": 2,
-        "pos": [
-          3,
-          6
-        ]
-      },
-      {
-        "unitId": "vi",
-        "star": 2,
-        "pos": [
-          0,
-          5
-        ]
-      }
-    ],
-    "coreItems": [
-      {
-        "unitId": "masteryi",
-        "itemId": "guinsoosrageblade"
-      },
-      {
-        "unitId": "rengar",
-        "itemId": "guardianangel"
-      },
-      {
-        "unitId": "rengar",
-        "itemId": "guinsoosrageblade"
-      },
-      {
-        "unitId": "rengar",
-        "itemId": "titansresolve"
-      },
-      {
-        "unitId": "vi",
-        "itemId": "spectralgauntlet"
-      },
-      {
-        "unitId": "vi",
-        "itemId": "gargoylestoneplate"
-      },
-      {
-        "unitId": "vi",
-        "itemId": "redbuff"
-      },
-      {
-        "unitId": "nidalee",
-        "itemId": "infinityedge"
-      },
-      {
-        "unitId": "nidalee",
-        "itemId": "spearofshojin"
-      },
-      {
-        "unitId": "nidalee",
-        "itemId": "steraksgage"
-      }
-    ],
-    "altItems": {
-      "masteryi": [
-        "quicksilver",
-        "guardianangel",
-        "bloodthirster"
-      ],
-      "rengar": [
-        "steraksgage",
-        "bloodthirster",
-        "unstableconcoction"
-      ],
-      "vi": [
-        "redemption",
-        "warmogsarmor",
-        "dragonsclaw"
-      ],
-      "nidalee": [
-        "guardianangel",
-        "unstableconcoction",
-        "guinsoosrageblade"
-      ]
-    },
-    "levels": {
-      "4": {
-        "units": [
-          "masteryi",
-          "rengar",
-          "yorick",
-          "karma"
-        ],
-        "avg": 3.8806,
-        "count": 335
-      },
-      "5": {
-        "units": [
-          "masteryi",
-          "rengar",
-          "yorick",
-          "karma",
-          "vi"
-        ],
-        "avg": 3.8534,
-        "count": 266
-      },
-      "7": {
-        "units": [
-          "masteryi",
-          "rengar",
-          "sett",
-          "yorick",
-          "krug",
-          "nidalee",
-          "vi"
-        ],
-        "avg": 5.6928,
-        "count": 2054
-      },
-      "8": {
-        "units": [
-          "masteryi",
-          "rengar",
-          "sett",
-          "yorick",
-          "kogmaw",
-          "krug",
-          "nidalee",
-          "vi"
-        ],
-        "avg": 3.1397,
-        "count": 1303
-      },
-      "9": {
-        "units": [
-          "gnar",
-          "masteryi",
-          "rengar",
-          "sett",
-          "yorick",
-          "kogmaw",
-          "krug",
-          "nidalee",
-          "vi"
-        ],
-        "avg": 1.8692,
-        "count": 107
-      },
-      "10": {
-        "units": [
-          "akali",
-          "gnar",
-          "masteryi",
-          "rengar",
-          "sett",
-          "yorick",
-          "kogmaw",
-          "krug",
-          "nidalee",
-          "vi"
-        ],
-        "avg": 1.75,
-        "count": 4
-      }
-    },
-    "counters": [
-      {
-        "deckId": "mt-425023",
-        "placeChange": 0.4
-      },
-      {
-        "deckId": "mt-425026",
-        "placeChange": 0.17
-      },
-      {
-        "deckId": "mt-425001",
-        "placeChange": 0.11
-      },
-      {
-        "deckId": "mt-425002",
-        "placeChange": 0.11
-      },
-      {
-        "deckId": "mt-425000",
-        "placeChange": 0.1
-      },
-      {
-        "deckId": "mt-425005",
-        "placeChange": 0.1
-      },
-      {
-        "deckId": "mt-425014",
-        "placeChange": 0.08
-      },
-      {
-        "deckId": "mt-425012",
-        "placeChange": 0.08
-      },
-      {
-        "deckId": "mt-425025",
-        "placeChange": 0.08
-      },
-      {
-        "deckId": "mt-425007",
-        "placeChange": 0.07
-      },
-      {
-        "deckId": "mt-425003",
-        "placeChange": 0.07
-      },
-      {
-        "deckId": "mt-425019",
-        "placeChange": -0.01
-      },
-      {
-        "deckId": "mt-425013",
-        "placeChange": -0.05
-      },
-      {
-        "deckId": "mt-425047",
-        "placeChange": -0.05
-      },
-      {
-        "deckId": "mt-425022",
-        "placeChange": -0.28
-      },
-      {
-        "deckId": "mt-425008",
-        "placeChange": -0.28
-      }
-    ],
-    "augments": [
-      {
-        "id": "DA_18_BranchingOut",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BranchingOutPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ChampDeliveryPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_LatentForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PartialAscension",
-        "tier": "S"
-      },
-      {
-        "id": "DA_RollingForDays",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SilverDestinyPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SlightlyMagicRoll",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SmallGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TeamBuilding",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_Ascension",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BigGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_CookingPot",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ExclusiveCustomization",
-        "tier": "S"
-      },
-      {
-        "id": "DA_GainGold",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBagPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBagPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PortableForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SalvageBin",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SalvageBinPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SpreadingRoots",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SpreadingRootsPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ForgedInStrength",
-        "tier": "S"
-      },
-      {
-        "id": "DA_LivingForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvils",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvilsPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SweetTreats",
-        "tier": "S"
-      },
-      {
-        "id": "DA_BackupBows",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BandOfThieves",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoxingLessons",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ComponentBuffet",
-        "tier": "A"
-      },
-      {
-        "id": "DA_FeelingLucky",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GroupHugI",
-        "tier": "A"
-      },
-      {
-        "id": "DA_IronAssets",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MissedConnections",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PatienceIsAVirtue",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagic",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SilverDestiny",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SilverDestinyPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoosterPack",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoosterPackPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BoosterPackPlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_DuoQueue",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldDestiny",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldDestinyPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MagicRoll",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungry_NotBroken",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungryPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Replication",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SpeedyDoubleKill",
-        "tier": "A"
-      },
-      {
-        "id": "DA_TradeSector",
-        "tier": "A"
-      },
-      {
-        "id": "DA_TradeSectorPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BaronsLair",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BuriedTreasuresIII",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CallToChaos",
-        "tier": "A"
-      },
-      {
-        "id": "DA_CommerceCore",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ComebackStory",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamble",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamblePlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamblePlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyMonsoon",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PrismaticTicket",
-        "tier": "A"
-      }
-    ],
-    "trends": [
-      {
-        "day": "09-25",
-        "avg": 4.43,
-        "pick": 0.96
-      },
-      {
-        "day": "09-26",
-        "avg": 4.46,
-        "pick": 0.93
-      },
-      {
-        "day": "09-27",
-        "avg": 4.42,
-        "pick": 0.83
-      },
-      {
-        "day": "09-28",
-        "avg": 4.46,
-        "pick": 0.9
-      },
-      {
-        "day": "09-29",
-        "avg": 4.43,
-        "pick": 0.9
-      },
-      {
-        "day": "09-30",
-        "avg": 4.46,
-        "pick": 0.9
-      },
-      {
-        "day": "10-01",
-        "avg": 4.5,
-        "pick": 0.89
-      },
-      {
-        "day": "10-02",
-        "avg": 4.89,
-        "pick": 0.86
-      }
-    ],
-    "proComps": [
-      {
-        "title": "MASTER YI > Adaptor > Lvl 7 reroll",
-        "author": "Sologesang#EUW",
-        "notes": "- PRIMAL: Tank (green Turtle one);\n- RENGAR farms us gold so prioritise item / combat augments early for winstreak;",
-        "units": [
-          {
-            "unitId": "masteryi",
-            "items": [
-              "guinsoosrageblade",
-              "guardianangel",
-              "titansresolve"
-            ]
-          },
-          {
-            "unitId": "vi",
-            "items": [
-              "gargoylestoneplate",
-              "redbuff",
-              "redemption"
-            ]
-          },
-          {
-            "unitId": "rengar",
-            "items": [
-              "guinsoosrageblade",
-              "steraksgage",
-              "titansresolve"
-            ]
-          },
-          {
-            "unitId": "sett",
-            "items": []
-          },
-          {
-            "unitId": "yorick",
-            "items": []
-          },
-          {
-            "unitId": "kogmaw",
-            "items": []
-          },
-          {
-            "unitId": "nidalee",
-            "items": []
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "mt-425023",
     "name": "적응가 마스터 이",
     "tierLabel": "B",
     "tier": 4,
     "avgPlacement": 4.48,
-    "games": 242598,
-    "winRate": 0.0709,
-    "top4Rate": 0.5053,
+    "games": 239351,
+    "winRate": 0.0707,
+    "top4Rate": 0.5051,
     "pickRate": 0.0078,
     "levelling": "lvl 7",
     "difficulty": "보통",
@@ -7943,8 +7282,8 @@
       "kogmaw",
       "krug",
       "vi",
-      "hecarim",
       "rammus",
+      "hecarim",
       "khazix"
     ],
     "carryId": "masteryi",
@@ -7978,7 +7317,7 @@
         "star": 2,
         "pos": [
           3,
-          6
+          0
         ]
       },
       {
@@ -8025,15 +7364,15 @@
       },
       {
         "unitId": "nidalee",
+        "itemId": "guardianangel"
+      },
+      {
+        "unitId": "nidalee",
+        "itemId": "unstableconcoction"
+      },
+      {
+        "unitId": "nidalee",
         "itemId": "infinityedge"
-      },
-      {
-        "unitId": "nidalee",
-        "itemId": "spearofshojin"
-      },
-      {
-        "unitId": "nidalee",
-        "itemId": "steraksgage"
       },
       {
         "unitId": "krug",
@@ -8055,19 +7394,19 @@
         "titansresolve"
       ],
       "kogmaw": [
-        "deathblade",
-        "archangelsstaff",
-        "morellonomicon"
+        "madredsbloodrazor",
+        "powergauntlet",
+        "archangelsstaff"
       ],
       "nidalee": [
-        "guardianangel",
-        "deathblade",
-        "bluebuff"
+        "bloodthirster",
+        "steraksgage",
+        "guinsoosrageblade"
       ],
       "krug": [
         "warmogsarmor",
-        "nightharvester",
-        "crownguard"
+        "frozenheart",
+        "spectralgauntlet"
       ]
     },
     "levels": {
@@ -8078,8 +7417,8 @@
           "yorick",
           "karma"
         ],
-        "avg": 3.4848,
-        "count": 165
+        "avg": 3.7891,
+        "count": 147
       },
       "5": {
         "units": [
@@ -8089,8 +7428,8 @@
           "kogmaw",
           "vi"
         ],
-        "avg": 3.7432,
-        "count": 74
+        "avg": 3.9012,
+        "count": 81
       },
       "7": {
         "units": [
@@ -8102,8 +7441,8 @@
           "nidalee",
           "vi"
         ],
-        "avg": 5.2984,
-        "count": 1374
+        "avg": 5.2888,
+        "count": 1333
       },
       "8": {
         "units": [
@@ -8116,8 +7455,8 @@
           "nidalee",
           "vi"
         ],
-        "avg": 3.0657,
-        "count": 426
+        "avg": 3.0509,
+        "count": 432
       },
       "9": {
         "units": [
@@ -8131,15 +7470,15 @@
           "sentinel",
           "vi"
         ],
-        "avg": 2.6452,
-        "count": 31
+        "avg": 2.9259,
+        "count": 27
       },
       "10": {
         "units": [
           "alistar",
           "gnar",
-          "kobuko",
           "masteryi",
+          "reksai",
           "sett",
           "yorick",
           "kogmaw",
@@ -8147,15 +7486,11 @@
           "nidalee",
           "vi"
         ],
-        "avg": 2,
-        "count": 4
+        "avg": 1.4,
+        "count": 5
       }
     },
     "counters": [
-      {
-        "deckId": "mt-425006",
-        "placeChange": 0.49
-      },
       {
         "deckId": "mt-425001",
         "placeChange": 0.35
@@ -8203,6 +7538,10 @@
       {
         "deckId": "mt-425022",
         "placeChange": -0.06
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": -0.07
       },
       {
         "deckId": "mt-425047",
@@ -8490,8 +7829,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.39,
-        "pick": 0.57
+        "avg": 4.93,
+        "pick": 0.44
       },
       {
         "day": "09-26",
@@ -8525,8 +7864,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.67,
-        "pick": 0.55
+        "avg": 4.47,
+        "pick": 0.57
       }
     ],
     "proComps": [
@@ -8580,663 +7919,27 @@
     ]
   },
   {
-    "id": "mt-425008",
-    "name": "엄호대 카시오페아",
-    "tierLabel": "B",
-    "tier": 4,
-    "avgPlacement": 4.48,
-    "games": 703312,
-    "winRate": 0.0975,
-    "top4Rate": 0.5378,
-    "pickRate": 0.0226,
-    "levelling": "lvl 7",
-    "difficulty": "보통",
-    "threeStarTargets": [
-      "cassiopeia",
-      "rammus",
-      "fiddlesticks",
-      "rengar",
-      "khazix",
-      "masteryi",
-      "warwick"
-    ],
-    "carryId": "cassiopeia",
-    "coreUnits": [
-      {
-        "unitId": "cassiopeia",
-        "star": 3,
-        "pos": [
-          3,
-          6
-        ]
-      },
-      {
-        "unitId": "leona",
-        "star": 2,
-        "pos": [
-          0,
-          0
-        ]
-      },
-      {
-        "unitId": "lillia",
-        "star": 2,
-        "pos": [
-          0,
-          3
-        ]
-      },
-      {
-        "unitId": "ornn",
-        "star": 2,
-        "pos": [
-          0,
-          2
-        ]
-      },
-      {
-        "unitId": "rammus",
-        "star": 3,
-        "pos": [
-          0,
-          5
-        ]
-      },
-      {
-        "unitId": "shen",
-        "star": 2,
-        "pos": [
-          0,
-          1
-        ]
-      },
-      {
-        "unitId": "fiddlesticks",
-        "star": 2,
-        "pos": [
-          0,
-          4
-        ]
-      }
-    ],
-    "coreItems": [
-      {
-        "unitId": "cassiopeia",
-        "itemId": "archangelsstaff"
-      },
-      {
-        "unitId": "cassiopeia",
-        "itemId": "archangelsstaff"
-      },
-      {
-        "unitId": "cassiopeia",
-        "itemId": "hextechgunblade"
-      },
-      {
-        "unitId": "rammus",
-        "itemId": "gargoylestoneplate"
-      },
-      {
-        "unitId": "rammus",
-        "itemId": "redemption"
-      },
-      {
-        "unitId": "rammus",
-        "itemId": "warmogsarmor"
-      },
-      {
-        "unitId": "fiddlesticks",
-        "itemId": "archangelsstaff"
-      },
-      {
-        "unitId": "fiddlesticks",
-        "itemId": "ionicspark"
-      },
-      {
-        "unitId": "fiddlesticks",
-        "itemId": "titansresolve"
-      },
-      {
-        "unitId": "lillia",
-        "itemId": "gargoylestoneplate"
-      },
-      {
-        "unitId": "lillia",
-        "itemId": "frozenheart"
-      },
-      {
-        "unitId": "lillia",
-        "itemId": "warmogsarmor"
-      }
-    ],
-    "altItems": {
-      "cassiopeia": [
-        "spearofshojin",
-        "bluebuff",
-        "rabadonsdeathcap"
-      ],
-      "rammus": [
-        "bramblevest",
-        "crownguard",
-        "ionicspark"
-      ],
-      "fiddlesticks": [
-        "crownguard",
-        "redbuff",
-        "dragonsclaw"
-      ],
-      "lillia": [
-        "adaptivehelm",
-        "spectralgauntlet",
-        "crownguard"
-      ]
-    },
-    "levels": {
-      "4": {
-        "units": [
-          "caitlyn",
-          "camille",
-          "cassiopeia",
-          "elise"
-        ],
-        "avg": 4.035,
-        "count": 600
-      },
-      "5": {
-        "units": [
-          "cassiopeia",
-          "leona",
-          "ornn",
-          "shen",
-          "fiddlesticks"
-        ],
-        "avg": 3.9927,
-        "count": 687
-      },
-      "7": {
-        "units": [
-          "cassiopeia",
-          "leona",
-          "lillia",
-          "ornn",
-          "rammus",
-          "shen",
-          "fiddlesticks"
-        ],
-        "avg": 5.5864,
-        "count": 4093
-      },
-      "8": {
-        "units": [
-          "cassiopeia",
-          "leona",
-          "lillia",
-          "ornn",
-          "rammus",
-          "shen",
-          "soraka",
-          "fiddlesticks"
-        ],
-        "avg": 3.5354,
-        "count": 2441
-      },
-      "9": {
-        "units": [
-          "cassiopeia",
-          "kennen",
-          "leona",
-          "lillia",
-          "ornn",
-          "rammus",
-          "shen",
-          "soraka",
-          "fiddlesticks"
-        ],
-        "avg": 2.5764,
-        "count": 144
-      },
-      "10": {
-        "units": [
-          "cassiopeia",
-          "ivern",
-          "kennen",
-          "leona",
-          "lillia",
-          "ornn",
-          "rammus",
-          "shen",
-          "soraka",
-          "fiddlesticks"
-        ],
-        "avg": 1.8889,
-        "count": 9
-      }
-    },
-    "counters": [
-      {
-        "deckId": "mt-425013",
-        "placeChange": 0.2
-      },
-      {
-        "deckId": "mt-425014",
-        "placeChange": 0.15
-      },
-      {
-        "deckId": "mt-425003",
-        "placeChange": 0.13
-      },
-      {
-        "deckId": "mt-425002",
-        "placeChange": 0.12
-      },
-      {
-        "deckId": "mt-425001",
-        "placeChange": 0.1
-      },
-      {
-        "deckId": "mt-425005",
-        "placeChange": 0.05
-      },
-      {
-        "deckId": "mt-425047",
-        "placeChange": 0.03
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.02
-      },
-      {
-        "deckId": "mt-425007",
-        "placeChange": -0.02
-      },
-      {
-        "deckId": "mt-425025",
-        "placeChange": -0.03
-      },
-      {
-        "deckId": "mt-425000",
-        "placeChange": -0.08
-      },
-      {
-        "deckId": "mt-425012",
-        "placeChange": -0.09
-      },
-      {
-        "deckId": "mt-425026",
-        "placeChange": -0.1
-      },
-      {
-        "deckId": "mt-425022",
-        "placeChange": -0.11
-      },
-      {
-        "deckId": "mt-425019",
-        "placeChange": -0.11
-      },
-      {
-        "deckId": "mt-425023",
-        "placeChange": -0.14
-      }
-    ],
-    "augments": [
-      {
-        "id": "DA_BoxingLessons",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BranchingOut",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BranchingOutPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ChampDeliveryPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ComponentBuffet",
-        "tier": "S"
-      },
-      {
-        "id": "DA_FeelingLucky",
-        "tier": "S"
-      },
-      {
-        "id": "DA_LatentForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PartialAscension",
-        "tier": "S"
-      },
-      {
-        "id": "DA_RollingForDays",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SilverDestinyPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SmallGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TeamBuilding",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_WispRebatePlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_FloraFatalisAugmentPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ConstructACompanion",
-        "tier": "S"
-      },
-      {
-        "id": "DA_Ascension",
-        "tier": "S"
-      },
-      {
-        "id": "DA_18_BigGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ExclusiveCustomization",
-        "tier": "S"
-      },
-      {
-        "id": "DA_FrontlineFoundation",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBagPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_HeroicGrabBagPlusPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_PortableForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SeraphimsStaff",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SpreadingRoots",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SpreadingRootsPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_Staffsmith",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TradeSector",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TradeSectorPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_LivingForge",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvils",
-        "tier": "S"
-      },
-      {
-        "id": "DA_NestingAnvilsPlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_ShoppingSpree",
-        "tier": "S"
-      },
-      {
-        "id": "DA_SweetTreats",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TheTraitTree",
-        "tier": "S"
-      },
-      {
-        "id": "DA_TheTraitTreePlus",
-        "tier": "S"
-      },
-      {
-        "id": "DA_UrfsGrabBag",
-        "tier": "S"
-      },
-      {
-        "id": "DA_CognitiveTaxPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ElectrochargeI",
-        "tier": "A"
-      },
-      {
-        "id": "DA_FlowingTears",
-        "tier": "A"
-      },
-      {
-        "id": "DA_IronAssets",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Kingslayer",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MissedConnections",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PandorasItemsI",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PatienceIsAVirtue",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagic",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_18_ResidualMagicPlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_SlightlyMagicRoll",
-        "tier": "A"
-      },
-      {
-        "id": "DA_ElectrochargeII",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GainGold",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungry_NotBroken",
-        "tier": "A"
-      },
-      {
-        "id": "DA_MoneyHungryPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BeltOverflow",
-        "tier": "A"
-      },
-      {
-        "id": "DA_BuriedTreasuresIII",
-        "tier": "A"
-      },
-      {
-        "id": "DA_DeadlierCaps",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamble",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamblePlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_GoldenGamblePlusPlus",
-        "tier": "A"
-      },
-      {
-        "id": "DA_Min_Max",
-        "tier": "A"
-      },
-      {
-        "id": "DA_PrismaticTicket",
-        "tier": "A"
-      }
-    ],
-    "trends": [
-      {
-        "day": "09-25",
-        "avg": 4.43,
-        "pick": 1.99
-      },
-      {
-        "day": "09-26",
-        "avg": 4.38,
-        "pick": 2.02
-      },
-      {
-        "day": "09-27",
-        "avg": 4.45,
-        "pick": 2
-      },
-      {
-        "day": "09-28",
-        "avg": 4.47,
-        "pick": 1.96
-      },
-      {
-        "day": "09-29",
-        "avg": 4.47,
-        "pick": 1.92
-      },
-      {
-        "day": "09-30",
-        "avg": 4.5,
-        "pick": 1.95
-      },
-      {
-        "day": "10-01",
-        "avg": 4.46,
-        "pick": 1.95
-      },
-      {
-        "day": "10-02",
-        "avg": 4.45,
-        "pick": 2.23
-      }
-    ],
-    "proComps": [
-      {
-        "title": "CASSIOPEIA > Defender > Lvl 7 reroll",
-        "author": "Sologesang#EUW",
-        "notes": "- CASSIOPEIA needs ARCHANGEL (or Rabadons) and Gunblade;",
-        "units": [
-          {
-            "unitId": "ornn",
-            "items": []
-          },
-          {
-            "unitId": "leona",
-            "items": []
-          },
-          {
-            "unitId": "rammus",
-            "items": []
-          },
-          {
-            "unitId": "shen",
-            "items": []
-          },
-          {
-            "unitId": "fiddlesticks",
-            "items": [
-              "redbuff",
-              "ionicspark",
-              "titansresolve"
-            ]
-          },
-          {
-            "unitId": "lillia",
-            "items": []
-          },
-          {
-            "unitId": "cassiopeia",
-            "items": [
-              "archangelsstaff",
-              "hextechgunblade",
-              "spearofshojin"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "mt-425019",
     "name": "약탈자 워윅",
     "tierLabel": "B",
     "tier": 4,
     "avgPlacement": 4.48,
-    "games": 471242,
-    "winRate": 0.0669,
-    "top4Rate": 0.5231,
-    "pickRate": 0.0151,
+    "games": 457122,
+    "winRate": 0.0674,
+    "top4Rate": 0.5236,
+    "pickRate": 0.0148,
     "levelling": "lvl 6",
     "difficulty": "보통",
     "threeStarTargets": [
       "warwick",
       "murkwolf",
       "elise",
-      "alistar",
       "yunara",
+      "alistar",
       "khazix",
       "scuttlecrab",
       "rengar",
+      "kobuko",
       "shen",
       "sejuani",
       "caitlyn"
@@ -9361,19 +8064,19 @@
         "quicksilver"
       ],
       "malphite": [
+        "spectralgauntlet",
         "redbuff",
-        "redemption",
-        "spectralgauntlet"
+        "redemption"
       ],
       "murkwolf": [
-        "deathblade",
+        "quicksilver",
         "madredsbloodrazor",
-        "quicksilver"
+        "deathblade"
       ],
       "brambleback": [
-        "quicksilver",
+        "infinityedge",
         "steraksgage",
-        "madredsbloodrazor"
+        "bloodthirster"
       ]
     },
     "levels": {
@@ -9384,8 +8087,8 @@
           "warwick",
           "murkwolf"
         ],
-        "avg": 4.3409,
-        "count": 704
+        "avg": 4.264,
+        "count": 731
       },
       "5": {
         "units": [
@@ -9395,8 +8098,8 @@
           "warwick",
           "murkwolf"
         ],
-        "avg": 4.2946,
-        "count": 482
+        "avg": 4.2953,
+        "count": 569
       },
       "7": {
         "units": [
@@ -9408,8 +8111,8 @@
           "krug",
           "murkwolf"
         ],
-        "avg": 5.5714,
-        "count": 574
+        "avg": 5.513,
+        "count": 577
       },
       "8": {
         "units": [
@@ -9422,8 +8125,8 @@
           "krug",
           "murkwolf"
         ],
-        "avg": 3.7876,
-        "count": 2265
+        "avg": 3.8374,
+        "count": 2196
       },
       "9": {
         "units": [
@@ -9437,14 +8140,14 @@
           "lux",
           "murkwolf"
         ],
-        "avg": 2.4286,
-        "count": 98
+        "avg": 2.4118,
+        "count": 102
       },
       "10": {
         "units": [
+          "alune",
           "azir",
           "diana",
-          "ivern",
           "malphite",
           "reksai",
           "warwick",
@@ -9453,8 +8156,8 @@
           "murkwolf",
           "taric"
         ],
-        "avg": 2.8889,
-        "count": 9
+        "avg": 1.6,
+        "count": 10
       }
     },
     "counters": [
@@ -9471,12 +8174,12 @@
         "placeChange": 0.17
       },
       {
-        "deckId": "mt-425006",
+        "deckId": "mt-425014",
         "placeChange": 0.12
       },
       {
-        "deckId": "mt-425014",
-        "placeChange": 0.12
+        "deckId": "mt-425010",
+        "placeChange": 0.1
       },
       {
         "deckId": "mt-425013",
@@ -9527,8 +8230,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.58,
-        "pick": 1.36
+        "avg": 4.25,
+        "pick": 1.03
       },
       {
         "day": "09-26",
@@ -9562,8 +8265,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.66,
-        "pick": 1.59
+        "avg": 4.49,
+        "pick": 1.06
       }
     ],
     "proComps": [
@@ -9615,15 +8318,16 @@
     "name": "나무정령 이즈리얼 아무무",
     "tierLabel": "B",
     "tier": 4,
-    "avgPlacement": 4.48,
-    "games": 1148637,
-    "winRate": 0.1964,
-    "top4Rate": 0.5128,
-    "pickRate": 0.0369,
+    "avgPlacement": 4.49,
+    "games": 1106421,
+    "winRate": 0.1941,
+    "top4Rate": 0.5107,
+    "pickRate": 0.0359,
     "levelling": "Fast 9",
     "difficulty": "어려움",
     "threeStarTargets": [
       "rengar",
+      "veigar",
       "leona"
     ],
     "carryId": "ezreal",
@@ -9751,22 +8455,22 @@
       "draven": [
         "deathblade",
         "infinityedge",
-        "redbuff"
+        "madredsbloodrazor"
       ],
       "maokai": [
         "dragonsclaw",
         "spectralgauntlet",
-        "nightharvester"
+        "frozenheart"
       ],
       "ezreal": [
-        "infinityedge",
-        "powergauntlet",
-        "deathblade"
+        "deathblade",
+        "bluebuff",
+        "powergauntlet"
       ],
       "kennen": [
-        "jeweledgauntlet",
         "rabadonsdeathcap",
-        "thiefsgloves"
+        "jeweledgauntlet",
+        "redbuff"
       ]
     },
     "levels": {
@@ -9777,8 +8481,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.5075,
-        "count": 798
+        "avg": 4.5508,
+        "count": 768
       },
       "5": {
         "units": [
@@ -9788,8 +8492,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 3.9508,
-        "count": 732
+        "avg": 4.04,
+        "count": 750
       },
       "6": {
         "units": [
@@ -9800,8 +8504,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 4.502,
-        "count": 504
+        "avg": 4.5047,
+        "count": 535
       },
       "7": {
         "units": [
@@ -9813,8 +8517,8 @@
           "varus",
           "xayah"
         ],
-        "avg": 3.92,
-        "count": 125
+        "avg": 4.5714,
+        "count": 133
       },
       "8": {
         "units": [
@@ -9827,8 +8531,8 @@
           "draven",
           "taric"
         ],
-        "avg": 5.8143,
-        "count": 70
+        "avg": 5.7794,
+        "count": 68
       },
       "9": {
         "units": [
@@ -9842,8 +8546,8 @@
           "draven",
           "taric"
         ],
-        "avg": 4.0505,
-        "count": 8633
+        "avg": 4.0538,
+        "count": 8461
       },
       "10": {
         "units": [
@@ -9858,8 +8562,8 @@
           "lux",
           "taric"
         ],
-        "avg": 1.655,
-        "count": 800
+        "avg": 1.6843,
+        "count": 757
       },
       "11": {
         "units": [
@@ -9875,11 +8579,15 @@
           "sentinel",
           "taric"
         ],
-        "avg": 1.8333,
-        "count": 12
+        "avg": 1.8182,
+        "count": 11
       }
     },
     "counters": [
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.16
+      },
       {
         "deckId": "mt-425001",
         "placeChange": 0.13
@@ -9927,10 +8635,6 @@
       {
         "deckId": "mt-425023",
         "placeChange": -0.03
-      },
-      {
-        "deckId": "mt-425006",
-        "placeChange": -0.04
       },
       {
         "deckId": "mt-425008",
@@ -10298,8 +9002,8 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.36,
-        "pick": 4.06
+        "avg": 4.12,
+        "pick": 4.09
       },
       {
         "day": "09-26",
@@ -10333,8 +9037,8 @@
       },
       {
         "day": "10-02",
-        "avg": 4.27,
-        "pick": 3.82
+        "avg": 4.48,
+        "pick": 3.27
       }
     ],
     "proComps": [
@@ -10391,62 +9095,27 @@
     ]
   },
   {
-    "id": "mt-425012",
-    "name": "개화 아리 시비르",
+    "id": "mt-425010",
+    "name": "처형자 소라카",
     "tierLabel": "B",
     "tier": 4,
-    "avgPlacement": 4.49,
-    "games": 458533,
-    "winRate": 0.1293,
-    "top4Rate": 0.5232,
-    "pickRate": 0.0147,
+    "avgPlacement": 4.5,
+    "games": 977804,
+    "winRate": 0.1147,
+    "top4Rate": 0.5456,
+    "pickRate": 0.0317,
     "levelling": "Fast 8",
-    "difficulty": "쉬움",
-    "threeStarTargets": [],
-    "carryId": "ahri",
+    "difficulty": "보통",
+    "threeStarTargets": [
+      "leona",
+      "kobuko",
+      "xayah",
+      "camille"
+    ],
+    "carryId": "soraka",
     "coreUnits": [
       {
-        "unitId": "ahri",
-        "star": 2,
-        "pos": [
-          3,
-          0
-        ]
-      },
-      {
-        "unitId": "gnar",
-        "star": 1,
-        "pos": [
-          1,
-          3
-        ]
-      },
-      {
-        "unitId": "sett",
-        "star": 2,
-        "pos": [
-          0,
-          3
-        ]
-      },
-      {
-        "unitId": "shen",
-        "star": 2,
-        "pos": [
-          2,
-          4
-        ]
-      },
-      {
-        "unitId": "yorick",
-        "star": 2,
-        "pos": [
-          0,
-          2
-        ]
-      },
-      {
-        "unitId": "zyra",
+        "unitId": "azir",
         "star": 2,
         "pos": [
           3,
@@ -10454,50 +9123,74 @@
         ]
       },
       {
-        "unitId": "amumu",
+        "unitId": "kennen",
+        "star": 1,
+        "pos": [
+          1,
+          3
+        ]
+      },
+      {
+        "unitId": "malphite",
         "star": 2,
         "pos": [
           0,
+          3
+        ]
+      },
+      {
+        "unitId": "soraka",
+        "star": 2,
+        "pos": [
+          3,
+          0
+        ]
+      },
+      {
+        "unitId": "yorick",
+        "star": 2,
+        "pos": [
+          2,
           4
+        ]
+      },
+      {
+        "unitId": "zyra",
+        "star": 2,
+        "pos": [
+          3,
+          1
+        ]
+      },
+      {
+        "unitId": "amumu",
+        "star": 2,
+        "pos": [
+          2,
+          2
         ]
       },
       {
         "unitId": "fiddlesticks",
         "star": 2,
         "pos": [
-          1,
-          2
+          2,
+          3
         ]
       }
     ],
     "coreItems": [
       {
-        "unitId": "ahri",
-        "itemId": "jeweledgauntlet"
+        "unitId": "malphite",
+        "itemId": "crownguard"
       },
       {
-        "unitId": "ahri",
-        "itemId": "spearofshojin"
-      },
-      {
-        "unitId": "ahri",
-        "itemId": "powergauntlet"
-      },
-      {
-        "unitId": "sett",
+        "unitId": "malphite",
         "itemId": "gargoylestoneplate"
       },
       {
-        "unitId": "sett",
-        "itemId": "redemption"
-      },
-      {
-        "unitId": "sett",
+        "unitId": "malphite",
         "itemId": "warmogsarmor"
-      },
-      {
-        "unitId": "zyra",
-        "itemId": "archangelsstaff"
       },
       {
         "unitId": "zyra",
@@ -10508,38 +9201,46 @@
         "itemId": "statikkshiv"
       },
       {
-        "unitId": "amumu",
-        "itemId": "crownguard"
+        "unitId": "soraka",
+        "itemId": "rabadonsdeathcap"
       },
       {
-        "unitId": "amumu",
-        "itemId": "gargoylestoneplate"
+        "unitId": "soraka",
+        "itemId": "spearofshojin"
       },
       {
-        "unitId": "amumu",
-        "itemId": "warmogsarmor"
+        "unitId": "azir",
+        "itemId": "guinsoosrageblade"
+      },
+      {
+        "unitId": "azir",
+        "itemId": "hextechgunblade"
+      },
+      {
+        "unitId": "azir",
+        "itemId": "rabadonsdeathcap"
       }
     ],
     "altItems": {
-      "ahri": [
-        "bluebuff",
-        "rabadonsdeathcap",
-        "leviathan"
-      ],
-      "sett": [
-        "dragonsclaw",
-        "frozenheart",
-        "steraksgage"
+      "malphite": [
+        "redemption",
+        "nightharvester",
+        "bramblevest"
       ],
       "zyra": [
-        "morellonomicon",
-        "bluebuff",
-        "hextechgunblade"
+        "leviathan",
+        "archangelsstaff",
+        "redbuff"
       ],
-      "amumu": [
-        "nightharvester",
-        "redemption",
-        "dragonsclaw"
+      "soraka": [
+        "adaptivehelm",
+        "hextechgunblade",
+        "leviathan"
+      ],
+      "azir": [
+        "archangelsstaff",
+        "jeweledgauntlet",
+        "powergauntlet"
       ]
     },
     "levels": {
@@ -10550,155 +9251,155 @@
           "yunara",
           "karma"
         ],
-        "avg": 4.266,
-        "count": 703
+        "avg": 4.4281,
+        "count": 2259
       },
       "5": {
         "units": [
-          "leblanc",
+          "azir",
           "rakan",
           "yorick",
           "yunara",
           "karma"
         ],
-        "avg": 3.4663,
-        "count": 163
+        "avg": 4.1578,
+        "count": 919
       },
       "6": {
         "units": [
-          "ahri",
-          "masteryi",
+          "azir",
           "rakan",
+          "veigar",
           "yorick",
           "yunara",
           "karma"
         ],
-        "avg": 4.1964,
-        "count": 56
+        "avg": 3.9474,
+        "count": 266
       },
       "7": {
         "units": [
-          "ahri",
-          "sett",
-          "shen",
+          "azir",
+          "malphite",
+          "soraka",
           "yorick",
           "zyra",
           "amumu",
           "fiddlesticks"
         ],
-        "avg": 5.25,
-        "count": 8
+        "avg": 6.5896,
+        "count": 173
       },
       "8": {
         "units": [
-          "ahri",
-          "gnar",
-          "sett",
-          "shen",
+          "azir",
+          "kennen",
+          "malphite",
+          "soraka",
           "yorick",
           "zyra",
           "amumu",
           "fiddlesticks"
         ],
-        "avg": 4.6777,
-        "count": 1455
+        "avg": 5.088,
+        "count": 8379
       },
       "9": {
         "units": [
-          "ahri",
-          "gnar",
-          "ivern",
-          "sett",
-          "shen",
+          "azir",
+          "ezreal",
+          "kennen",
+          "malphite",
+          "soraka",
           "yorick",
           "zyra",
           "amumu",
           "fiddlesticks"
         ],
-        "avg": 3.044,
-        "count": 705
+        "avg": 3.236,
+        "count": 2525
       },
       "10": {
         "units": [
-          "ahri",
-          "ashe",
-          "gnar",
-          "sett",
-          "sivir",
+          "alune",
+          "azir",
+          "ezreal",
+          "kennen",
+          "malphite",
+          "soraka",
           "yorick",
           "zyra",
-          "karma",
-          "lux",
-          "vi"
+          "amumu",
+          "fiddlesticks"
         ],
-        "avg": 2,
-        "count": 42
+        "avg": 1.9697,
+        "count": 99
       }
     },
     "counters": [
       {
-        "deckId": "mt-425006",
-        "placeChange": 0.23
-      },
-      {
-        "deckId": "mt-425005",
-        "placeChange": 0.23
-      },
-      {
-        "deckId": "mt-425000",
-        "placeChange": 0.22
+        "deckId": "mt-425013",
+        "placeChange": 0.26
       },
       {
         "deckId": "mt-425007",
         "placeChange": 0.21
       },
       {
-        "deckId": "mt-425019",
+        "deckId": "mt-425000",
         "placeChange": 0.1
       },
       {
-        "deckId": "mt-425008",
-        "placeChange": 0.09
-      },
-      {
-        "deckId": "mt-425022",
-        "placeChange": 0.09
-      },
-      {
-        "deckId": "mt-425025",
+        "deckId": "mt-425026",
         "placeChange": 0.08
       },
       {
-        "deckId": "mt-425023",
+        "deckId": "mt-425008",
         "placeChange": 0.07
       },
       {
-        "deckId": "mt-425002",
+        "deckId": "mt-425019",
+        "placeChange": 0.07
+      },
+      {
+        "deckId": "mt-425005",
         "placeChange": 0.04
       },
       {
-        "deckId": "mt-425013",
-        "placeChange": -0.01
-      },
-      {
         "deckId": "mt-425003",
-        "placeChange": -0.02
+        "placeChange": 0.03
       },
       {
-        "deckId": "mt-425014",
-        "placeChange": -0.02
+        "deckId": "mt-425022",
+        "placeChange": 0.02
       },
       {
-        "deckId": "mt-425047",
-        "placeChange": -0.03
-      },
-      {
-        "deckId": "mt-425026",
-        "placeChange": -0.07
+        "deckId": "mt-425002",
+        "placeChange": 0.01
       },
       {
         "deckId": "mt-425001",
-        "placeChange": -0.25
+        "placeChange": 0
+      },
+      {
+        "deckId": "mt-425047",
+        "placeChange": -0.02
+      },
+      {
+        "deckId": "mt-425025",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425014",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425012",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425023",
+        "placeChange": -0.13
       }
     ],
     "augments": [
@@ -11058,8 +9759,1414 @@
     "trends": [
       {
         "day": "09-25",
-        "avg": 4.62,
-        "pick": 1.09
+        "avg": 4.47,
+        "pick": 7.98
+      },
+      {
+        "day": "09-26",
+        "avg": 4.48,
+        "pick": 7.17
+      },
+      {
+        "day": "09-27",
+        "avg": 4.51,
+        "pick": 7.09
+      },
+      {
+        "day": "09-28",
+        "avg": 4.51,
+        "pick": 7.06
+      },
+      {
+        "day": "09-29",
+        "avg": 4.5,
+        "pick": 7.13
+      },
+      {
+        "day": "09-30",
+        "avg": 4.49,
+        "pick": 6.99
+      },
+      {
+        "day": "10-01",
+        "avg": 4.51,
+        "pick": 6.8
+      },
+      {
+        "day": "10-02",
+        "avg": 4.49,
+        "pick": 6.69
+      }
+    ],
+    "proComps": [
+      {
+        "title": "SORAKA > Executioner > Lvl 8 push",
+        "author": "Sologesang#EUW",
+        "notes": "- BLACKTHORN: sacrifice FIDDLESTICKS or AMUMU -> the more expensive the unit the bigger the Blackthorn bonus;\n- itemise ZYRA lvl 2 > SORAKA lvl 2 > ZYRA lvl 1;\n- KENNEN early -> replace Ezreal;",
+        "units": [
+          {
+            "unitId": "malphite",
+            "items": [
+              "gargoylestoneplate",
+              "warmogsarmor",
+              "gargoylestoneplate"
+            ]
+          },
+          {
+            "unitId": "fiddlesticks",
+            "items": []
+          },
+          {
+            "unitId": "amumu",
+            "items": []
+          },
+          {
+            "unitId": "yorick",
+            "items": []
+          },
+          {
+            "unitId": "zyra",
+            "items": [
+              "statikkshiv"
+            ]
+          },
+          {
+            "unitId": "soraka",
+            "items": [
+              "leviathan",
+              "rabadonsdeathcap",
+              "spearofshojin"
+            ]
+          },
+          {
+            "unitId": "ezreal",
+            "items": []
+          },
+          {
+            "unitId": "azir",
+            "items": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mt-425008",
+    "name": "엄호대 카시오페아",
+    "tierLabel": "B",
+    "tier": 4,
+    "avgPlacement": 4.5,
+    "games": 691793,
+    "winRate": 0.0965,
+    "top4Rate": 0.5362,
+    "pickRate": 0.0225,
+    "levelling": "lvl 7",
+    "difficulty": "보통",
+    "threeStarTargets": [
+      "cassiopeia",
+      "rammus",
+      "fiddlesticks",
+      "rengar",
+      "khazix",
+      "masteryi"
+    ],
+    "carryId": "cassiopeia",
+    "coreUnits": [
+      {
+        "unitId": "cassiopeia",
+        "star": 3,
+        "pos": [
+          3,
+          6
+        ]
+      },
+      {
+        "unitId": "leona",
+        "star": 2,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      {
+        "unitId": "lillia",
+        "star": 2,
+        "pos": [
+          0,
+          3
+        ]
+      },
+      {
+        "unitId": "ornn",
+        "star": 2,
+        "pos": [
+          0,
+          2
+        ]
+      },
+      {
+        "unitId": "rammus",
+        "star": 3,
+        "pos": [
+          0,
+          5
+        ]
+      },
+      {
+        "unitId": "shen",
+        "star": 2,
+        "pos": [
+          0,
+          1
+        ]
+      },
+      {
+        "unitId": "fiddlesticks",
+        "star": 2,
+        "pos": [
+          0,
+          4
+        ]
+      }
+    ],
+    "coreItems": [
+      {
+        "unitId": "cassiopeia",
+        "itemId": "archangelsstaff"
+      },
+      {
+        "unitId": "cassiopeia",
+        "itemId": "archangelsstaff"
+      },
+      {
+        "unitId": "cassiopeia",
+        "itemId": "hextechgunblade"
+      },
+      {
+        "unitId": "rammus",
+        "itemId": "bramblevest"
+      },
+      {
+        "unitId": "rammus",
+        "itemId": "redemption"
+      },
+      {
+        "unitId": "rammus",
+        "itemId": "warmogsarmor"
+      },
+      {
+        "unitId": "fiddlesticks",
+        "itemId": "archangelsstaff"
+      },
+      {
+        "unitId": "fiddlesticks",
+        "itemId": "ionicspark"
+      },
+      {
+        "unitId": "fiddlesticks",
+        "itemId": "titansresolve"
+      },
+      {
+        "unitId": "lillia",
+        "itemId": "gargoylestoneplate"
+      },
+      {
+        "unitId": "lillia",
+        "itemId": "frozenheart"
+      },
+      {
+        "unitId": "lillia",
+        "itemId": "warmogsarmor"
+      }
+    ],
+    "altItems": {
+      "cassiopeia": [
+        "spearofshojin",
+        "bluebuff",
+        "statikkshiv"
+      ],
+      "rammus": [
+        "gargoylestoneplate",
+        "crownguard",
+        "dragonsclaw"
+      ],
+      "fiddlesticks": [
+        "crownguard",
+        "redbuff",
+        "adaptivehelm"
+      ],
+      "lillia": [
+        "nightharvester",
+        "spectralgauntlet",
+        "redbuff"
+      ]
+    },
+    "levels": {
+      "4": {
+        "units": [
+          "caitlyn",
+          "camille",
+          "cassiopeia",
+          "elise"
+        ],
+        "avg": 4.0884,
+        "count": 611
+      },
+      "5": {
+        "units": [
+          "cassiopeia",
+          "leona",
+          "ornn",
+          "shen",
+          "fiddlesticks"
+        ],
+        "avg": 4.0764,
+        "count": 681
+      },
+      "7": {
+        "units": [
+          "cassiopeia",
+          "leona",
+          "lillia",
+          "ornn",
+          "rammus",
+          "shen",
+          "fiddlesticks"
+        ],
+        "avg": 5.6257,
+        "count": 4128
+      },
+      "8": {
+        "units": [
+          "cassiopeia",
+          "leona",
+          "lillia",
+          "ornn",
+          "rammus",
+          "shen",
+          "soraka",
+          "fiddlesticks"
+        ],
+        "avg": 3.5987,
+        "count": 2427
+      },
+      "9": {
+        "units": [
+          "cassiopeia",
+          "kennen",
+          "leona",
+          "lillia",
+          "ornn",
+          "rammus",
+          "shen",
+          "soraka",
+          "fiddlesticks"
+        ],
+        "avg": 2.6853,
+        "count": 143
+      },
+      "10": {
+        "units": [
+          "cassiopeia",
+          "ivern",
+          "kennen",
+          "leona",
+          "lillia",
+          "ornn",
+          "rammus",
+          "shen",
+          "soraka",
+          "fiddlesticks"
+        ],
+        "avg": 1.8571,
+        "count": 7
+      }
+    },
+    "counters": [
+      {
+        "deckId": "mt-425013",
+        "placeChange": 0.2
+      },
+      {
+        "deckId": "mt-425014",
+        "placeChange": 0.15
+      },
+      {
+        "deckId": "mt-425003",
+        "placeChange": 0.13
+      },
+      {
+        "deckId": "mt-425002",
+        "placeChange": 0.12
+      },
+      {
+        "deckId": "mt-425001",
+        "placeChange": 0.1
+      },
+      {
+        "deckId": "mt-425005",
+        "placeChange": 0.05
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.04
+      },
+      {
+        "deckId": "mt-425047",
+        "placeChange": 0.03
+      },
+      {
+        "deckId": "mt-425007",
+        "placeChange": -0.02
+      },
+      {
+        "deckId": "mt-425025",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425000",
+        "placeChange": -0.08
+      },
+      {
+        "deckId": "mt-425012",
+        "placeChange": -0.09
+      },
+      {
+        "deckId": "mt-425026",
+        "placeChange": -0.1
+      },
+      {
+        "deckId": "mt-425022",
+        "placeChange": -0.11
+      },
+      {
+        "deckId": "mt-425019",
+        "placeChange": -0.11
+      },
+      {
+        "deckId": "mt-425023",
+        "placeChange": -0.14
+      }
+    ],
+    "augments": [
+      {
+        "id": "DA_BoxingLessons",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BranchingOut",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BranchingOutPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDeliveryPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ComponentBuffet",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FeelingLucky",
+        "tier": "S"
+      },
+      {
+        "id": "DA_LatentForge",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PartialAscension",
+        "tier": "S"
+      },
+      {
+        "id": "DA_RollingForDays",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SilverDestinyPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SmallGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TeamBuilding",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_FloraFatalisAugmentPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ConstructACompanion",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Ascension",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BigGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ExclusiveCustomization",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FrontlineFoundation",
+        "tier": "S"
+      },
+      {
+        "id": "DA_HeroicGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_HeroicGrabBagPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_HeroicGrabBagPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PortableForge",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SeraphimsStaff",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SpreadingRoots",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SpreadingRootsPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Staffsmith",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TradeSector",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TradeSectorPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_LivingForge",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvils",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvilsPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ShoppingSpree",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SweetTreats",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TheTraitTree",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TheTraitTreePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_UrfsGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_CognitiveTaxPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ElectrochargeI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_FlowingTears",
+        "tier": "A"
+      },
+      {
+        "id": "DA_IronAssets",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Kingslayer",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MissedConnections",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PandorasItemsI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PatienceIsAVirtue",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_ResidualMagic",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlusPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SlightlyMagicRoll",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ElectrochargeII",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GainGold",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungry_NotBroken",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungryPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BeltOverflow",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BuriedTreasuresIII",
+        "tier": "A"
+      },
+      {
+        "id": "DA_DeadlierCaps",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GoldenGamble",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GoldenGamblePlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GoldenGamblePlusPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Min_Max",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PrismaticTicket",
+        "tier": "A"
+      }
+    ],
+    "trends": [
+      {
+        "day": "09-25",
+        "avg": 4.77,
+        "pick": 2
+      },
+      {
+        "day": "09-26",
+        "avg": 4.38,
+        "pick": 2.02
+      },
+      {
+        "day": "09-27",
+        "avg": 4.45,
+        "pick": 2
+      },
+      {
+        "day": "09-28",
+        "avg": 4.47,
+        "pick": 1.96
+      },
+      {
+        "day": "09-29",
+        "avg": 4.47,
+        "pick": 1.92
+      },
+      {
+        "day": "09-30",
+        "avg": 4.5,
+        "pick": 1.95
+      },
+      {
+        "day": "10-01",
+        "avg": 4.46,
+        "pick": 1.96
+      },
+      {
+        "day": "10-02",
+        "avg": 4.53,
+        "pick": 1.88
+      }
+    ],
+    "proComps": [
+      {
+        "title": "CASSIOPEIA > Defender > Lvl 7 reroll",
+        "author": "Sologesang#EUW",
+        "notes": "- CASSIOPEIA needs ARCHANGEL (or Rabadons) and Gunblade;",
+        "units": [
+          {
+            "unitId": "ornn",
+            "items": []
+          },
+          {
+            "unitId": "leona",
+            "items": []
+          },
+          {
+            "unitId": "rammus",
+            "items": []
+          },
+          {
+            "unitId": "shen",
+            "items": []
+          },
+          {
+            "unitId": "fiddlesticks",
+            "items": [
+              "redbuff",
+              "ionicspark",
+              "titansresolve"
+            ]
+          },
+          {
+            "unitId": "lillia",
+            "items": []
+          },
+          {
+            "unitId": "cassiopeia",
+            "items": [
+              "archangelsstaff",
+              "hextechgunblade",
+              "spearofshojin"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mt-425012",
+    "name": "개화 아리 시비르",
+    "tierLabel": "B",
+    "tier": 4,
+    "avgPlacement": 4.5,
+    "games": 462551,
+    "winRate": 0.1283,
+    "top4Rate": 0.525,
+    "pickRate": 0.015,
+    "levelling": "Fast 8",
+    "difficulty": "쉬움",
+    "threeStarTargets": [
+      "akali",
+      "varus"
+    ],
+    "carryId": "ahri",
+    "coreUnits": [
+      {
+        "unitId": "ahri",
+        "star": 2,
+        "pos": [
+          3,
+          0
+        ]
+      },
+      {
+        "unitId": "gnar",
+        "star": 1,
+        "pos": [
+          1,
+          3
+        ]
+      },
+      {
+        "unitId": "sett",
+        "star": 2,
+        "pos": [
+          0,
+          3
+        ]
+      },
+      {
+        "unitId": "shen",
+        "star": 2,
+        "pos": [
+          2,
+          4
+        ]
+      },
+      {
+        "unitId": "yorick",
+        "star": 2,
+        "pos": [
+          0,
+          2
+        ]
+      },
+      {
+        "unitId": "zyra",
+        "star": 2,
+        "pos": [
+          3,
+          6
+        ]
+      },
+      {
+        "unitId": "amumu",
+        "star": 2,
+        "pos": [
+          0,
+          4
+        ]
+      },
+      {
+        "unitId": "fiddlesticks",
+        "star": 2,
+        "pos": [
+          1,
+          2
+        ]
+      }
+    ],
+    "coreItems": [
+      {
+        "unitId": "ahri",
+        "itemId": "jeweledgauntlet"
+      },
+      {
+        "unitId": "ahri",
+        "itemId": "spearofshojin"
+      },
+      {
+        "unitId": "ahri",
+        "itemId": "powergauntlet"
+      },
+      {
+        "unitId": "sett",
+        "itemId": "gargoylestoneplate"
+      },
+      {
+        "unitId": "sett",
+        "itemId": "redemption"
+      },
+      {
+        "unitId": "sett",
+        "itemId": "warmogsarmor"
+      },
+      {
+        "unitId": "zyra",
+        "itemId": "archangelsstaff"
+      },
+      {
+        "unitId": "zyra",
+        "itemId": "spearofshojin"
+      },
+      {
+        "unitId": "zyra",
+        "itemId": "statikkshiv"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "crownguard"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "gargoylestoneplate"
+      },
+      {
+        "unitId": "amumu",
+        "itemId": "warmogsarmor"
+      }
+    ],
+    "altItems": {
+      "ahri": [
+        "bluebuff",
+        "rabadonsdeathcap",
+        "leviathan"
+      ],
+      "sett": [
+        "steraksgage",
+        "dragonsclaw",
+        "frozenheart"
+      ],
+      "zyra": [
+        "morellonomicon",
+        "jeweledgauntlet",
+        "rabadonsdeathcap"
+      ],
+      "amumu": [
+        "dragonsclaw",
+        "redemption",
+        "nightharvester"
+      ]
+    },
+    "levels": {
+      "4": {
+        "units": [
+          "rakan",
+          "yorick",
+          "yunara",
+          "karma"
+        ],
+        "avg": 4.3525,
+        "count": 834
+      },
+      "5": {
+        "units": [
+          "leblanc",
+          "rakan",
+          "yorick",
+          "yunara",
+          "karma"
+        ],
+        "avg": 3.5371,
+        "count": 175
+      },
+      "6": {
+        "units": [
+          "rakan",
+          "shen",
+          "yorick",
+          "yunara",
+          "fiddlesticks",
+          "karma"
+        ],
+        "avg": 3.7419,
+        "count": 62
+      },
+      "7": {
+        "units": [
+          "ahri",
+          "sett",
+          "shen",
+          "yorick",
+          "zyra",
+          "amumu",
+          "fiddlesticks"
+        ],
+        "avg": 5.3333,
+        "count": 9
+      },
+      "8": {
+        "units": [
+          "ahri",
+          "gnar",
+          "sett",
+          "shen",
+          "yorick",
+          "zyra",
+          "amumu",
+          "fiddlesticks"
+        ],
+        "avg": 4.7225,
+        "count": 1701
+      },
+      "9": {
+        "units": [
+          "ahri",
+          "gnar",
+          "ivern",
+          "sett",
+          "shen",
+          "yorick",
+          "zyra",
+          "amumu",
+          "fiddlesticks"
+        ],
+        "avg": 3.0501,
+        "count": 798
+      },
+      "10": {
+        "units": [
+          "ahri",
+          "ashe",
+          "gnar",
+          "sett",
+          "sivir",
+          "yorick",
+          "zyra",
+          "karma",
+          "lux",
+          "vi"
+        ],
+        "avg": 1.9,
+        "count": 40
+      }
+    },
+    "counters": [
+      {
+        "deckId": "mt-425005",
+        "placeChange": 0.23
+      },
+      {
+        "deckId": "mt-425000",
+        "placeChange": 0.22
+      },
+      {
+        "deckId": "mt-425007",
+        "placeChange": 0.21
+      },
+      {
+        "deckId": "mt-425019",
+        "placeChange": 0.1
+      },
+      {
+        "deckId": "mt-425008",
+        "placeChange": 0.09
+      },
+      {
+        "deckId": "mt-425022",
+        "placeChange": 0.09
+      },
+      {
+        "deckId": "mt-425025",
+        "placeChange": 0.08
+      },
+      {
+        "deckId": "mt-425023",
+        "placeChange": 0.07
+      },
+      {
+        "deckId": "mt-425002",
+        "placeChange": 0.04
+      },
+      {
+        "deckId": "mt-425010",
+        "placeChange": 0.02
+      },
+      {
+        "deckId": "mt-425013",
+        "placeChange": -0.01
+      },
+      {
+        "deckId": "mt-425003",
+        "placeChange": -0.02
+      },
+      {
+        "deckId": "mt-425014",
+        "placeChange": -0.02
+      },
+      {
+        "deckId": "mt-425047",
+        "placeChange": -0.03
+      },
+      {
+        "deckId": "mt-425026",
+        "placeChange": -0.07
+      },
+      {
+        "deckId": "mt-425001",
+        "placeChange": -0.25
+      }
+    ],
+    "augments": [
+      {
+        "id": "DA_BandOfThieves",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDelivery",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDeliveryPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ChampDeliveryPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ComponentBuffet",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FeelingLucky",
+        "tier": "S"
+      },
+      {
+        "id": "DA_FlowingTears",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GlassCannon_Silver",
+        "tier": "S"
+      },
+      {
+        "id": "DA_LatentForge",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PartialAscension",
+        "tier": "S"
+      },
+      {
+        "id": "DA_PatienceIsAVirtue",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagic",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_ResidualMagicPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_RollingForDays",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SilverDestinyPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SilverDestinyPlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SliceOfLife",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SlightlyMagicRoll",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SmallGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TwinGuardians",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_WispRebatePlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Ascension",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BigGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BoosterPackPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_EpicRolldown",
+        "tier": "S"
+      },
+      {
+        "id": "DA_ExclusiveCustomization",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GainGold",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GlassCannon_Gold",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BlackthornTraitAugment",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Replication",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SalvageBin",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SalvageBinPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_SeraphimsStaff",
+        "tier": "S"
+      },
+      {
+        "id": "DA_Staffsmith",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BeltOverflow",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BuriedTreasuresIII",
+        "tier": "S"
+      },
+      {
+        "id": "DA_CommerceCore",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamble",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamblePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_GoldenGamblePlusPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvils",
+        "tier": "S"
+      },
+      {
+        "id": "DA_NestingAnvilsPlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_OneBuffTwoBuff",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TheTraitTree",
+        "tier": "S"
+      },
+      {
+        "id": "DA_TheTraitTreePlus",
+        "tier": "S"
+      },
+      {
+        "id": "DA_UrfsGrabBag",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BronzeForLifeI",
+        "tier": "S"
+      },
+      {
+        "id": "DA_BronzeForLifeII",
+        "tier": "S"
+      },
+      {
+        "id": "DA_18_BranchingOut",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CognitiveTaxPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Expedition",
+        "tier": "A"
+      },
+      {
+        "id": "DA_FindYourCenter",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_GoodForSomethingI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_IronAssets",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ItemGrabBag",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MissedConnections",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PandorasItemsI",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SilverDestiny",
+        "tier": "A"
+      },
+      {
+        "id": "DA_TheTower",
+        "tier": "A"
+      },
+      {
+        "id": "DA_AdvancedLoanPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BoosterPack",
+        "tier": "A"
+      },
+      {
+        "id": "DA_BoosterPackPlusPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CaretakersFavor",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ClutteredMind",
+        "tier": "A"
+      },
+      {
+        "id": "DA_CyberneticUplink_Gold",
+        "tier": "A"
+      },
+      {
+        "id": "DA_18_DuoQueue",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ExplosiveGrowth",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GoldDestiny",
+        "tier": "A"
+      },
+      {
+        "id": "DA_GoldDestinyPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ItsMeBaby",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MagicRoll",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungry_NotBroken",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyHungryPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PatientStudy",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Slammin",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SlamminPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ComebackStory",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Coronation",
+        "tier": "A"
+      },
+      {
+        "id": "DA_DeadlierCaps",
+        "tier": "A"
+      },
+      {
+        "id": "DA_JeweledLotus_II",
+        "tier": "A"
+      },
+      {
+        "id": "DA_MoneyMonsoon",
+        "tier": "A"
+      },
+      {
+        "id": "DA_Min_Max",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PrismaticDestiny",
+        "tier": "A"
+      },
+      {
+        "id": "DA_PrismaticDestinyPlus",
+        "tier": "A"
+      },
+      {
+        "id": "DA_RadiantRelic",
+        "tier": "A"
+      },
+      {
+        "id": "DA_ShoppingSpree",
+        "tier": "A"
+      },
+      {
+        "id": "DA_SweetTreats",
+        "tier": "A"
+      },
+      {
+        "id": "DA_UpwardMobility",
+        "tier": "A"
+      }
+    ],
+    "trends": [
+      {
+        "day": "09-25",
+        "avg": 4.48,
+        "pick": 1
       },
       {
         "day": "09-26",
@@ -11089,12 +11196,12 @@
       {
         "day": "10-01",
         "avg": 4.49,
-        "pick": 1.66
+        "pick": 1.65
       },
       {
         "day": "10-02",
-        "avg": 4.58,
-        "pick": 1.18
+        "avg": 4.53,
+        "pick": 1.5
       }
     ],
     "proComps": [
