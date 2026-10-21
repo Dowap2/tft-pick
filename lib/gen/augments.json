@@ -1712,12 +1712,12 @@
   "DA_18_RiftbeastTraitAugment": {
     "name": "종결자 협곡야수",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png",
-    "desc": "이제 두 번째 우두머리 협곡야수를 선택할 수 있습니다. 바위 게, 불타는 묘목, 조약돌을 획득합니다."
+    "desc": "이제 두 번째 우두머리 협곡야수를 선택할 수 있습니다. 우두머리 협곡야수가 최대 체력을 N%, 공격 속도를 N% 얻습니다. 바위 게, 불타는 묘목, 조약돌을 획득합니다."
   },
   "DA_Min_Max": {
     "name": "최적화",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/minmax_iii.png",
-    "desc": "황금 아이템 제거기와 무작위 조합 아이템 4개를 획득합니다."
+    "desc": "황금 아이템 제거기, 무작위 조합 아이템 4개, N골드를 획득합니다."
   },
   "DA_BoosterPack": {
     "name": "부스터 팩",
@@ -1802,7 +1802,7 @@
   "DA_WeStickTogether": {
     "name": "하나로 뭉치는 거지",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/westicktogether_iii.png",
-    "desc": "무작위 상징 1개와 완성 아이템 모루 1개를 획득합니다. 해당 상징과 특성을 공유하는 아군이 공격 속도를 N% 얻습니다. 0 0 2025 아케인의 세계로 전략가의 왕관"
+    "desc": "무작위 특성 상징 1개와 완성 아이템 모루 1개를 획득합니다. 해당 특성을 가진 아군은 공격 속도를 N% 얻습니다. 0 0 2025 아케인의 세계로 전략가의 왕관"
   },
   "DA_Ascension": {
     "name": "초월",
@@ -1853,6 +1853,11 @@
     "name": "재활용 쓰레기통",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/salvage2.png",
     "desc": "지금 무작위 완성 아이템 1개를 획득하고 플레이어 대상 전투 N회 후에 조합 아이템 1개를 획득합니다. 챔피언을 판매하면 완성 아이템이 조합 아이템으로 분해됩니다. (전략가의 아이템 및 상징 제외)"
+  },
+  "DA_ConstructACompanion": {
+    "name": "동료 제작",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/constructacompanion_iii.png",
+    "desc": "다음에 구매하는 N단계 챔피언이 N성으로 변합니다. N골드를 획득합니다."
   },
   "DA_SpreadingRootsPlus": {
     "name": "뻗어가는 뿌리+",
@@ -1992,7 +1997,7 @@
   "DA_BlackthornTraitAugment": {
     "name": "아이템 추출",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png",
-    "desc": "검은 가시 칸에 챔피언을 처음 N번 희생시킬 때 각각 해당 챔피언이 장착한 무작위 조합 아이템 복사본 1개를 획득합니다. 아지르, 베이가, 렉사이를 획득합니다."
+    "desc": "검은 가시 칸에 챔피언을 N번 희생시키면 해당 챔피언이 장착한 무작위 조합 아이템 복사본 1개를 획득합니다. 아지르와 렉사이를 획득합니다."
   },
   "DA_Pilfer": {
     "name": "슬쩍하기",
@@ -2044,6 +2049,11 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/electrocharge-i.png",
     "desc": "아군이 N번 공격당할 때마다 주변 적에게 N~N(현재 스테이지 비례)의 마법 피해를 입힙니다. (재사용 대기시간 N초)"
   },
+  "DA_PandorasItemsIIPlusPlus": {
+    "name": "판도라의 아이템 II++",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png",
+    "desc": "라운드 시작: 대기석의 아이템이 무작위로 변합니다. 무작위 조합 아이템 N개와 N골드를 획득합니다."
+  },
   "DA_TheTraitTreePlus": {
     "name": "특성 나무+",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thetraittree_iii.png",
@@ -2073,11 +2083,6 @@
     "name": "맑은 정신",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/clearmind2.png",
     "desc": "플레이어 대상 전투 종료 시 대기석에 챔피언이 없다면 N의 경험치를 획득합니다."
-  },
-  "DA_PandorasItemsII": {
-    "name": "판도라의 아이템 II",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pandora2.png",
-    "desc": "라운드 시작: 대기석의 아이템이 무작위로 변합니다. 무작위 조합 아이템 N개를 획득합니다."
   },
   "DA_Slammin": {
     "name": "재빠른 무장",
@@ -2148,6 +2153,11 @@
     "name": "해와 달",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png",
     "desc": "아군 달빛 챔피언이 배치한 햇빛 챔피언 한 종류당 체력을 N, 피해 증폭을 N% 얻습니다. 레오나, 케일, 다이애나를 획득합니다."
+  },
+  "DA_ForgeAFriend": {
+    "name": "친구 만들기",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/constructacompanion_iii.png",
+    "desc": "다음에 구매하는 N단계 챔피언이 N성으로 변합니다. N골드를 획득합니다."
   },
   "DA_SweetTreats": {
     "name": "달콤한 간식",
@@ -2313,11 +2323,6 @@
     "name": "사이버네틱 이식술",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/cybernetic2.png",
     "desc": "아이템을 장착한 아군 챔피언이 체력을 N, 공격력을 N% 얻습니다. B.F. 대검 1개를 획득합니다."
-  },
-  "DA_DoubleTrouble": {
-    "name": "문제가 두 배",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/double-trouble-ii.png",
-    "desc": "전장에 똑같은 챔피언이 정확히 2명 있다면 둘 다 공격력 및 주문력을 N%, 방어력 및 마법 저항력을 N 얻습니다. 챔피언을 3성으로 업그레이드하면 동일한 2성 챔피언을 1명 획득합니다."
   },
   "DA_ItsMeBaby": {
     "name": "이 몸 등장",
@@ -2699,6 +2704,11 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/rodsmith_ii.png",
     "desc": "쓸데없이 큰 지팡이로 제작되는 무작위 완성 아이템 N개를 획득합니다."
   },
+  "DA_PandorasItemsIIMinus": {
+    "name": "판도라의 아이템 II",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/pandora2.png",
+    "desc": "라운드 시작: 대기석의 아이템이 무작위로 변합니다. 무작위 조합 아이템 N개와 N골드를 획득합니다."
+  },
   "DA_18_ResidualMagic": {
     "name": "잔류 마법",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t1.png",
@@ -2898,6 +2908,11 @@
     "name": "유리한 조건",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/hardbargain_ii.png",
     "desc": "공동 선택 보상을 선택할 수 없습니다. 공동 선택 라운드마다 추가로 플레이어 체력을 N 얻고 N골드를 획득합니다. 공동 선택 보상을 선택하지 않으면 선택되지 않은 챔피언과 해당 챔피언의 아이템을 획득합니다."
+  },
+  "DA_PandorasItemsIIPlus": {
+    "name": "판도라의 아이템 II+",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t2.png",
+    "desc": "라운드 시작: 대기석의 아이템이 무작위로 변합니다. 무작위 조합 아이템 N개와 N골드를 획득합니다."
   },
   "DA_BronzeForLifeI": {
     "name": "영원한 브론즈 I",
