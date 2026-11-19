@@ -1899,6 +1899,11 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/bronzeforlife_iii.png",
     "desc": "아군이 브론즈 단계 특성당 피해 증폭을 N%, 방어력 및 마법 저항력을 N 얻습니다."
   },
+  "DA_BranchingOut": {
+    "name": "가지 뻗기",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png",
+    "desc": "무작위 상징 1개를 획득합니다."
+  },
   "DA_InvestmentStrategy": {
     "name": "투자 전략 II",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/investmentstrategy_iii.png",
@@ -1953,11 +1958,6 @@
     "name": "투자+",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/invested-iii.png",
     "desc": "26골드를 획득합니다. 각 라운드 시작 시, 50골드를 모은 상태에서 초과 10골드마다 상점 새로고침을 1회 획득합니다. (최대 80골드)"
-  },
-  "DA_18_BigGrabBag": {
-    "name": "큰 꾸러미",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grab-bag-ii.png",
-    "desc": "무작위 조합 아이템 3개, N골드, 재조합기 1개를 획득합니다."
   },
   "DA_CapitalGainsII": {
     "name": "자본 이익 II",
@@ -2114,11 +2114,6 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/goldengamble_iii.png",
     "desc": "N골드를 획득하고 동전을 던집니다. 앞면이 나오면 찬란한 행운의 아이템 상자를 획득합니다. 뒷면이 나오면 완성 아이템 모루 N개를 획득합니다."
   },
-  "DA_18_OneTwoFive": {
-    "name": "하나, 둘, 다섯!",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/one-two-five-i.png",
-    "desc": "무작위 조합 아이템 1개, N골드, 무작위 5단계 챔피언 1명을 획득합니다."
-  },
   "DA_MaliciousMonetization": {
     "name": "악의적 수익 창출",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/mirroredmonetization_ii.png",
@@ -2224,6 +2219,11 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/plotarmor_ii.png",
     "desc": "아군이 방어력 및 마법 저항력을 N 얻습니다. 체력이 N% 아래로 떨어지면 전투가 끝날 때까지 대신 N만큼 얻습니다."
   },
+  "DA_GoodForSomethingI": {
+    "name": "다 쓸 데가 있다니까 I",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/good-for-something-i.png",
+    "desc": "아이템을 장착하지 않은 챔피언이 사망하면 N% 확률로 N골드를 떨어뜨립니다."
+  },
   "DA_ShimmerscaleEssence": {
     "name": "빛비늘 정수",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/shimmerscaleessence_iii.png",
@@ -2263,6 +2263,11 @@
     "name": "도전자의 은총",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/choiceui/precisiongrace_ii.png",
     "desc": "전투 시작 시 아군이 N초 동안 공격 속도를 N% 얻습니다. 처치 관여 시 아군이 다음 대상에게 돌진하고 동일한 추가 효과를 다시 얻습니다."
+  },
+  "DA_OneTwoFive": {
+    "name": "하나, 둘, 다섯!",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/one-two-five-i.png",
+    "desc": "무작위 조합 아이템 1개, 2골드, 무작위 5단계 챔피언 1명을 획득합니다."
   },
   "DA_18_FaeTraitAugment": {
     "name": "커져라",
@@ -2339,10 +2344,10 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/missing-t3.png",
     "desc": "유물 모루 1개를 획득합니다. 모루를 열면 조합 아이템 모루 1개를 획득합니다. 획득한 조합 아이템 모루를 열면 N골드를 획득합니다."
   },
-  "DA_18_BranchingOutPlus": {
-    "name": "가지 뻗기+",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png",
-    "desc": "무작위 상징과 재조합기를 획득합니다."
+  "DA_BigGrabBag": {
+    "name": "큰 꾸러미",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/grab-bag-ii.png",
+    "desc": "무작위 조합 아이템 3개, N골드, 재조합기 1개를 획득합니다."
   },
   "DA_GainGold": {
     "name": "21골드 획득",
@@ -2649,6 +2654,11 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/awakenedsoul_iii.png",
     "desc": "전투 시작: 아군이 N초 동안 매초 공격력 및 주문력을 N% 얻습니다. 최대 중첩 시 N%의 추가 고정 피해를 입힙니다."
   },
+  "DA_BranchingOutPlus": {
+    "name": "가지 뻗기+",
+    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png",
+    "desc": "무작위 상징과 재조합기를 획득합니다."
+  },
   "DA_Expedition": {
     "name": "탐사",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/expedition_i.png",
@@ -2849,11 +2859,6 @@
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/onebufftwobuff_iii.png",
     "desc": "붉은 덩굴정령, 푸른 파수꾼, 챔피언 복제기를 1개씩 획득합니다."
   },
-  "DA_18_BranchingOut": {
-    "name": "가지 뻗기",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/branching-out-i.png",
-    "desc": "무작위 상징 1개를 획득합니다."
-  },
   "DA_CalledShot": {
     "name": "결과 예측",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/calledshot_i.png",
@@ -2938,11 +2943,6 @@
     "name": "남작의 소굴",
     "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/thebaronslair_iii.png",
     "desc": "무작위 탱커 아이템 1개를 획득합니다. 전투 시작 N초 후, 아군이 전투가 끝날 때까지 매초 추가 공격력 및 주문력을 N% 얻습니다. 2025 전략적 팀 전투 파리 오픈"
-  },
-  "DA_18_GoodForSomethingI": {
-    "name": "다 쓸 데가 있다니까 I",
-    "img": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/augments/hexcore/good-for-something-i.png",
-    "desc": "아이템을 장착하지 않은 챔피언이 사망하면 N% 확률로 N골드를 떨어뜨립니다."
   },
   "DA_SpiritOfRedemption": {
     "name": "구원의 영혼",
